@@ -1,0 +1,12 @@
+<resources>
+	<string id="application_name">Badminton</string>
+
+	<string id="welcome_who_start">Who starts?</string>
+	<string id="welcome_opponent_up">Opponent</string>
+	<string id="welcome_you_down">You</string>
+	<string id="welcome_random">Random</string>
+
+	<string id="end_you_won">You won!</string>
+	<string id="end_opponent_won">They won!</string>
+	<string id="end_total_strokes">${strokes} strokes</string>
+</resources>

@@ -1,0 +1,12 @@
+<resources>
+	<string id="application_name">Badminton</string>
+
+	<string id="welcome_who_start">Qui commence ?</string>
+	<string id="welcome_opponent_up">Adversaire</string>
+	<string id="welcome_you_down">Vous</string>
+	<string id="welcome_random">Aléatoire</string>
+
+	<string id="end_you_won">Gagné !</string>
+	<string id="end_opponent_won">Perdu !</string>
+	<string id="end_total_strokes">${strokes} coups</string>
+</resources>

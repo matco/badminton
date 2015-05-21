@@ -1,0 +1,18 @@
+<layout id="MainLayout">
+	<label id="welcome_who_start_label" x="center" y="25" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="welcome_random_label" x="180" y="60" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_RIGHT" />
+	<label id="welcome_opponent_up_label" x="25" y="95" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
+	<label id="welcome_you_down_label" x="40" y="145" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
+
+	<!--<drawable id="pointers" />-->
+
+	<!--<drawable id="court_player_2_left" />
+	<drawable id="court_player_2_right" />
+	<drawable id="court_player_1_left" />
+	<drawable id="court_player_1_right" />-->
+
+	<!--<label text="Player 1" x="25" y="70" font="Gfx.FONT_MEDIUM" color="Gfx.COLOR_WHITE" />-->
+	<!--<label id="score_player_1" text="0" x="105" y="20" font="Gfx.FONT_NUMBER_MEDIUM" color="Gfx.COLOR_RED" />-->
+	<!--<label text="Player 2" x="25" y="100" font="Gfx.FONT_MEDIUM" color="Gfx.COLOR_WHITE" />-->
+	<!--<label id="score_player_2" text="0" x="100" y="80" font="Gfx.FONT_NUMBER_HOT" color="Gfx.COLOR_RED" />-->
+</layout>

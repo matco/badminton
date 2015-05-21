@@ -1,0 +1,37 @@
+<resources>
+	<string id="application_name">Badminton</string>
+	<bitmap id="application_launcher_icon" filename="images/application_launcher_icon.png" />
+
+	<string id="welcome_who_start">Who starts?</string>
+	<string id="welcome_opponent_up">Opponent</string>
+	<string id="welcome_you_down">You</string>
+	<string id="welcome_random">Random</string>
+
+	<string id="end_you_won">You won!</string>
+	<string id="end_opponent_won">They won!</string>
+	<string id="end_total_strokes">${strokes} strokes</string>
+
+	<!--
+	<drawable-list id="court_player_2_left" foreground="Gfx.COLOR_WHITE">
+		<shape type="polygon" points="[[70,20], [108,20], [108,80], [50,80]]" />
+	</drawable-list>
+	<drawable-list id="court_player_2_right" foreground="Gfx.COLOR_WHITE">
+		<shape type="polygon" points="[[110,20], [150,20], [170,80], [110,80]]" />
+	</drawable-list>
+	<drawable-list id="court_player_1_left" foreground="Gfx.COLOR_WHITE">
+		<shape type="polygon" points="[[50,85], [108,85], [108,160], [30,160]]" />
+	</drawable-list>
+	<drawable-list id="court_player_1_right" foreground="Gfx.COLOR_WHITE">
+		<shape type="polygon" points="[[110,85], [170,85], [190,160], [110,160]]" />
+	</drawable-list>
+	-->
+
+	<!--
+	<drawable-list id="pointers" background="Gfx.COLOR_BLUE" foreground="Gfx.COLOR_BLUE">
+		<shape type="polygon" points="[[0,60], [5,55], [0,65]]" />
+		<shape type="polygon" points="[[120,60], [115,55], [115,65]]" />
+		<shape type="polygon" points="[[60,60], [70,70], [12,65]]" />
+		<shape type="polygon" points="[[110,85], [170,85], [190,160], [110,160]]" />
+	</drawable-list>
+	-->
+</resources>
