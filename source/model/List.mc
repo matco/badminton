@@ -42,7 +42,7 @@ class List {
 		return length > 0 ? elements[length - 1] : null;
 	}
 
-	function grow() {
+	hidden function grow() {
 		var new_elements = new [elements.size() + INITIAL_SIZE];
 		for(var i = 0; i < length; i++) {
 			new_elements[i] = elements[i];
