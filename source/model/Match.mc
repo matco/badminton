@@ -45,7 +45,7 @@ class Match {
 	function end() {
 		stopTime = Time.now();
 		if(listener != null && listener has :onMatchEnd) {
-			var winner = match.getWinner();
+			var winner = getWinner();
 			listener.onMatchEnd(winner);
 		}
 	}
@@ -80,7 +80,7 @@ class Match {
 
 	function getDuration() {
 		var time = stopTime != null ? stopTime : Time.now();
-		return time.subtract(match.startTime);
+		return time.subtract(startTime);
 	}
 
 	function hasBegun() {
