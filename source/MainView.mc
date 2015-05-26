@@ -45,7 +45,7 @@ class MainView extends Ui.View {
 				var wonText = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
 				dc.drawText(xCenter, yCenter - 60, Gfx.FONT_LARGE, wonText, Gfx.TEXT_JUSTIFY_CENTER);
 				//draw score
-				dc.drawText(xCenter, yCenter - 20, Gfx.FONT_LARGE, match.scores[:player_1].toString() + " - " + match.scores[:player_2].toString(), Gfx.TEXT_JUSTIFY_CENTER);
+				dc.drawText(xCenter, yCenter - 20, Gfx.FONT_LARGE, match.getScore(:player_1).toString() + " - " + match.getScore(:player_2).toString(), Gfx.TEXT_JUSTIFY_CENTER);
 				//draw match time
 				dc.drawText(xCenter, yCenter + 28, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
 				//draw strokes
@@ -78,9 +78,9 @@ class MainView extends Ui.View {
 			//draw scores
 			dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 			//player 1 (watch carrier)
-			dc.drawText(xCenter, 89, Gfx.FONT_NUMBER_MEDIUM, match.scores[:player_1].toString(), Gfx.TEXT_JUSTIFY_CENTER);
+			dc.drawText(xCenter, 89, Gfx.FONT_NUMBER_MEDIUM, match.getScore(:player_1).toString(), Gfx.TEXT_JUSTIFY_CENTER);
 			//player 2 (opponent)
-			dc.drawText(xCenter, 29, Gfx.FONT_NUMBER_MILD, match.scores[:player_2].toString(), Gfx.TEXT_JUSTIFY_CENTER);
+			dc.drawText(xCenter, 29, Gfx.FONT_NUMBER_MILD, match.getScore(:player_2).toString(), Gfx.TEXT_JUSTIFY_CENTER);
 
 			//draw timer
 			dc.drawText(xCenter, 170, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);

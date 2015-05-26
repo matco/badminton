@@ -8,7 +8,7 @@ class Match {
 	hidden var strokes;
 
 	hidden var beginner;
-	var scores;
+	hidden var scores;
 
 	var startTime;
 	var stopTime;
@@ -42,19 +42,21 @@ class Match {
 		}
 	}
 
-	function end() {
+	hidden function end(winner) {
 		stopTime = Time.now();
 		if(listener != null && listener has :onMatchEnd) {
-			var winner = getWinner();
 			listener.onMatchEnd(winner);
 		}
 	}
 
 	function score(player) {
-		strokes.push(player);
-		scores[player]++;
-		if(hasEnded()) {
-			end();
+		if(hasBegun()) {
+			strokes.push(player);
+			scores[player]++;
+			var winner = getWinner();
+			if(winner != null) {
+				end(winner);
+			}
 		}
 	}
 
@@ -79,6 +81,9 @@ class Match {
 	}
 
 	function getDuration() {
+		if(startTime == null) {
+			return null;
+		}
 		var time = stopTime != null ? stopTime : Time.now();
 		return time.subtract(startTime);
 	}
@@ -91,11 +96,17 @@ class Match {
 		return getWinner() != null;
 	}
 
+	function getScore(player) {
+		return scores[player];
+	}
+
 	function getWinner() {
-		if(scores[:player_1] >= MAXIMUM_POINTS && (scores[:player_1] - scores[:player_2]) > 1) {
+		var scorePlayer1 = getScore(:player_1);
+		var scorePlayer2 = getScore(:player_2);
+		if(scorePlayer1 >= MAXIMUM_POINTS && (scorePlayer1 - scorePlayer2) > 1) {
 			return :player_1;
 		}
-		if(scores[:player_2] >= MAXIMUM_POINTS && (scores[:player_2] - scores[:player_1]) > 1) {
+		if(scorePlayer2 >= MAXIMUM_POINTS && (scorePlayer2 - scorePlayer1) > 1) {
 			return :player_2;
 		}
 		return null;
@@ -108,8 +119,8 @@ class Match {
 		}
 		//last score from player 1
 		if(strokes.last() == :player_1) {
-			return 3 - scores[:player_1] % 2;
+			return 3 - getScore(:player_1) % 2;
 		}
-		return scores[:player_2] % 2;
+		return getScore(:player_2) % 2;
 	}
 }
