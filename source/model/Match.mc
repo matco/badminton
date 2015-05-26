@@ -59,6 +59,7 @@ class Match {
 	}
 
 	function undo() {
+		stopTime = null;
 		if(strokes.size() > 0) {
 			scores[strokes.pop()]--;
 		}
