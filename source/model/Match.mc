@@ -74,6 +74,8 @@ class Match {
 		strokes = new List();
 		beginner = null;
 		scores = {:player_1 => 0, :player_2 => 0};
+		startTime = null;
+		stopTime = null;
 	}
 
 	function getStrokesNumber() {
