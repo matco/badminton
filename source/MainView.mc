@@ -6,7 +6,7 @@ class MainView extends Ui.View {
 
 	//! Load your resources here
 	function onLayout(dc) {
-		setLayout(Rez.Layouts.MainLayout(dc));
+		//setLayout(Rez.Layouts.MainLayout(dc));
 	}
 
 	//! Restore the state of the app and prepare the view to be shown
@@ -14,23 +14,16 @@ class MainView extends Ui.View {
 	}
 
 	function drawWelcomeScreen(dc) {
-		var xCenter = dc.getWidth() / 2;
-		var yCenter = dc.getHeight() / 2;
+		setLayout(Rez.Layouts.WelcomeLayout(dc));
 
 		//update localized text
 		findDrawableById("welcome_who_start_label").setText(Rez.Strings.welcome_who_start);
 		findDrawableById("welcome_opponent_up_label").setText(Rez.Strings.welcome_opponent_up);
 		findDrawableById("welcome_you_down_label").setText(Rez.Strings.welcome_you_down);
 		findDrawableById("welcome_random_label").setText(Rez.Strings.welcome_random);
+
 		//call the parent onUpdate function to redraw the layout
 		View.onUpdate(dc);
-		dc.setColor(Gfx.COLOR_BLUE, Gfx.COLOR_BLUE);
-		//player 1
-		dc.fillPolygon([[0,yCenter], [10,yCenter - 10], [10,yCenter + 10]]);
-		//player 2
-		dc.fillPolygon([[15,165], [20,150], [30,170]]);
-		//random
-		dc.fillPolygon([[dc.getWidth() - 15,55], [dc.getWidth() - 30,55], [dc.getWidth() - 20,70]]);
 	}
 
 	function drawFinalScreen(dc, winner) {
