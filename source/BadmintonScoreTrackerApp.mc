@@ -16,6 +16,8 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 		match.listener = self;
 		var timer = new Timer.Timer();
 		timer.start(method(:redraw), 1000, true);
+		//test
+		//Test.test();
 	}
 
 	//! onStop() is called when your application is exiting
