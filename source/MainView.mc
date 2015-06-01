@@ -27,20 +27,21 @@ class MainView extends Ui.View {
 	}
 
 	function drawFinalScreen(dc, winner) {
-		var xCenter = dc.getWidth() / 2;
-		var yCenter = dc.getHeight() / 2;
+		setLayout(Rez.Layouts.FinalLayout(dc));
 
-		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_BLACK);
 		//draw end of match text
 		var wonText = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
-		dc.drawText(xCenter, yCenter - 60, Gfx.FONT_LARGE, wonText, Gfx.TEXT_JUSTIFY_CENTER);
+		findDrawableById("final_won_text").setText(wonText);
 		//draw score
-		dc.drawText(xCenter, yCenter - 20, Gfx.FONT_LARGE, match.getScore(:player_1).toString() + " - " + match.getScore(:player_2).toString(), Gfx.TEXT_JUSTIFY_CENTER);
+		findDrawableById("final_score").setText(match.getScore(:player_1).toString() + " - " + match.getScore(:player_2).toString());
 		//draw match time
-		dc.drawText(xCenter, yCenter + 28, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
+		findDrawableById("final_time").setText(Helpers.formatDuration(match.getDuration()));
 		//draw strokes
 		var strokesText = Ui.loadResource(Rez.Strings.end_total_strokes);
-		dc.drawText(xCenter, yCenter + 52, Gfx.FONT_SMALL, Helpers.formatString(strokesText, {"strokes" => match.getStrokesNumber().toString()}), Gfx.TEXT_JUSTIFY_CENTER);
+		findDrawableById("final_strokes").setText(Helpers.formatString(strokesText, {"strokes" => match.getStrokesNumber().toString()}));
+
+		//call the parent onUpdate function to redraw the layout
+		View.onUpdate(dc);
 	}
 
 	function drawMatchScreen(dc) {
