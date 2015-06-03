@@ -4,6 +4,7 @@ using Toybox.Time as Time;
 class Match {
 
 	var MAXIMUM_POINTS = 21;
+	var ABSOLUTE_MAXIMUM_POINTS = 30;
 
 	hidden var rallies;
 
@@ -105,10 +106,10 @@ class Match {
 	function getWinner() {
 		var scorePlayer1 = getScore(:player_1);
 		var scorePlayer2 = getScore(:player_2);
-		if(scorePlayer1 >= MAXIMUM_POINTS && (scorePlayer1 - scorePlayer2) > 1) {
+		if(scorePlayer1 >= ABSOLUTE_MAXIMUM_POINTS || scorePlayer1 >= MAXIMUM_POINTS && (scorePlayer1 - scorePlayer2) > 1) {
 			return :player_1;
 		}
-		if(scorePlayer2 >= MAXIMUM_POINTS && (scorePlayer2 - scorePlayer1) > 1) {
+		if(scorePlayer2 >= ABSOLUTE_MAXIMUM_POINTS || scorePlayer2 >= MAXIMUM_POINTS && (scorePlayer2 - scorePlayer1) > 1) {
 			return :player_2;
 		}
 		return null;
