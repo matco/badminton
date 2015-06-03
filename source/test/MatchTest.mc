@@ -4,7 +4,7 @@ module MatchTest {
 		var match = new Match();
 		Assert.isFalse(match.hasBegun(), "Newly created match has not begun");
 		Assert.isFalse(match.hasEnded(), "Newly created match has not ended");
-		Assert.isEqual(match.getStrokesNumber(), 0, "Newly created match has 0 stroke number");
+		Assert.isEqual(match.getRalliesNumber(), 0, "Newly created match has 0 rally");
 		Assert.isNull(match.getWinner(), "Newly created match has no winner");
 		Assert.isNull(match.getDuration(), "Newly created match has no duration");
 	}
@@ -17,7 +17,7 @@ module MatchTest {
 		Assert.isTrue(match.hasBegun(), "Began match has begun");
 		Assert.isFalse(match.hasEnded(), "Began match has not ended");
 
-		Assert.isEqual(match.getStrokesNumber(), 0, "Just began match has 0 stroke number");
+		Assert.isEqual(match.getRalliesNumber(), 0, "Just began match has 0 rally");
 		Assert.isNull(match.getWinner(), "Just began match has now winner");
 		Assert.isNotNull(match.getDuration(), "Began match has a non null duration");
 	}
@@ -39,7 +39,7 @@ module MatchTest {
 		Assert.isTrue(match.hasBegun(), "Began match has begun");
 		Assert.isFalse(match.hasEnded(), "Began match has not ended");
 
-		Assert.isEqual(match.getStrokesNumber(), 1, "Match with 1 stroke 1 stroke number");
+		Assert.isEqual(match.getRalliesNumber(), 1, "Match with 1 rally 1 rally number");
 		Assert.isNull(match.getWinner(), "Just began match has now winner");
 		Assert.isNotNull(match.getDuration(), "Began match has a non null duration");
 	}

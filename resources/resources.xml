@@ -9,7 +9,7 @@
 
 	<string id="end_you_won">You won!</string>
 	<string id="end_opponent_won">They won!</string>
-	<string id="end_total_strokes">${strokes} strokes</string>
+	<string id="end_total_rallies">${rallies} rallies</string>
 
 	<!--
 	<drawable-list id="court_player_2_left" foreground="Gfx.COLOR_WHITE">

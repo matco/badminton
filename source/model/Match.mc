@@ -5,7 +5,7 @@ class Match {
 
 	var MAXIMUM_POINTS = 21;
 
-	hidden var strokes;
+	hidden var rallies;
 
 	hidden var beginner;
 	hidden var scores;
@@ -22,14 +22,14 @@ class Match {
 
 	function restore(state) {
 		if(state != null) {
-			//strokes = state.get(:match_strokes);
+			//rallies = state.get(:match_rallies);
 			//beginner = state.get("match_beginner");
 			//scores = state.get("match_scores");
 		}
 	}
 
 	function save(state) {
-		//state.put("match_strokes", strokes);
+		//state.put("match_rallies", rallies);
 		//state.put("match_beginner", beginner);
 		//state.put("match_scores", scores);
 	}
@@ -51,7 +51,7 @@ class Match {
 
 	function score(player) {
 		if(hasBegun()) {
-			strokes.push(player);
+			rallies.push(player);
 			scores[player]++;
 			var winner = getWinner();
 			if(winner != null) {
@@ -62,8 +62,8 @@ class Match {
 
 	function undo() {
 		stopTime = null;
-		if(strokes.size() > 0) {
-			scores[strokes.pop()]--;
+		if(rallies.size() > 0) {
+			scores[rallies.pop()]--;
 		}
 		else {
 			beginner = null;
@@ -71,15 +71,15 @@ class Match {
 	}
 
 	function reset() {
-		strokes = new List();
+		rallies = new List();
 		beginner = null;
 		scores = {:player_1 => 0, :player_2 => 0};
 		startTime = null;
 		stopTime = null;
 	}
 
-	function getStrokesNumber() {
-		return strokes.size();
+	function getRalliesNumber() {
+		return rallies.size();
 	}
 
 	function getDuration() {
@@ -116,11 +116,11 @@ class Match {
 
 	function getHighlightedCorner() {
 		//beginning of the match
-		if(strokes.isEmpty()) {
+		if(rallies.isEmpty()) {
 			return beginner == :player_1 ? 3 : 0;
 		}
 		//last score from player 1
-		if(strokes.last() == :player_1) {
+		if(rallies.last() == :player_1) {
 			return 3 - getScore(:player_1) % 2;
 		}
 		return getScore(:player_2) % 2;

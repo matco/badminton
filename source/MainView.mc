@@ -36,9 +36,9 @@ class MainView extends Ui.View {
 		findDrawableById("final_score").setText(match.getScore(:player_1).toString() + " - " + match.getScore(:player_2).toString());
 		//draw match time
 		findDrawableById("final_time").setText(Helpers.formatDuration(match.getDuration()));
-		//draw strokes
-		var strokesText = Ui.loadResource(Rez.Strings.end_total_strokes);
-		findDrawableById("final_strokes").setText(Helpers.formatString(strokesText, {"strokes" => match.getStrokesNumber().toString()}));
+		//draw rallies
+		var ralliesText = Ui.loadResource(Rez.Strings.end_total_rallies);
+		findDrawableById("final_rallies").setText(Helpers.formatString(ralliesText, {"rallies" => match.getRalliesNumber().toString()}));
 
 		//call the parent onUpdate function to redraw the layout
 		View.onUpdate(dc);
