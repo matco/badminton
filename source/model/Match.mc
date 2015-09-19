@@ -3,8 +3,8 @@ using Toybox.Time as Time;
 
 class Match {
 
-	var MAXIMUM_POINTS = 21;
-	var ABSOLUTE_MAXIMUM_POINTS = 30;
+	const MAXIMUM_POINTS = 21;
+	const ABSOLUTE_MAXIMUM_POINTS = 30;
 
 	hidden var rallies;
 
