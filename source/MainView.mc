@@ -127,12 +127,20 @@ class MainViewDelegate extends Ui.BehaviorDelegate {
 
 	function onKey(key) {
 		Sys.println("on key " + key.getKey());
-		//random start
-		if(key.getKey() == Ui.KEY_ENTER && !match.hasBegun()) {
-			var beginner = Math.rand() % 2 == 0 ? :player_1 : :player_2;
-			match.begin(beginner);
-			Ui.requestUpdate();
-			return true;
+		if(key.getKey() == Ui.KEY_ENTER) {
+			//random start
+			if(!match.hasBegun()) {
+				var beginner = Math.rand() % 2 == 0 ? :player_1 : :player_2;
+				match.begin(beginner);
+				Ui.requestUpdate();
+				return true;
+			}
+			//restart game
+			if(match.hasEnded()) {
+				match.reset();
+				Ui.requestUpdate();
+				return true;
+			}
 		}
 		return false;
 	}
