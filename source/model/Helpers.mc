@@ -58,4 +58,11 @@ module Helpers {
 		}
 		return time_label;
 	}
+
+	function absolute(value) {
+		if(value > 0) {
+			return value;
+		}
+		return -value;
+	}
 }

@@ -17,6 +17,9 @@ class BadmintonApp extends Application.AppBase {
 	function onStart(state as Dictionary?) as Void {
 		//register application itself in the bus
 		BUS.register(self);
+
+		var sensorTimer = new Timer.Timer();
+		sensorTimer.start(method(:monitor), 50, true);
 	}
 
 	function getInitialView() {
@@ -33,6 +36,29 @@ class BadmintonApp extends Application.AppBase {
 
 	function setMatch(m as Match) as Void {
 		match = m;
+	}
+
+	function monitor() {
+		var info = Sensor.getInfo();
+
+		if(info has :accel && info.accel != null) {
+			var accel = info.accel;
+			var xAccel = accel[0];
+			var yAccel = accel[1];
+
+			//spot high acceleration value
+			var hit = 2600;
+			if(Helpers.absolute(xAccel) > hit || Helpers.absolute(yAccel) > hit) {
+				Sys.println("hit detected xaccel=" + xAccel + " yaccel=" + yAccel);
+				Attention.vibrate([new Attention.VibeProfile(80, 100)]);
+			}
+
+			hit = 3300;
+			if(Helpers.absolute(xAccel) > hit || Helpers.absolute(yAccel) > hit) {
+				Sys.println("hit detected xaccel=" + xAccel + " yaccel=" + yAccel);
+				Attention.playTone(Attention.TONE_START);
+			}
+		}
 	}
 
 	function onMatchBegin() as Void {
