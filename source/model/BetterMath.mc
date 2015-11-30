@@ -26,4 +26,11 @@ module BetterMath {
 		}
 		return rounded;
 	}
+
+	function absolute(value as Numeric) as Numeric {
+		if(value > 0) {
+			return value;
+		}
+		return -value;
+	}
 }

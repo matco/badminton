@@ -17,6 +17,8 @@ class BadmintonApp extends Application.AppBase {
 	private var activityMonitor as Timer.Timer = new Timer.Timer();
 	private var lastHearRateAlert  as Moment? = null;
 
+	private var accelerationMonitor as Timer.Timer = new Timer.Timer();
+
 	function initialize() {
 		AppBase.initialize();
 	}
@@ -68,7 +70,34 @@ class BadmintonApp extends Application.AppBase {
 		}
 	}
 
+	function monitorAcceleration() as Void {
+		var info = Sensor.getInfo();
+
+		if(info has :accel) {
+			var acceleration = info.accel;
+			if(acceleration != null) {
+				var xAccel = acceleration[0] as Number;
+				var yAccel = acceleration[1] as Number;
+				//var zAccel = acceleration[2] as Number;
+
+				//spot high acceleration value
+				var hit = 2600;
+				if(BetterMath.absolute(xAccel) > hit || BetterMath.absolute(yAccel) > hit) {
+					System.println("hit detected xaccel=" + xAccel + " yaccel=" + yAccel);
+					Attention.vibrate([new Attention.VibeProfile(80, 100)]);
+				}
+
+				hit = 3300;
+				if(BetterMath.absolute(xAccel) > hit || BetterMath.absolute(yAccel) > hit) {
+					System.println("hit detected xaccel=" + xAccel + " yaccel=" + yAccel);
+					Attention.playTone(Attention.TONE_START);
+				}
+			}
+		}
+	}
+
 	function onMatchBegin() as Void {
+		accelerationMonitor.start(method(:monitorAcceleration), 50, true);
 		if(Properties.getValue("enable_alert_heart_rate_zone_5")) {
 			activityMonitor.start(method(:monitorActivity), 1000, true);
 		}
@@ -83,6 +112,7 @@ class BadmintonApp extends Application.AppBase {
 	}
 
 	function onMatchEnd(payload as Dictionary) as Void {
+		accelerationMonitor.stop();
 		if(Properties.getValue("enable_alert_heart_rate_zone_5")) {
 			activityMonitor.stop();
 		}
