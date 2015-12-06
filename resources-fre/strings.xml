@@ -1,6 +1,8 @@
 <resources>
 	<string id="application_name">Badminton</string>
 
+	<string id="menu_reset_game">Reset</string>
+
 	<string id="welcome_who_start">Qui commence ?</string>
 	<string id="welcome_opponent_up">Adversaire</string>
 	<string id="welcome_you_down">Vous</string>
