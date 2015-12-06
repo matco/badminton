@@ -16,12 +16,6 @@ class MainView extends Ui.View {
 	function drawWelcomeScreen(dc) {
 		setLayout(Rez.Layouts.WelcomeLayout(dc));
 
-		//update localized text
-		findDrawableById("welcome_who_start_label").setText(Rez.Strings.welcome_who_start);
-		findDrawableById("welcome_opponent_up_label").setText(Rez.Strings.welcome_opponent_up);
-		findDrawableById("welcome_you_down_label").setText(Rez.Strings.welcome_you_down);
-		findDrawableById("welcome_random_label").setText(Rez.Strings.welcome_random);
-
 		//call the parent onUpdate function to redraw the layout
 		View.onUpdate(dc);
 	}

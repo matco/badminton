@@ -1,8 +1,8 @@
 <layout id="WelcomeLayout">
 	<drawable id="pointers" />
 
-	<label id="welcome_who_start_label" x="center" y="25" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
-	<label id="welcome_random_label" x="180" y="60" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_RIGHT" />
-	<label id="welcome_opponent_up_label" x="25" y="95" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
-	<label id="welcome_you_down_label" x="40" y="145" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
+	<label id="welcome_who_start_label" x="center" y="25" text="@Strings.welcome_who_start" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="welcome_random_label" x="180" y="60" text="@Strings.welcome_opponent_up" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_RIGHT" />
+	<label id="welcome_opponent_up_label" x="25" y="95" text="@Strings.welcome_you_down"  color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
+	<label id="welcome_you_down_label" x="40" y="145" text="@Strings.welcome_random" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
 </layout>
