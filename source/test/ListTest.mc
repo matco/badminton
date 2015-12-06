@@ -21,7 +21,7 @@ module ListTest {
 		var list = new List();
 		list.push(3);
 		list.push(5);
-		Assert.isEqual(list.size(), 2, "List containing 1 element has a size 1");
+		Assert.isEqual(list.size(), 2, "List containing 2 elements has a size 2");
 		Assert.isEqual(list.first(), 3, "Getting first element of a list returns the first element");
 		Assert.isEqual(list.last(), 5, "Getting last element of a list returns the last element");
 	}

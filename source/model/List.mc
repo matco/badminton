@@ -22,7 +22,7 @@ class List {
 	}
 
 	function push(element) {
-		if (length + 1 > elements.size()) {
+		if(length + 1 > elements.size()) {
 			grow();
 		}
 		elements[length] = element;
