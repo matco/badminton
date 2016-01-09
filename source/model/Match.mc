@@ -6,10 +6,11 @@ class Match {
 	const MAXIMUM_POINTS = 21;
 	const ABSOLUTE_MAXIMUM_POINTS = 30;
 
-	hidden var rallies;
+	hidden var type; //type of the match, :single or :double
+	hidden var beginner; //store the beginner of the match
 
-	hidden var beginner;
-	hidden var scores;
+	hidden var rallies; //array of all rallies
+	hidden var scores; //dictionnary containing players current scores
 
 	var startTime;
 	var stopTime;
@@ -66,13 +67,11 @@ class Match {
 		if(rallies.size() > 0) {
 			scores[rallies.pop()]--;
 		}
-		else {
-			beginner = null;
-		}
 	}
 
 	function reset() {
 		rallies = new List();
+		type = null;
 		beginner = null;
 		scores = {:player_1 => 0, :player_2 => 0};
 		startTime = null;
@@ -89,6 +88,18 @@ class Match {
 		}
 		var time = stopTime != null ? stopTime : Time.now();
 		return time.subtract(startTime);
+	}
+
+	function hasType() {
+		return type != null;
+	}
+
+	function setType(match_type) {
+		type = match_type;
+	}
+
+	function setBeginner(match_beginner) {
+		beginner = match_beginner;
 	}
 
 	function hasBegun() {

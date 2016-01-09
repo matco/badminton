@@ -13,6 +13,13 @@ class MainView extends Ui.View {
 	function onShow() {
 	}
 
+	function drawTypeScreen(dc) {
+		setLayout(Rez.Layouts.type(dc));
+
+		//call the parent onUpdate function to redraw the layout
+		View.onUpdate(dc);
+	}
+
 	function drawBeginnerScreen(dc) {
 		setLayout(Rez.Layouts.beginner(dc));
 
@@ -76,7 +83,10 @@ class MainView extends Ui.View {
 
 	//! Update the view
 	function onUpdate(dc) {
-		if(!match.hasBegun()) {
+		if(!match.hasType()) {
+			drawTypeScreen(dc);
+		}
+		else if(!match.hasBegun()) {
 			drawBeginnerScreen(dc);
 		}
 		else {
@@ -107,33 +117,23 @@ class MainViewDelegate extends Ui.BehaviorDelegate {
 		return true;
 	}
 
-	function handleScore(player) {
-		if(!match.hasEnded()) {
-			if(!match.hasBegun()) {
-				match.begin(player);
-			}
-			else {
-				match.score(player);
-			}
-			Ui.requestUpdate();
-		}
-	}
-
 	function onKey(key) {
 		Sys.println("on key " + key.getKey());
 		if(key.getKey() == Ui.KEY_ENTER) {
-			//random start
-			if(!match.hasBegun()) {
-				var beginner = Math.rand() % 2 == 0 ? :player_1 : :player_2;
-				match.begin(beginner);
-				Ui.requestUpdate();
-				return true;
-			}
-			//restart game
-			if(match.hasEnded()) {
-				match.reset();
-				Ui.requestUpdate();
-				return true;
+			if(match.hasType()) {
+				//random start
+				if(!match.hasBegun()) {
+					var beginner = Math.rand() % 2 == 0 ? :player_1 : :player_2;
+					match.begin(beginner);
+					Ui.requestUpdate();
+					return true;
+				}
+				//restart game
+				if(match.hasEnded()) {
+					match.reset();
+					Ui.requestUpdate();
+					return true;
+				}
 			}
 		}
 		return false;
@@ -142,22 +142,63 @@ class MainViewDelegate extends Ui.BehaviorDelegate {
 	//player 2 (opponent) scores
 	function onNextPage() {
 		Sys.println("on next page");
-		handleScore(:player_1);
-		return true;
+		if(!match.hasEnded()) {
+			//set match type to single
+			if(!match.hasType()) {
+				match.setType(:single);
+			}
+			//start match with player 1
+			else if(!match.hasBegun()) {
+				match.begin(:player_1);
+			}
+			//score with player 1
+			else {
+				match.score(:player_1);
+			}
+			Ui.requestUpdate();
+			return true;
+		}
+		return false;
 	}
 
 	//player 1 (watch carrier) scores
 	function onPreviousPage() {
 		Sys.println("on previous page");
-		handleScore(:player_2);
-		return true;
+		if(!match.hasEnded()) {
+			//set match type to double
+			if(!match.hasType()) {
+				match.setType(:double);
+			}
+			//start match with player 2
+			else if(!match.hasBegun()) {
+				match.begin(:player_2);
+			}
+			//score with player 2
+			else {
+				match.score(:player_2);
+			}
+			Ui.requestUpdate();
+			return true;
+		}
+		return false;
 	}
 
 	//undo last point
 	function onBack() {
 		Sys.println("on back");
-		if(match.hasBegun()) {
-			match.undo();
+		if(match.hasType()) {
+			//undo score
+			if(match.getRalliesNumber() > 0) {
+				match.undo();
+			}
+			//reset beginner
+			else if(match.hasBegun()) {
+				match.setBeginner(null);
+			}
+			//reset type
+			else {
+				match.setType(null);
+			}
 			Ui.requestUpdate();
 			return true;
 		}

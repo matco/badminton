@@ -6,7 +6,6 @@ using Toybox.Timer as Timer;
 
 var match;
 
-
 class BadmintonScoreTrackerApp extends App.AppBase {
 
 	//! onStart() is called on application start up
