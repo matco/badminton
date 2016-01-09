@@ -13,15 +13,15 @@ class MainView extends Ui.View {
 	function onShow() {
 	}
 
-	function drawWelcomeScreen(dc) {
-		setLayout(Rez.Layouts.WelcomeLayout(dc));
+	function drawBeginnerScreen(dc) {
+		setLayout(Rez.Layouts.beginner(dc));
 
 		//call the parent onUpdate function to redraw the layout
 		View.onUpdate(dc);
 	}
 
 	function drawFinalScreen(dc, winner) {
-		setLayout(Rez.Layouts.FinalLayout(dc));
+		setLayout(Rez.Layouts.final(dc));
 
 		//draw end of match text
 		var wonText = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
@@ -77,7 +77,7 @@ class MainView extends Ui.View {
 	//! Update the view
 	function onUpdate(dc) {
 		if(!match.hasBegun()) {
-			drawWelcomeScreen(dc);
+			drawBeginnerScreen(dc);
 		}
 		else {
 			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);

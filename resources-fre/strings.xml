@@ -3,10 +3,10 @@
 
 	<string id="menu_reset_game">Reset</string>
 
-	<string id="welcome_who_start">Qui commence ?</string>
-	<string id="welcome_opponent_up">Adversaire</string>
-	<string id="welcome_you_down">Vous</string>
-	<string id="welcome_random">Aléatoire</string>
+	<string id="beginner_who">Qui commence ?</string>
+	<string id="beginner_opponent">Adversaire</string>
+	<string id="beginner_you">Vous</string>
+	<string id="beginner_random">Aléatoire</string>
 
 	<string id="end_you_won">Gagné !</string>
 	<string id="end_opponent_won">Perdu !</string>
