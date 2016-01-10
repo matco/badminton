@@ -31,54 +31,53 @@ class MainView extends Ui.View {
 		setLayout(Rez.Layouts.final(dc));
 
 		//draw end of match text
-		var wonText = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
-		findDrawableById("final_won_text").setText(wonText);
+		var won_text = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
+		findDrawableById("final_won_text").setText(won_text);
 		//draw score
 		findDrawableById("final_score").setText(match.getScore(:player_1).toString() + " - " + match.getScore(:player_2).toString());
 		//draw match time
 		findDrawableById("final_time").setText(Helpers.formatDuration(match.getDuration()));
 		//draw rallies
-		var ralliesText = Ui.loadResource(Rez.Strings.end_total_rallies);
-		findDrawableById("final_rallies").setText(Helpers.formatString(ralliesText, {"rallies" => match.getRalliesNumber().toString()}));
+		var rallies_text = Ui.loadResource(Rez.Strings.end_total_rallies);
+		findDrawableById("final_rallies").setText(Helpers.formatString(rallies_text, {"rallies" => match.getRalliesNumber().toString()}));
 
 		//call the parent onUpdate function to redraw the layout
 		View.onUpdate(dc);
 	}
 
 	function drawMatchScreen(dc) {
-		var xCenter = dc.getWidth() / 2;
-		var yCenter = dc.getHeight() / 2;
+		var x_center = dc.getWidth() / 2;
 
-		var highlighted_corner_index = match.getHighlightedCorner();
-		Sys.println("highlighted corner index " + highlighted_corner_index);
+		var highlighted_corner = match.getHighlightedCorner();
+		Sys.println("highlighted corner " + highlighted_corner);
 		//draw corner 0
-		dc.setColor(highlighted_corner_index == 0 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon([[68,20], [xCenter - 2,20], [xCenter - 2,80], [50,80]]);
+		dc.setColor(highlighted_corner == 0 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+		dc.fillPolygon([[68,20], [x_center - 2,20], [x_center - 2,80], [50,80]]);
 		//draw corner 1
-		dc.setColor(highlighted_corner_index == 1 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon([[xCenter + 2,20], [152,20], [170,80], [xCenter + 2,80]]);
+		dc.setColor(highlighted_corner == 1 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+		dc.fillPolygon([[x_center + 2,20], [152,20], [170,80], [x_center + 2,80]]);
 		//draw corner 2
-		dc.setColor(highlighted_corner_index == 2 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon([[49,85], [xCenter - 2,85], [xCenter - 2,160], [30,160]]);
+		dc.setColor(highlighted_corner == 2 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+		dc.fillPolygon([[49,85], [x_center - 2,85], [x_center - 2,160], [30,160]]);
 		//draw corner 3
-		dc.setColor(highlighted_corner_index == 3 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon([[xCenter + 2,85], [171,85], [190,160], [xCenter + 2,160]]);
+		dc.setColor(highlighted_corner == 3 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+		dc.fillPolygon([[x_center + 2,85], [171,85], [190,160], [x_center + 2,160]]);
 
 		//draw scores container
 		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 		//player 1 (watch carrier)
-		dc.fillRoundedRectangle(xCenter - 25, 94, 50, 58, 5);
+		dc.fillRoundedRectangle(x_center - 25, 94, 50, 58, 5);
 		//player 2 (opponent)
-		dc.fillRoundedRectangle(xCenter - 20, 29, 40, 42, 5);
+		dc.fillRoundedRectangle(x_center - 20, 29, 40, 42, 5);
 		//draw scores
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 		//player 1 (watch carrier)
-		dc.drawText(xCenter, 89, Gfx.FONT_NUMBER_MEDIUM, match.getScore(:player_1).toString(), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, 89, Gfx.FONT_NUMBER_MEDIUM, match.getScore(:player_1).toString(), Gfx.TEXT_JUSTIFY_CENTER);
 		//player 2 (opponent)
-		dc.drawText(xCenter, 29, Gfx.FONT_NUMBER_MILD, match.getScore(:player_2).toString(), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, 29, Gfx.FONT_NUMBER_MILD, match.getScore(:player_2).toString(), Gfx.TEXT_JUSTIFY_CENTER);
 
 		//draw timer
-		dc.drawText(xCenter, 170, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, 170, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
 
 		//in double, draw a dot for the player 1 (watch carrier) position if his team is engaging
 		if(match.getType() == :double && match.hasService()) {
