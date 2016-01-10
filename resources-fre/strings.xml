@@ -3,6 +3,10 @@
 
 	<string id="menu_reset_game">Reset</string>
 
+	<string id="type_what">Choisir le type</string>
+	<string id="type_single">Simple</string>
+	<string id="type_double">Double</string>
+
 	<string id="beginner_who">Qui commence ?</string>
 	<string id="beginner_opponent">Adversaire</string>
 	<string id="beginner_you">Vous</string>

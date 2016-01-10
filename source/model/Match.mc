@@ -6,10 +6,13 @@ class Match {
 	const MAXIMUM_POINTS = 21;
 	const ABSOLUTE_MAXIMUM_POINTS = 30;
 
-	hidden var rallies;
+	hidden var type; //type of the match, :single or :double
+	hidden var beginner; //store the beginner of the match, :player_1 or :player_2
 
-	hidden var beginner;
-	hidden var scores;
+	hidden var rallies; //array of all rallies
+
+	hidden var scores; //dictionnary containing players current scores
+	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
 
 	var startTime;
 	var stopTime;
@@ -52,8 +55,15 @@ class Match {
 
 	function score(player) {
 		if(hasBegun()) {
+			//in double, change server if player 1 (watch carrier) team regain service
+			if(type == :double) {
+				if(rallies.last() == :player_2 && player == :player_1) {
+					server = !server;
+				}
+			}
 			rallies.push(player);
 			scores[player]++;
+			//detect if match has a winner
 			var winner = getWinner();
 			if(winner != null) {
 				end(winner);
@@ -64,16 +74,22 @@ class Match {
 	function undo() {
 		stopTime = null;
 		if(rallies.size() > 0) {
-			scores[rallies.pop()]--;
-		}
-		else {
-			beginner = null;
+			var rally = rallies.pop();
+			//in double, change server if player 1 (watch carrier) team regain service
+			if(type == :double) {
+				if(rally == :player_2 && rallies.last() == :player_1) {
+					server = !server;
+				}
+			}
+			scores[rally]--;
 		}
 	}
 
 	function reset() {
 		rallies = new List();
+		type = null;
 		beginner = null;
+		server = true;
 		scores = {:player_1 => 0, :player_2 => 0};
 		startTime = null;
 		stopTime = null;
@@ -89,6 +105,22 @@ class Match {
 		}
 		var time = stopTime != null ? stopTime : Time.now();
 		return time.subtract(startTime);
+	}
+
+	function hasType() {
+		return type != null;
+	}
+
+	function setType(match_type) {
+		type = match_type;
+	}
+
+	function getType() {
+		return type;
+	}
+
+	function setBeginner(match_beginner) {
+		beginner = match_beginner;
 	}
 
 	function hasBegun() {
@@ -115,15 +147,43 @@ class Match {
 		return null;
 	}
 
-	function getHighlightedCorner() {
+	function getServer() {
 		//beginning of the match
 		if(rallies.isEmpty()) {
-			return beginner == :player_1 ? 3 : 0;
+			return beginner;
 		}
-		//last score from player 1
-		if(rallies.last() == :player_1) {
-			return 3 - getScore(:player_1) % 2;
-		}
-		return getScore(:player_2) % 2;
+		//last team who score
+		return rallies.last();
 	}
+
+	function getHighlightedCorner() {
+		var server = getServer();
+		var server_score = getScore(server);
+		//player 1 serves from corner 2 or 3
+		if(server == :player_1) {
+			return 3 - server_score % 2;
+		}
+		//player 2 serves from corner 0 or 1
+		return server_score % 2;
+	}
+
+	//methods used from perspective of player 1 (watch carrier)
+	hidden function getPlayerTeamIsServer() {
+		return getServer() == :player_1;
+	}
+
+	function getPlayerCorner() {
+		if(getPlayerTeamIsServer()) {
+			Sys.println("player team is server");
+			var highlighted_corner = getHighlightedCorner();
+			if(server) {
+				Sys.println("player is server");
+				return highlighted_corner;
+			}
+			//return other corner
+			return highlighted_corner == 2 ? 3 : 2;
+		}
+		return null;
+	}
+
 }
