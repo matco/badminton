@@ -143,9 +143,9 @@ class MainViewDelegate extends Ui.BehaviorDelegate {
 	function onNextPage() {
 		Sys.println("on next page");
 		if(!match.hasEnded()) {
-			//set match type to single
+			//set match type to double
 			if(!match.hasType()) {
-				match.setType(:single);
+				match.setType(:double);
 			}
 			//start match with player 1
 			else if(!match.hasBegun()) {
@@ -165,9 +165,9 @@ class MainViewDelegate extends Ui.BehaviorDelegate {
 	function onPreviousPage() {
 		Sys.println("on previous page");
 		if(!match.hasEnded()) {
-			//set match type to double
+			//set match type to single
 			if(!match.hasType()) {
-				match.setType(:double);
+				match.setType(:single);
 			}
 			//start match with player 2
 			else if(!match.hasBegun()) {
