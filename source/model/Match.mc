@@ -10,8 +10,9 @@ class Match {
 	hidden var beginner; //store the beginner of the match, :player_1 or :player_2
 
 	hidden var rallies; //array of all rallies
+
 	hidden var scores; //dictionnary containing players current scores
-	hidden var server; //in double, true if the player 1 (watch carrier) is the server
+	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
 
 	var startTime;
 	var stopTime;
@@ -146,24 +147,43 @@ class Match {
 		return null;
 	}
 
-	function getHighlightedCorner() {
+	function getServer() {
 		//beginning of the match
 		if(rallies.isEmpty()) {
-			return beginner == :player_1 ? 3 : 0;
+			return beginner;
 		}
-		//last score from player 1
-		if(rallies.last() == :player_1) {
-			return 3 - getScore(:player_1) % 2;
-		}
-		return getScore(:player_2) % 2;
+		//last team who score
+		return rallies.last();
 	}
 
-	function hasService() {
-		return getHighlightedCorner() > 1;
+	function getHighlightedCorner() {
+		var server = getServer();
+		var server_score = getScore(server);
+		//player 1 serves from corner 2 or 3
+		if(server == :player_1) {
+			return 3 - server_score % 2;
+		}
+		//player 2 serves from corner 0 or 1
+		return server_score % 2;
 	}
 
-	function isServer() {
-		return server;
+	//methods used from perspective of player 1 (watch carrier)
+	hidden function getPlayerTeamIsServer() {
+		return getServer() == :player_1;
+	}
+
+	function getPlayerCorner() {
+		if(getPlayerTeamIsServer()) {
+			Sys.println("player team is server");
+			var highlighted_corner = getHighlightedCorner();
+			if(server) {
+				Sys.println("player is server");
+				return highlighted_corner;
+			}
+			//return other corner
+			return highlighted_corner == 2 ? 3 : 2;
+		}
+		return null;
 	}
 
 }
