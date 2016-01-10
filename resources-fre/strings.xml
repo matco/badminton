@@ -3,7 +3,7 @@
 
 	<string id="menu_reset_game">Reset</string>
 
-	<string id="type_what">Quel type de match ?</string>
+	<string id="type_what">Choisir le type</string>
 	<string id="type_single">Simple</string>
 	<string id="type_double">Double</string>
 

@@ -84,8 +84,8 @@ class MainView extends Ui.View {
 			var player_corner = match.getPlayerCorner();
 			if(player_corner != null) {
 				var x_position = player_corner == 2 ? 65 : x_center + 45;
-				dc.setColor(Gfx.COLOR_DK_BLUE, Gfx.COLOR_TRANSPARENT);
-				dc.fillCircle(x_position, 120, 5);
+				dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+				dc.fillCircle(x_position, 120, 7);
 			}
 		}
 	}
