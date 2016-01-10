@@ -7,10 +7,11 @@ class Match {
 	const ABSOLUTE_MAXIMUM_POINTS = 30;
 
 	hidden var type; //type of the match, :single or :double
-	hidden var beginner; //store the beginner of the match
+	hidden var beginner; //store the beginner of the match, :player_1 or :player_2
 
 	hidden var rallies; //array of all rallies
 	hidden var scores; //dictionnary containing players current scores
+	hidden var server; //in double, true if the player 1 (watch carrier) is the server
 
 	var startTime;
 	var stopTime;
@@ -53,8 +54,15 @@ class Match {
 
 	function score(player) {
 		if(hasBegun()) {
+			//in double, change server if player 1 (watch carrier) team regain service
+			if(type == :double) {
+				if(rallies.last() == :player_2 && player == :player_1) {
+					server = !server;
+				}
+			}
 			rallies.push(player);
 			scores[player]++;
+			//detect if match has a winner
 			var winner = getWinner();
 			if(winner != null) {
 				end(winner);
@@ -65,7 +73,14 @@ class Match {
 	function undo() {
 		stopTime = null;
 		if(rallies.size() > 0) {
-			scores[rallies.pop()]--;
+			var rally = rallies.pop();
+			//in double, change server if player 1 (watch carrier) team regain service
+			if(type == :double) {
+				if(rally == :player_2 && rallies.last() == :player_1) {
+					server = !server;
+				}
+			}
+			scores[rally]--;
 		}
 	}
 
@@ -73,6 +88,7 @@ class Match {
 		rallies = new List();
 		type = null;
 		beginner = null;
+		server = true;
 		scores = {:player_1 => 0, :player_2 => 0};
 		startTime = null;
 		stopTime = null;
@@ -96,6 +112,10 @@ class Match {
 
 	function setType(match_type) {
 		type = match_type;
+	}
+
+	function getType() {
+		return type;
 	}
 
 	function setBeginner(match_beginner) {
@@ -137,4 +157,13 @@ class Match {
 		}
 		return getScore(:player_2) % 2;
 	}
+
+	function hasService() {
+		return getHighlightedCorner() > 1;
+	}
+
+	function isServer() {
+		return server;
+	}
+
 }

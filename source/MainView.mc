@@ -79,6 +79,14 @@ class MainView extends Ui.View {
 
 		//draw timer
 		dc.drawText(xCenter, 170, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
+
+		//in double, draw a dot for the player 1 (watch carrier) position if his team is engaging
+		if(match.getType() == :double && match.hasService()) {
+			var player_corner = match.isServer() ? highlighted_corner_index : highlighted_corner_index == 2 ? 3 : 2;
+			var xPosition = player_corner == 2 ? 65 : xCenter + 45;
+			dc.setColor(Gfx.COLOR_DK_BLUE, Gfx.COLOR_TRANSPARENT);
+			dc.fillCircle(xPosition, 120, 5);
+		}
 	}
 
 	//! Update the view
