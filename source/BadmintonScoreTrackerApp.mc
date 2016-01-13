@@ -27,7 +27,7 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 
 	//! Return the initial view of your application here
 	function getInitialView() {
-		return [ new MainView(), new MainViewDelegate() ];
+		return [ new TypeView(), new TypeViewDelegate() ];
 	}
 
 	function redraw() {

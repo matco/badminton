@@ -18,7 +18,7 @@ class MenuDelegate extends Ui.MenuInputDelegate {
 			//Ui.pushView(reset_confirmation, new ResetConfirmationDelegate(), Ui.SLIDE_IMMEDIATE);
 			Sys.println("reset game");
 			match.reset();
-			Ui.requestUpdate();
+			Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SWIPE_LEFT);
 		}
 	}
 }

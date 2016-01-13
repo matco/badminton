@@ -1,4 +1,4 @@
-<layout id="final">
+<layout id="result">
 	<label id="final_won_text" x="center" y="45" font="Gfx.FONT_LARGE" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
 	<label id="final_score" x="center" y="85" font="Gfx.FONT_LARGE" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
 	<label id="final_time" x="center" y="135" font="Gfx.FONT_SMALL" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
