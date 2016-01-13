@@ -2,7 +2,10 @@ using Toybox.WatchUi as Ui;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 
+var need_full_update;
+
 class MatchView extends Ui.View {
+
 
 	//! Load your resources here
 	function onLayout(dc) {
@@ -10,9 +13,10 @@ class MatchView extends Ui.View {
 
 	//! Restore the state of the app and prepare the view to be shown
 	function onShow() {
+		need_full_update = true;
 	}
 
-	function drawMatchScreen(dc) {
+	function drawField(dc) {
 		var x_center = dc.getWidth() / 2;
 
 		var highlighted_corner = match.getHighlightedCorner();
@@ -43,9 +47,6 @@ class MatchView extends Ui.View {
 		//player 2 (opponent)
 		dc.drawText(x_center, 29, Gfx.FONT_NUMBER_MILD, match.getScore(:player_2).toString(), Gfx.TEXT_JUSTIFY_CENTER);
 
-		//draw timer
-		dc.drawText(x_center, 170, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
-
 		//in double, draw a dot for the player 1 (watch carrier) position if his team is engaging
 		if(match.getType() == :double) {
 			var player_corner = match.getPlayerCorner();
@@ -55,13 +56,33 @@ class MatchView extends Ui.View {
 				dc.fillCircle(x_position, 120, 7);
 			}
 		}
+
+		//draw timer
+		drawTimer(dc);
+	}
+
+	function drawTimer(dc) {
+		var x_center = dc.getWidth() / 2;
+
+		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+		dc.drawText(x_center, 170, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
 	}
 
 	//! Update the view
 	function onUpdate(dc) {
-		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
-		dc.clear();
-		drawMatchScreen(dc);
+		if(need_full_update) {
+			//clean the entire screen
+			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
+			dc.clear();
+			drawField(dc);
+			need_full_update = false;
+		}
+		else {
+			//clean only the area of the timer
+			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
+			dc.fillRectangle(0, 170, dc.getWidth(), 26);
+			drawTimer(dc);
+		}
 	}
 
 	//! Called when this View is removed from the screen. Save the
@@ -84,6 +105,7 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 			Ui.switchToView(new ResultView(), new ResultViewDelegate(), Ui.SWIPE_RIGHT);
 		}
 		else {
+			need_full_update = true;
 			Ui.requestUpdate();
 		}
 	}
@@ -109,6 +131,7 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		//undo score
 		if(match.getRalliesNumber() > 0) {
 			match.undo();
+			need_full_update = true;
 			Ui.requestUpdate();
 		}
 		else {
