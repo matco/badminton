@@ -6,20 +6,24 @@ var need_full_update;
 
 class MatchView extends Ui.View {
 
+	hidden var timer;
+
 	//! Load your resources here
 	function onLayout(dc) {
-		var timer = new Timer.Timer();
-		timer.start(method(:onTimer), 1000, true);
+		timer = new Timer.Timer();
 	}
 
 	//! Restore the state of the app and prepare the view to be shown
 	function onShow() {
+		timer.start(method(:onTimer), 1000, true);
+
 		need_full_update = true;
 	}
 
 	//! Called when this View is removed from the screen. Save the
 	//! state of your app here.
 	function onHide() {
+		timer.stop();
 	}
 
 	function onTimer() {
