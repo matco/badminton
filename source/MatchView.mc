@@ -17,6 +17,11 @@ class MatchView extends Ui.View {
 		need_full_update = true;
 	}
 
+	//! Called when this View is removed from the screen. Save the
+	//! state of your app here.
+	function onHide() {
+	}
+
 	function onTimer() {
 		Ui.requestUpdate();
 	}
@@ -88,11 +93,6 @@ class MatchView extends Ui.View {
 			dc.fillRectangle(0, 170, dc.getWidth(), 26);
 			drawTimer(dc);
 		}
-	}
-
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
-	function onHide() {
 	}
 
 }
