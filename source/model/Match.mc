@@ -19,27 +19,15 @@ class Match {
 
 	var listener;
 
-	function initialize(state) {
-		reset();
-		restore(state);
-	}
-
-	function restore(state) {
-		if(state != null) {
-			//rallies = state.get(:match_rallies);
-			//beginner = state.get("match_beginner");
-			//scores = state.get("match_scores");
-		}
-	}
-
-	function save(state) {
-		//state.put("match_rallies", rallies);
-		//state.put("match_beginner", beginner);
-		//state.put("match_scores", scores);
+	function initialize(match_type) {
+		type = match_type;
+		rallies = new List();
+		scores = {:player_1 => 0, :player_2 => 0};
 	}
 
 	function begin(player) {
 		beginner = player;
+		server = true;
 		startTime = Time.now();
 		if(listener != null && listener has :onMatchBegin) {
 			listener.onMatchBegin();
@@ -85,16 +73,6 @@ class Match {
 		}
 	}
 
-	function reset() {
-		rallies = new List();
-		type = null;
-		beginner = null;
-		server = true;
-		scores = {:player_1 => 0, :player_2 => 0};
-		startTime = null;
-		stopTime = null;
-	}
-
 	function getRalliesNumber() {
 		return rallies.size();
 	}
@@ -107,20 +85,8 @@ class Match {
 		return time.subtract(startTime);
 	}
 
-	function hasType() {
-		return type != null;
-	}
-
-	function setType(match_type) {
-		type = match_type;
-	}
-
 	function getType() {
 		return type;
-	}
-
-	function setBeginner(match_beginner) {
-		beginner = match_beginner;
 	}
 
 	function hasBegun() {

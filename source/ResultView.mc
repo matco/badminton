@@ -39,8 +39,7 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 
 	function onKey(key) {
 		if(key.getKey() == Ui.KEY_ENTER) {
-			match.reset();
-			Ui.requestUpdate();
+			Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SWIPE_LEFT);
 			return true;
 		}
 		return false;

@@ -11,15 +11,12 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 	//! onStart() is called on application start up
 	function onStart(state) {
 		Sys.println("on start " + state);
-		match = new Match(); //new Match(state);
-		match.listener = self;
 		//test
 		//Test.test();
 	}
 
 	//! onStop() is called when your application is exiting
 	function onStop(state) {
-		//match.save(state);
 		Sys.println("on stop " + state);
 	}
 

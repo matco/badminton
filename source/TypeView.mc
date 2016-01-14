@@ -22,17 +22,19 @@ class TypeView extends Ui.View {
 
 class TypeViewDelegate extends Ui.BehaviorDelegate {
 
-	function onNextPage() {
-		//set match type to double
-		match.setType(:double);
+	function manageChoice(type) {
+		match = new Match(type);
+		match.listener = Application.getApp();
 		Ui.switchToView(new BeginnerView(), new BeginnerViewDelegate(), Ui.SWIPE_RIGHT);
+	}
+
+	function onNextPage() {
+		manageChoice(:double);
 		return true;
 	}
 
 	function onPreviousPage() {
-		//set match type to single
-		match.setType(:single);
-		Ui.switchToView(new BeginnerView(), new BeginnerViewDelegate(), Ui.SWIPE_RIGHT);
+		manageChoice(:single);
 		return true;
 	}
 

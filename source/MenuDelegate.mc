@@ -16,8 +16,7 @@ class MenuDelegate extends Ui.MenuInputDelegate {
 		if(item == :menu_reset_game) {
 			//var reset_confirmation = new Ui.Confirmation("Are you sure you want to reset?");
 			//Ui.pushView(reset_confirmation, new ResetConfirmationDelegate(), Ui.SLIDE_IMMEDIATE);
-			Sys.println("reset game");
-			match.reset();
+			Sys.println("reset app");
 			Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SWIPE_LEFT);
 		}
 	}
