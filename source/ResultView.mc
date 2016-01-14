@@ -48,7 +48,7 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 	//undo last point
 	function onBack() {
 		match.undo();
-		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SWIPE_LEFT);
+		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 

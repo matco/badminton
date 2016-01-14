@@ -26,7 +26,7 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 		if(key.getKey() == Ui.KEY_ENTER) {
 			var beginner = Math.rand() % 2 == 0 ? :player_1 : :player_2;
 			match.begin(beginner);
-			Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SWIPE_RIGHT);
+			Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 			return true;
 		}
 		return false;
@@ -35,14 +35,14 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 	function onNextPage() {
 		//begin match with player 1
 		match.begin(:player_1);
-		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SWIPE_RIGHT);
+		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onPreviousPage() {
 		//begin match with player 2
 		match.begin(:player_2);
-		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SWIPE_RIGHT);
+		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 
