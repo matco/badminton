@@ -6,14 +6,19 @@ var need_full_update;
 
 class MatchView extends Ui.View {
 
-
 	//! Load your resources here
 	function onLayout(dc) {
+		var timer = new Timer.Timer();
+		timer.start(method(:onTimer), 1000, true);
 	}
 
 	//! Restore the state of the app and prepare the view to be shown
 	function onShow() {
 		need_full_update = true;
+	}
+
+	function onTimer() {
+		Ui.requestUpdate();
 	}
 
 	function drawField(dc) {

@@ -13,8 +13,6 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 		Sys.println("on start " + state);
 		match = new Match(); //new Match(state);
 		match.listener = self;
-		var timer = new Timer.Timer();
-		timer.start(method(:redraw), 1000, true);
 		//test
 		//Test.test();
 	}
@@ -28,12 +26,6 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 	//! Return the initial view of your application here
 	function getInitialView() {
 		return [ new TypeView(), new TypeViewDelegate() ];
-	}
-
-	function redraw() {
-		if(match.hasBegun()) {
-			Ui.requestUpdate();
-		}
 	}
 
 	function onMatchBegin() {
