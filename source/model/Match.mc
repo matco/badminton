@@ -43,7 +43,7 @@ class Match {
 
 	function score(player) {
 		if(hasBegun()) {
-			//in double, change server if player 1 (watch carrier) team regain service
+			//in double, change server if player 1 (watch carrier) team regains service
 			if(type == :double) {
 				if(rallies.last() == :player_2 && player == :player_1) {
 					server = !server;
@@ -63,9 +63,9 @@ class Match {
 		stopTime = null;
 		if(rallies.size() > 0) {
 			var rally = rallies.pop();
-			//in double, change server if player 1 (watch carrier) team regain service
+			//in double, change server if player 1 (watch carrier) team looses service
 			if(type == :double) {
-				if(rally == :player_2 && rallies.last() == :player_1) {
+				if(rally == :player_1 && rallies.last() == :player_2) {
 					server = !server;
 				}
 			}
