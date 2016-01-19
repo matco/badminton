@@ -24,6 +24,7 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 
 	function onKey(key) {
 		if(key.getKey() == Ui.KEY_ENTER) {
+			//begin match with random player
 			var beginner = Math.rand() % 2 == 0 ? :player_1 : :player_2;
 			match.begin(beginner);
 			Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
@@ -33,21 +34,21 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function onNextPage() {
-		//begin match with player 1
+		//begin match with player 1 (watch carrier)
 		match.begin(:player_1);
 		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onPreviousPage() {
-		//begin match with player 2
+		//begin match with player 2 (opponent)
 		match.begin(:player_2);
 		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 
-	//undo last point
 	function onBack() {
+		//return to type screen
 		Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SWIPE_LEFT);
 		return true;
 	}

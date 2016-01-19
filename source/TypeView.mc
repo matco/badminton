@@ -29,11 +29,13 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function onNextPage() {
+		//create double match
 		manageChoice(:double);
 		return true;
 	}
 
 	function onPreviousPage() {
+		//create single match
 		manageChoice(:single);
 		return true;
 	}

@@ -119,31 +119,30 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		}
 	}
 
-	//player 2 (opponent) scores
 	function onNextPage() {
-		//score with player 1
+		//score with player 1 (watch carrier)
 		match.score(:player_1);
 		manageScore();
 		return true;
 	}
 
-	//player 1 (watch carrier) scores
 	function onPreviousPage() {
-		//score with player 2
+		//score with player 2 (opponent)
 		match.score(:player_2);
 		manageScore();
 		return true;
 	}
 
-	//undo last point
+	//undo last action
 	function onBack() {
-		//undo score
 		if(match.getRalliesNumber() > 0) {
+			//undo last rally
 			match.undo();
 			need_full_update = true;
 			Ui.requestUpdate();
 		}
 		else {
+			//return to beginner screen if match has not started yet
 			Ui.switchToView(new BeginnerView(), new BeginnerViewDelegate(), Ui.SWIPE_LEFT);
 		}
 		return true;

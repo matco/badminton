@@ -39,14 +39,15 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 
 	function onKey(key) {
 		if(key.getKey() == Ui.KEY_ENTER) {
+			//return to type screen
 			Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SWIPE_LEFT);
 			return true;
 		}
 		return false;
 	}
 
-	//undo last point
 	function onBack() {
+		//undo last point
 		match.undo();
 		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
