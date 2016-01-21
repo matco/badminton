@@ -1,6 +1,7 @@
 using Toybox.WatchUi as Ui;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
+using Toybox.Math as Math;
 
 class BeginnerView extends Ui.View {
 
