@@ -40,7 +40,8 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 	function onKey(key) {
 		if(key.getKey() == Ui.KEY_ENTER) {
 			//return to type screen
-			Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SWIPE_LEFT);
+			var view = new TypeView();
+			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SWIPE_LEFT);
 			return true;
 		}
 		return false;

@@ -22,10 +22,17 @@ class TypeView extends Ui.View {
 
 class TypeViewDelegate extends Ui.BehaviorDelegate {
 
+	hidden var view;
+
+	function initialize(view) {
+		self.view = view;
+	}
+
 	function manageChoice(type) {
 		match = new Match(type);
 		match.listener = Application.getApp();
-		Ui.switchToView(new BeginnerView(), new BeginnerViewDelegate(), Ui.SWIPE_RIGHT);
+		var view = new BeginnerView();
+		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SWIPE_RIGHT);
 	}
 
 	function onNextPage() {
@@ -37,6 +44,19 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 	function onPreviousPage() {
 		//create single match
 		manageChoice(:single);
+		return true;
+	}
+
+	function onTap(event) {
+		var single = view.findDrawableById("type_single");
+		var double = view.findDrawableById("type_double");
+		var tapped = UIHelpers.findTappedDrawable(event, [single, double]);
+		if("type_single".equals(tapped.identifier)) {
+			manageChoice(:single);
+		}
+		else {
+			manageChoice(:double);
+		}
 		return true;
 	}
 

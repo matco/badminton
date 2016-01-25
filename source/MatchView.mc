@@ -154,7 +154,8 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		return true;
 	}
 
-	function manageScore() {
+	function manageScore(player) {
+		match.score(player);
 		var winner = match.getWinner();
 		if(winner != null) {
 			Ui.switchToView(new ResultView(), new ResultViewDelegate(), Ui.SWIPE_RIGHT);
@@ -167,15 +168,13 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 
 	function onNextPage() {
 		//score with player 1 (watch carrier)
-		match.score(:player_1);
-		manageScore();
+		manageScore(:player_1);
 		return true;
 	}
 
 	function onPreviousPage() {
 		//score with player 2 (opponent)
-		match.score(:player_2);
-		manageScore();
+		manageScore(:player_2);
 		return true;
 	}
 
@@ -189,7 +188,21 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		}
 		else {
 			//return to beginner screen if match has not started yet
-			Ui.switchToView(new BeginnerView(), new BeginnerViewDelegate(), Ui.SWIPE_LEFT);
+			var view = new BeginnerView();
+			Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SWIPE_LEFT);
+		}
+		return true;
+	}
+
+	function onTap(event) {
+		var center = device.screenHeight / 2;
+		if(event.getCoordinates()[1] < boundaries.get("y_middle")) {
+			//score with player 2 (opponent)
+			manageScore(:player_2);
+		}
+		else {
+			//score with player 1 (watch carrier)
+			manageScore(:player_1);
 		}
 		return true;
 	}
