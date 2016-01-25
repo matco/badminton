@@ -7,6 +7,8 @@ module Test {
 		BetterMathTest.testMin();
 		BetterMathTest.testMax();
 
+		GeometryTest.testMiddle();
+
 		HelpersTest.testFormatString();
 		HelpersTest.testFormatDuration();
 
