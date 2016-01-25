@@ -24,14 +24,14 @@ class ResultView extends Ui.View {
 		//draw end of match text
 		var winner = match.getWinner();
 		var won_text = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
-		findDrawableById("final_won_text").setText(won_text);
+		findDrawableById("result_won_text").setText(won_text);
 		//draw score
-		findDrawableById("final_score").setText(match.getScore(:player_1).toString() + " - " + match.getScore(:player_2).toString());
+		findDrawableById("result_score").setText(match.getScore(:player_1).toString() + " - " + match.getScore(:player_2).toString());
 		//draw match time
-		findDrawableById("final_time").setText(Helpers.formatDuration(match.getDuration()));
+		findDrawableById("result_time").setText(Helpers.formatDuration(match.getDuration()));
 		//draw rallies
 		var rallies_text = Ui.loadResource(Rez.Strings.end_total_rallies);
-		findDrawableById("final_rallies").setText(Helpers.formatString(rallies_text, {"rallies" => match.getRalliesNumber().toString()}));
+		findDrawableById("result_rallies").setText(Helpers.formatString(rallies_text, {"rallies" => match.getRalliesNumber().toString()}));
 	}
 }
 
