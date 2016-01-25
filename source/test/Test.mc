@@ -4,6 +4,9 @@ module Test {
 		ListTest.testOneElementList();
 		ListTest.testTwoElementsList();
 
+		BetterMathTest.testMin();
+		BetterMathTest.testMax();
+
 		HelpersTest.testFormatString();
 		HelpersTest.testFormatDuration();
 
