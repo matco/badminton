@@ -5,6 +5,7 @@ using Toybox.Attention as Attention;
 using Toybox.Timer as Timer;
 
 var match;
+var device = Sys.getDeviceSettings();
 
 class BadmintonScoreTrackerApp extends App.AppBase {
 

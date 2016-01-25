@@ -2,15 +2,30 @@ using Toybox.WatchUi as Ui;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 
+var boundaries;
 var need_full_update;
 
 class MatchView extends Ui.View {
+
+	const MARGIN_TOP = 20;
+	const MARGIN_BOTTOM = 50;
+	const MARGIN_SIDE = 16;
+
+	const FIELD_RATIO = 0.4;
+	const FIELD_PADDING = 2;
+
+	const FIELD_SCORE_WIDTH_PLAYER_1 = 50;
+	const FIELD_SCORE_HEIGHT_PLAYER_1 = 58;
+
+	const FIELD_SCORE_WIDTH_PLAYER_2 = 40;
+	const FIELD_SCORE_HEIGHT_PLAYER_2 = 42;
 
 	hidden var timer;
 
 	//! Load your resources here
 	function onLayout(dc) {
 		timer = new Timer.Timer();
+		boundaries = getFieldBoundaries();
 	}
 
 	//! Restore the state of the app and prepare the view to be shown
@@ -30,36 +45,64 @@ class MatchView extends Ui.View {
 		Ui.requestUpdate();
 	}
 
+	function getFieldBoundaries() {
+		var radius = device.screenWidth / 2;
+		var x_center = radius;
+		var y_bottom = device.screenHeight - MARGIN_BOTTOM;
+		var y_middle = Geometry.middle(y_bottom, MARGIN_TOP, FIELD_RATIO);
+		//calculate half width of the top of the field
+		var half_width_top = Geometry.chordLength(radius, MARGIN_TOP) / 2 - MARGIN_SIDE;
+		//calculate half width of the base of the field
+		var half_width_bottom = Geometry.chordLength(radius, MARGIN_BOTTOM) / 2 - MARGIN_SIDE;
+		//calculate half width of the middle of the field
+		var half_width_middle = Geometry.middle(half_width_bottom, half_width_top, FIELD_RATIO);
+		//calculate score position
+		var score_2_container_y = Geometry.middle(y_middle, MARGIN_TOP) - FIELD_SCORE_HEIGHT_PLAYER_2 / 2;
+		var score_1_container_y = Geometry.middle(y_bottom, y_middle) - FIELD_SCORE_HEIGHT_PLAYER_1 / 2;
+		return {
+			"x_center" => x_center,
+			"y_middle" => y_middle,
+			"y_bottom" => y_bottom,
+			"corners" => [
+				[[x_center - half_width_top, MARGIN_TOP], [x_center - FIELD_PADDING, MARGIN_TOP], [x_center - FIELD_PADDING, y_middle - FIELD_PADDING], [x_center - half_width_middle, y_middle - FIELD_PADDING]],
+				[[x_center + FIELD_PADDING, MARGIN_TOP], [x_center + half_width_top, MARGIN_TOP], [x_center + half_width_middle, y_middle - FIELD_PADDING], [x_center + FIELD_PADDING, y_middle - FIELD_PADDING]],
+				[[x_center - half_width_middle, y_middle + FIELD_PADDING], [x_center - FIELD_PADDING, y_middle + FIELD_PADDING], [x_center - FIELD_PADDING, y_bottom, y_middle - FIELD_PADDING], [x_center - half_width_bottom, y_bottom]],
+				[[x_center + FIELD_PADDING, y_middle + FIELD_PADDING], [x_center + half_width_middle, y_middle + FIELD_PADDING], [x_center + half_width_bottom, y_bottom], [x_center + FIELD_PADDING, y_bottom]]
+			],
+			"score_2_container_y" => score_2_container_y,
+			"score_2_y" => score_2_container_y + FIELD_SCORE_HEIGHT_PLAYER_2 / 2 - 18,
+			"score_1_container_y" => score_1_container_y,
+			"score_1_y" => score_1_container_y + FIELD_SCORE_HEIGHT_PLAYER_1 / 2 - 34
+		};
+	}
+
 	function drawField(dc) {
-		var x_center = dc.getWidth() / 2;
+		var x_center = boundaries.get("x_center");
+		var y_bottom = boundaries.get("y_bottom");
 
 		var highlighted_corner = match.getHighlightedCorner();
 		Sys.println("highlighted corner " + highlighted_corner);
-		//draw corner 0
-		dc.setColor(highlighted_corner == 0 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon([[68,20], [x_center - 2,20], [x_center - 2,80], [50,80]]);
-		//draw corner 1
-		dc.setColor(highlighted_corner == 1 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon([[x_center + 2,20], [152,20], [170,80], [x_center + 2,80]]);
-		//draw corner 2
-		dc.setColor(highlighted_corner == 2 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon([[49,85], [x_center - 2,85], [x_center - 2,160], [30,160]]);
-		//draw corner 3
-		dc.setColor(highlighted_corner == 3 ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon([[x_center + 2,85], [171,85], [190,160], [x_center + 2,160]]);
+
+		var corners = boundaries.get("corners");
+		//draw corners
+		for(var i = 0; i < corners.size(); i++) {
+			var color = highlighted_corner == i ? Gfx.COLOR_DK_GREEN : Gfx.COLOR_WHITE;
+			dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+			dc.fillPolygon(corners[i]);
+		}
 
 		//draw scores container
 		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 		//player 1 (watch carrier)
-		dc.fillRoundedRectangle(x_center - 25, 94, 50, 58, 5);
+		dc.fillRoundedRectangle(x_center - FIELD_SCORE_WIDTH_PLAYER_1 / 2, boundaries.get("score_1_container_y"), FIELD_SCORE_WIDTH_PLAYER_1, FIELD_SCORE_HEIGHT_PLAYER_1, 5);
 		//player 2 (opponent)
-		dc.fillRoundedRectangle(x_center - 20, 29, 40, 42, 5);
+		dc.fillRoundedRectangle(x_center - FIELD_SCORE_WIDTH_PLAYER_2 / 2, boundaries.get("score_2_container_y"), FIELD_SCORE_WIDTH_PLAYER_2, FIELD_SCORE_HEIGHT_PLAYER_2, 5);
 		//draw scores
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 		//player 1 (watch carrier)
-		dc.drawText(x_center, 89, Gfx.FONT_NUMBER_MEDIUM, match.getScore(:player_1).toString(), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, boundaries.get("score_1_y"), Gfx.FONT_NUMBER_MEDIUM, match.getScore(:player_1).toString(), Gfx.TEXT_JUSTIFY_CENTER);
 		//player 2 (opponent)
-		dc.drawText(x_center, 29, Gfx.FONT_NUMBER_MILD, match.getScore(:player_2).toString(), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, boundaries.get("score_2_y"), Gfx.FONT_NUMBER_MILD, match.getScore(:player_2).toString(), Gfx.TEXT_JUSTIFY_CENTER);
 
 		//in double, draw a dot for the player 1 (watch carrier) position if his team is engaging
 		if(match.getType() == :double) {
@@ -77,9 +120,15 @@ class MatchView extends Ui.View {
 
 	function drawTimer(dc) {
 		var x_center = dc.getWidth() / 2;
+		var y_bottom = dc.getHeight() - (MARGIN_BOTTOM / 2) - 13;
 
+		//clean only the area of the timer
+		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
+		dc.fillRectangle(0, y_bottom, dc.getWidth(), 26);
+
+		//draw timer
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.drawText(x_center, 170, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, y_bottom, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
 	}
 
 	//! Update the view
@@ -92,9 +141,6 @@ class MatchView extends Ui.View {
 			need_full_update = false;
 		}
 		else {
-			//clean only the area of the timer
-			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
-			dc.fillRectangle(0, 170, dc.getWidth(), 26);
 			drawTimer(dc);
 		}
 	}
