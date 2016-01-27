@@ -3,16 +3,11 @@
 	<iq:application entry="BadmintonScoreTrackerApp" id="DE89FD8121D14E04A71ACC7FB81E156A" launcherIcon="@Drawables.application_launcher_icon" name="@Strings.application_name" type="watch-app">
 
 		<iq:products>
-			<!--
-			<iq:product id="square_watch"/>
-			<iq:product id="vivoactive"/>
-			<iq:product id="fr920xt"/>
-			<iq:product id="epix"/>
-			-->
+			<iq:product id="fr630"/>
 			<iq:product id="fenix3"/>
 		</iq:products>
 
-		<iq:permissions></iq:permissions>
+		<iq:permissions/>
 
 		<iq:languages>
 			<iq:language>eng</iq:language>
