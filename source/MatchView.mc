@@ -13,12 +13,10 @@ class MatchView extends Ui.View {
 
 	const FIELD_RATIO = 0.4;
 	const FIELD_PADDING = 2;
+	const FIELD_SCORE_RATIO = 0.7;
 
 	const FIELD_SCORE_WIDTH_PLAYER_1 = 50;
-	const FIELD_SCORE_HEIGHT_PLAYER_1 = 58;
-
 	const FIELD_SCORE_WIDTH_PLAYER_2 = 40;
-	const FIELD_SCORE_HEIGHT_PLAYER_2 = 42;
 
 	hidden var timer;
 
@@ -57,8 +55,10 @@ class MatchView extends Ui.View {
 		//calculate half width of the middle of the field
 		var half_width_middle = Geometry.middle(half_width_bottom, half_width_top, FIELD_RATIO);
 		//calculate score position
-		var score_2_container_y = Geometry.middle(y_middle, MARGIN_TOP) - FIELD_SCORE_HEIGHT_PLAYER_2 / 2;
-		var score_1_container_y = Geometry.middle(y_bottom, y_middle) - FIELD_SCORE_HEIGHT_PLAYER_1 / 2;
+		var score_2_container_y = Geometry.middle(y_middle, MARGIN_TOP, (1 - FIELD_SCORE_RATIO) / 2);
+		var score_2_container_height = (y_middle - MARGIN_TOP) * FIELD_SCORE_RATIO;
+		var score_1_container_y = Geometry.middle(y_bottom, y_middle, (1 - FIELD_SCORE_RATIO) / 2);
+		var score_1_container_height = (y_bottom - y_middle) * FIELD_SCORE_RATIO;
 		return {
 			"x_center" => x_center,
 			"y_middle" => y_middle,
@@ -70,9 +70,11 @@ class MatchView extends Ui.View {
 				[[x_center + FIELD_PADDING, y_middle + FIELD_PADDING], [x_center + half_width_middle, y_middle + FIELD_PADDING], [x_center + half_width_bottom, y_bottom], [x_center + FIELD_PADDING, y_bottom]]
 			],
 			"score_2_container_y" => score_2_container_y,
-			"score_2_y" => score_2_container_y + FIELD_SCORE_HEIGHT_PLAYER_2 / 2 - 18,
+			"score_2_container_height" => score_2_container_height,
+			"score_2_y" => score_2_container_y + score_2_container_height / 2 - 18,
 			"score_1_container_y" => score_1_container_y,
-			"score_1_y" => score_1_container_y + FIELD_SCORE_HEIGHT_PLAYER_1 / 2 - 34
+			"score_1_container_height" => score_1_container_height,
+			"score_1_y" => score_1_container_y + score_1_container_height / 2 - 34
 		};
 	}
 
@@ -94,9 +96,9 @@ class MatchView extends Ui.View {
 		//draw scores container
 		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 		//player 1 (watch carrier)
-		dc.fillRoundedRectangle(x_center - FIELD_SCORE_WIDTH_PLAYER_1 / 2, boundaries.get("score_1_container_y"), FIELD_SCORE_WIDTH_PLAYER_1, FIELD_SCORE_HEIGHT_PLAYER_1, 5);
+		dc.fillRoundedRectangle(x_center - FIELD_SCORE_WIDTH_PLAYER_1 / 2, boundaries.get("score_1_container_y"), FIELD_SCORE_WIDTH_PLAYER_1, boundaries.get("score_1_container_height"), 5);
 		//player 2 (opponent)
-		dc.fillRoundedRectangle(x_center - FIELD_SCORE_WIDTH_PLAYER_2 / 2, boundaries.get("score_2_container_y"), FIELD_SCORE_WIDTH_PLAYER_2, FIELD_SCORE_HEIGHT_PLAYER_2, 5);
+		dc.fillRoundedRectangle(x_center - FIELD_SCORE_WIDTH_PLAYER_2 / 2, boundaries.get("score_2_container_y"), FIELD_SCORE_WIDTH_PLAYER_2, boundaries.get("score_2_container_height"), 5);
 		//draw scores
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 		//player 1 (watch carrier)
