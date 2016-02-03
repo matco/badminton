@@ -71,10 +71,10 @@ class MatchView extends Ui.View {
 			],
 			"score_2_container_y" => score_2_container_y,
 			"score_2_container_height" => score_2_container_height,
-			"score_2_y" => score_2_container_y + score_2_container_height / 2 - 18,
+			"score_2_y" => (score_2_container_y + score_2_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MILD) / 2 - 4),
 			"score_1_container_y" => score_1_container_y,
 			"score_1_container_height" => score_1_container_height,
-			"score_1_y" => score_1_container_y + score_1_container_height / 2 - 34
+			"score_1_y" => (score_1_container_y + score_1_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MEDIUM) / 2 - 4)
 		};
 	}
 
