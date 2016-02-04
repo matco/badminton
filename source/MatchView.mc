@@ -7,10 +7,6 @@ var need_full_update;
 
 class MatchView extends Ui.View {
 
-	const MARGIN_TOP = 20;
-	const MARGIN_BOTTOM = 50;
-	const MARGIN_SIDE = 16;
-
 	const FIELD_RATIO = 0.4;
 	const FIELD_PADDING = 2;
 	const FIELD_SCORE_RATIO = 0.7;
@@ -44,19 +40,27 @@ class MatchView extends Ui.View {
 	}
 
 	function getFieldBoundaries() {
+		//calculate margins
+		var margin_height = device.screenHeight * 0.1;
+		var margin_width = device.screenWidth * 0.08;
+
 		var radius = device.screenWidth / 2;
+		var timer_height = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1;
+
 		var x_center = radius;
-		var y_bottom = device.screenHeight - MARGIN_BOTTOM;
-		var y_middle = Geometry.middle(y_bottom, MARGIN_TOP, FIELD_RATIO);
+		var y_top = margin_height;
+		var y_bottom = device.screenHeight - margin_height - timer_height;
+		var y_middle = Geometry.middle(y_bottom, y_top, FIELD_RATIO);
+
 		//calculate half width of the top of the field
-		var half_width_top = Geometry.chordLength(radius, MARGIN_TOP) / 2 - MARGIN_SIDE;
+		var half_width_top = Geometry.chordLength(radius, y_top) / 2 - margin_width;
 		//calculate half width of the base of the field
-		var half_width_bottom = Geometry.chordLength(radius, MARGIN_BOTTOM) / 2 - MARGIN_SIDE;
+		var half_width_bottom = Geometry.chordLength(radius, timer_height + margin_height) / 2 - margin_width;
 		//calculate half width of the middle of the field
 		var half_width_middle = Geometry.middle(half_width_bottom, half_width_top, FIELD_RATIO);
 		//calculate score position
-		var score_2_container_y = Geometry.middle(y_middle, MARGIN_TOP, (1 - FIELD_SCORE_RATIO) / 2);
-		var score_2_container_height = (y_middle - MARGIN_TOP) * FIELD_SCORE_RATIO;
+		var score_2_container_y = Geometry.middle(y_middle, y_top, (1 - FIELD_SCORE_RATIO) / 2);
+		var score_2_container_height = (y_middle - y_top) * FIELD_SCORE_RATIO;
 		var score_1_container_y = Geometry.middle(y_bottom, y_middle, (1 - FIELD_SCORE_RATIO) / 2);
 		var score_1_container_height = (y_bottom - y_middle) * FIELD_SCORE_RATIO;
 		return {
@@ -64,8 +68,8 @@ class MatchView extends Ui.View {
 			"y_middle" => y_middle,
 			"y_bottom" => y_bottom,
 			"corners" => [
-				[[x_center - half_width_top, MARGIN_TOP], [x_center - FIELD_PADDING, MARGIN_TOP], [x_center - FIELD_PADDING, y_middle - FIELD_PADDING], [x_center - half_width_middle, y_middle - FIELD_PADDING]],
-				[[x_center + FIELD_PADDING, MARGIN_TOP], [x_center + half_width_top, MARGIN_TOP], [x_center + half_width_middle, y_middle - FIELD_PADDING], [x_center + FIELD_PADDING, y_middle - FIELD_PADDING]],
+				[[x_center - half_width_top, y_top], [x_center - FIELD_PADDING, y_top], [x_center - FIELD_PADDING, y_middle - FIELD_PADDING], [x_center - half_width_middle, y_middle - FIELD_PADDING]],
+				[[x_center + FIELD_PADDING, y_top], [x_center + half_width_top, y_top], [x_center + half_width_middle, y_middle - FIELD_PADDING], [x_center + FIELD_PADDING, y_middle - FIELD_PADDING]],
 				[[x_center - half_width_middle, y_middle + FIELD_PADDING], [x_center - FIELD_PADDING, y_middle + FIELD_PADDING], [x_center - FIELD_PADDING, y_bottom, y_middle - FIELD_PADDING], [x_center - half_width_bottom, y_bottom]],
 				[[x_center + FIELD_PADDING, y_middle + FIELD_PADDING], [x_center + half_width_middle, y_middle + FIELD_PADDING], [x_center + half_width_bottom, y_bottom], [x_center + FIELD_PADDING, y_bottom]]
 			],
@@ -74,13 +78,13 @@ class MatchView extends Ui.View {
 			"score_2_y" => (score_2_container_y + score_2_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MILD) / 2 - 4),
 			"score_1_container_y" => score_1_container_y,
 			"score_1_container_height" => score_1_container_height,
-			"score_1_y" => (score_1_container_y + score_1_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MEDIUM) / 2 - 4)
+			"score_1_y" => (score_1_container_y + score_1_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MEDIUM) / 2 - 4),
+			"timer_height" => timer_height
 		};
 	}
 
 	function drawField(dc) {
 		var x_center = boundaries.get("x_center");
-		var y_bottom = boundaries.get("y_bottom");
 
 		var highlighted_corner = match.getHighlightedCorner();
 		Sys.println("highlighted corner " + highlighted_corner);
@@ -123,16 +127,17 @@ class MatchView extends Ui.View {
 	}
 
 	function drawTimer(dc) {
-		var x_center = dc.getWidth() / 2;
-		var y_bottom = dc.getHeight() - (MARGIN_BOTTOM / 2) - 13;
+		var x_center = boundaries.get("x_center");
+		var y_bottom = boundaries.get("y_bottom");
+		var timer_height = boundaries.get("timer_height");
 
 		//clean only the area of the timer
 		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
-		dc.fillRectangle(0, y_bottom, dc.getWidth(), 26);
+		dc.fillRectangle(0, y_bottom, dc.getWidth(), timer_height);
 
 		//draw timer
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.drawText(x_center, y_bottom, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, y_bottom + timer_height * 0.1, Gfx.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
 	}
 
 	//! Update the view
