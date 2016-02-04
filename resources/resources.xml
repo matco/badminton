@@ -1,5 +1,4 @@
 <resources>
-	<string id="application_name">Badminton</string>
 	<bitmap id="application_launcher_icon" filename="images/application_launcher_icon.png" />
 
 	<!--
@@ -13,15 +12,6 @@
 		<shape type="polygon" points="[[50,85], [108,85], [108,160], [30,160]]" />
 	</drawable-list>
 	<drawable-list id="court_player_1_right" foreground="Gfx.COLOR_WHITE">
-		<shape type="polygon" points="[[110,85], [170,85], [190,160], [110,160]]" />
-	</drawable-list>
-	-->
-
-	<!--
-	<drawable-list id="pointers" background="Gfx.COLOR_BLUE" foreground="Gfx.COLOR_BLUE">
-		<shape type="polygon" points="[[0,60], [5,55], [0,65]]" />
-		<shape type="polygon" points="[[120,60], [115,55], [115,65]]" />
-		<shape type="polygon" points="[[60,60], [70,70], [12,65]]" />
 		<shape type="polygon" points="[[110,85], [170,85], [190,160], [110,160]]" />
 	</drawable-list>
 	-->
