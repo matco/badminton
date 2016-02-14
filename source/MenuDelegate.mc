@@ -17,7 +17,7 @@ class MenuDelegate extends Ui.MenuInputDelegate {
 			//var reset_confirmation = new Ui.Confirmation("Are you sure you want to reset?");
 			//Ui.pushView(reset_confirmation, new ResetConfirmationDelegate(), Ui.SLIDE_IMMEDIATE);
 			Sys.println("reset app");
-			Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SWIPE_LEFT);
+			Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		}
 	}
 }

@@ -159,7 +159,7 @@ class MatchView extends Ui.View {
 class MatchViewDelegate extends Ui.BehaviorDelegate {
 
 	function onMenu() {
-		Ui.pushView(new Rez.Menus.MainMenu(), new MenuDelegate(), Ui.SLIDE_UP);
+		Ui.pushView(new Rez.Menus.MainMenu(), new MenuDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 
@@ -167,7 +167,7 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		match.score(player);
 		var winner = match.getWinner();
 		if(winner != null) {
-			Ui.switchToView(new ResultView(), new ResultViewDelegate(), Ui.SWIPE_RIGHT);
+			Ui.pushView(new ResultView(), new ResultViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		}
 		else {
 			need_full_update = true;
@@ -194,13 +194,10 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 			match.undo();
 			need_full_update = true;
 			Ui.requestUpdate();
+			return true;
 		}
-		else {
-			//return to beginner screen if match has not started yet
-			var view = new BeginnerView();
-			Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SWIPE_LEFT);
-		}
-		return true;
+		//let default behavior happen, back to previous view
+		return false;
 	}
 
 	function onTap(event) {

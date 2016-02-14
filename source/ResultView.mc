@@ -41,7 +41,7 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 		if(key.getKey() == Ui.KEY_ENTER) {
 			//return to type screen
 			var view = new TypeView();
-			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SWIPE_LEFT);
+			Ui.pushView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 			return true;
 		}
 		return false;
@@ -50,8 +50,8 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 	function onBack() {
 		//undo last point
 		match.undo();
-		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
-		return true;
+		//let default behavior happen, back to previous view
+		return false;
 	}
 
 }
