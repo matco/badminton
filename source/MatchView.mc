@@ -41,23 +41,32 @@ class MatchView extends Ui.View {
 
 	function getFieldBoundaries() {
 		//calculate margins
-		var margin_height = device.screenHeight * 0.1;
-		var margin_width = device.screenWidth * 0.08;
+		var margin_height = device.screenHeight * (device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.1);
+		var margin_width = device.screenWidth * (device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.08);
 
-		var radius = device.screenWidth / 2;
 		var timer_height = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1;
 
-		var x_center = radius;
+		var x_center = device.screenWidth / 2;
 		var y_top = margin_height;
 		var y_bottom = device.screenHeight - margin_height - timer_height;
 		var y_middle = Geometry.middle(y_bottom, y_top, FIELD_RATIO);
 
-		//calculate half width of the top of the field
-		var half_width_top = Geometry.chordLength(radius, y_top) / 2 - margin_width;
-		//calculate half width of the base of the field
-		var half_width_bottom = Geometry.chordLength(radius, timer_height + margin_height) / 2 - margin_width;
-		//calculate half width of the middle of the field
-		var half_width_middle = Geometry.middle(half_width_bottom, half_width_top, FIELD_RATIO);
+		//calculate half width of the top, the middle and the base of the field
+		var half_width_top, half_width_middle, half_width_bottom;
+		
+		//rectangular watches
+		if(device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE) {
+			half_width_top = (device.screenWidth / 2 * 0.6) - margin_width;
+			half_width_bottom = (device.screenWidth / 2 * 0.9) - margin_width;
+		}
+		//round watches
+		else {
+			var radius = device.screenWidth / 2;
+			half_width_top = Geometry.chordLength(radius, y_top) / 2 - margin_width;
+			half_width_bottom = Geometry.chordLength(radius, timer_height + margin_height) / 2 - margin_width;
+		}
+		half_width_middle = Geometry.middle(half_width_bottom, half_width_top, FIELD_RATIO);
+
 		//calculate score position
 		var score_2_container_y = Geometry.middle(y_middle, y_top, (1 - FIELD_SCORE_RATIO) / 2);
 		var score_2_container_height = (y_middle - y_top) * FIELD_SCORE_RATIO;
