@@ -155,6 +155,7 @@ class MatchView extends Ui.View {
 		if(need_full_update) {
 			need_full_update = false;
 			//clean the entire screen
+			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 			dc.clear();
 			drawField(dc);
 		}
