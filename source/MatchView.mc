@@ -16,16 +16,20 @@ class MatchView extends Ui.View {
 
 	hidden var timer;
 
-	//! Load your resources here
-	function onLayout(dc) {
+	function initialize() {
 		timer = new Timer.Timer();
 		boundaries = getFieldBoundaries();
+	}
+
+	//! Load your resources here
+	function onLayout(dc) {
 	}
 
 	//! Restore the state of the app and prepare the view to be shown
 	function onShow() {
 		timer.start(method(:onTimer), 1000, true);
 
+		//when shown, ask for full update
 		need_full_update = true;
 	}
 
@@ -53,7 +57,7 @@ class MatchView extends Ui.View {
 
 		//calculate half width of the top, the middle and the base of the field
 		var half_width_top, half_width_middle, half_width_bottom;
-		
+
 		//rectangular watches
 		if(device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE) {
 			half_width_top = (device.screenWidth / 2 * 0.6) - margin_width;
@@ -130,9 +134,6 @@ class MatchView extends Ui.View {
 				dc.fillCircle(x_position, y_dot, 7);
 			}
 		}
-
-		//draw timer
-		drawTimer(dc);
 	}
 
 	function drawTimer(dc) {
@@ -152,15 +153,12 @@ class MatchView extends Ui.View {
 	//! Update the view
 	function onUpdate(dc) {
 		if(need_full_update) {
+			need_full_update = false;
 			//clean the entire screen
-			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 			dc.clear();
 			drawField(dc);
-			need_full_update = false;
 		}
-		else {
-			drawTimer(dc);
-		}
+		drawTimer(dc);
 	}
 
 }
