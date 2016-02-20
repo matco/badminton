@@ -1,3 +1,5 @@
+using Toybox.System as Sys;
+
 module Test {
 	function test() {
 		ListTest.testNewList();
@@ -15,5 +17,7 @@ module Test {
 		MatchTest.testNewMatch();
 		MatchTest.testBeginMatch();
 		MatchTest.testScore();
+
+		Sys.println("Tests executed successfully");	
 	}
 }
