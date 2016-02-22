@@ -28,7 +28,15 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		self.view = view;
 	}
 
+	function discardMatch() {
+		if(match != null) {
+			match.discard();
+			match = null;
+		}
+	}
+
 	function manageChoice(type) {
+		discardMatch();
 		match = new Match(type);
 		match.listener = Application.getApp();
 		var view = new BeginnerView();
@@ -59,8 +67,9 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		}
 		return true;
 	}
-	
+
 	function onBack() {
+		discardMatch();
 		Sys.exit();
 	}
 

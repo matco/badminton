@@ -1,5 +1,7 @@
 using Toybox.System as Sys;
 using Toybox.Time as Time;
+using Toybox.ActivityRecording as Recording;
+using Toybox.Activity as Activity;
 
 class Match {
 
@@ -14,8 +16,8 @@ class Match {
 	hidden var scores; //dictionnary containing players current scores
 	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
 
-	var startTime;
-	var stopTime;
+	var session;
+	var activity;
 
 	var listener;
 
@@ -25,17 +27,43 @@ class Match {
 		scores = {:player_1 => 0, :player_2 => 0};
 	}
 
+	function save() {
+		if(session != null) {
+			session.save();
+		}
+		activity = null;
+		session = null;
+	}
+
+	function discard() {
+		if(session != null) {
+			session.discard();
+		}
+		activity = null;
+		session = null;
+	}
+
 	function begin(player) {
 		beginner = player;
 		server = true;
-		startTime = Time.now();
+
+		//manage activity session
+		discard();
+		session = Recording.createSession({:sport => Recording.SPORT_GENERIC, :subSport => Recording.SUB_SPORT_MATCH, :name => "Badminton"});
+		session.start();
+
 		if(listener != null && listener has :onMatchBegin) {
 			listener.onMatchBegin();
 		}
 	}
 
 	hidden function end(winner) {
-		stopTime = Time.now();
+		//manage activity session
+		session.stop();
+		//save();
+		//keep a hook on activity
+		activity = Activity.getActivityInfo();
+
 		if(listener != null && listener has :onMatchEnd) {
 			listener.onMatchEnd(winner);
 		}
@@ -60,7 +88,6 @@ class Match {
 	}
 
 	function undo() {
-		stopTime = null;
 		if(rallies.size() > 0) {
 			var rally = rallies.pop();
 			//in double, change server if player 1 (watch carrier) team looses service
@@ -70,7 +97,15 @@ class Match {
 				}
 			}
 			scores[rally]--;
+			//manage activity session
+			if(session.isRecording()) {
+				session.start();
+			}
 		}
+	}
+
+	function getActivity() {
+		return activity;
 	}
 
 	function getRalliesNumber() {
@@ -78,11 +113,7 @@ class Match {
 	}
 
 	function getDuration() {
-		if(startTime == null) {
-			return null;
-		}
-		var time = stopTime != null ? stopTime : Time.now();
-		return time.subtract(startTime);
+		return Activity.getActivityInfo().elapsedTime / 1000;
 	}
 
 	function getType() {

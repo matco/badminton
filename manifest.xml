@@ -8,7 +8,9 @@
 			<iq:product id="vivoactive"/>
 		</iq:products>
 
-		<iq:permissions/>
+		<iq:permissions>
+			<iq:uses-permission id="Fit"/>
+		</iq:permissions>
 
 		<iq:languages>
 			<iq:language>eng</iq:language>
