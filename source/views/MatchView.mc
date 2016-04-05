@@ -205,7 +205,9 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 			return true;
 		}
 		//let default behavior happen, back to previous view
-		return false;
+		var view = new BeginnerView();
+		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 
 	function onTap(event) {

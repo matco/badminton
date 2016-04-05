@@ -36,7 +36,13 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 
 	function manageChoice(player) {
 		match.begin(player);
-		Ui.pushView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
+		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
+	}
+
+	function onBack() {
+		var view = new TypeView();
+		Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 
 	function onKey(key) {

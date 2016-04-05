@@ -20,7 +20,6 @@ class ResultView extends Ui.View {
 
 	//! Update the view
 	function onUpdate(dc) {
-		View.onUpdate(dc);
 		//draw end of match text
 		var winner = match.getWinner();
 		var won_text = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
@@ -32,6 +31,7 @@ class ResultView extends Ui.View {
 		//draw rallies
 		var rallies_text = Ui.loadResource(Rez.Strings.end_total_rallies);
 		findDrawableById("result_rallies").setText(Helpers.formatString(rallies_text, {"rallies" => match.getRalliesNumber().toString()}));
+		View.onUpdate(dc);
 	}
 }
 
@@ -41,7 +41,7 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 		if(key.getKey() == Ui.KEY_ENTER) {
 			//return to type screen
 			var view = new TypeView();
-			Ui.pushView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 			return true;
 		}
 		return false;
@@ -51,7 +51,9 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 		//undo last point
 		match.undo();
 		//let default behavior happen, back to previous view
-		return false;
+		var view = new MatchView();
+		Ui.switchToView(view, new MatchViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 
 }
