@@ -1,0 +1,18 @@
+<resources>
+	<string id="application_name">Badminton</string>
+
+	<string id="menu_reset_game">Reset</string>
+
+	<string id="type_what">Spielart</string>
+	<string id="type_single">Einzel</string>
+	<string id="type_double">Doppel</string>
+
+	<string id="beginner_who">Wer fängt an?</string>
+	<string id="beginner_opponent">Gegner</string>
+	<string id="beginner_you">Du</string>
+	<string id="beginner_random">Zufall</string>
+
+	<string id="end_you_won">Gewonnen!</string>
+	<string id="end_opponent_won">Verloren!</string>
+	<string id="end_total_rallies">${rallies} Wechsel</string>
+</resources>
