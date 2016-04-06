@@ -206,7 +206,7 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		else {
 			//return to beginner screen if match has not started yet
 			var view = new BeginnerView();
-			Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SWIPE_LEFT);
+			Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 		}
 		return true;
 	}
