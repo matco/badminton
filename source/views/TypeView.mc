@@ -32,7 +32,7 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		match = new Match(type);
 		match.listener = Application.getApp();
 		var view = new BeginnerView();
-		Ui.pushView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 	}
 
 	function onNextPage() {
@@ -59,7 +59,7 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		}
 		return true;
 	}
-	
+
 	function onBack() {
 		Sys.exit();
 	}

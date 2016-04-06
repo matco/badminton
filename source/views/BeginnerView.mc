@@ -36,7 +36,7 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 
 	function manageChoice(player) {
 		match.begin(player);
-		Ui.pushView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
+		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 	}
 
 	function onKey(key) {
@@ -60,6 +60,13 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 	function onPreviousPage() {
 		//begin match with player 2 (opponent)
 		manageChoice(:player_2);
+		return true;
+	}
+
+	function onBack() {
+		//return to type screen
+		var view = new TypeView();
+		Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 
