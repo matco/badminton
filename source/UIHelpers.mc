@@ -7,10 +7,10 @@ module UIHelpers {
 		var coordinate = event.getCoordinates();
 		var event_x = coordinate[0];
 		var event_y = coordinate[1];
-		//first loop to detech if tap occurs inside one of the drawable
+		//first loop to detect if tap occurs inside one of the drawable
 		for(var i = 0; i < drawables.size(); i++) {
 			var drawable = drawables[i];
-			//start by y axis because selections is generally vertically
+			//start by y axis because menus options are generally placed vertically
 			if(event_y >= drawable.locY && event_y <= (drawable.locY + drawable.height) && event_x >= (drawable.locX) && event_x <= (drawable.locX + drawable.width)) {
 				Sys.println("tap on drawable " + drawable.identifier);
 				return drawable;
