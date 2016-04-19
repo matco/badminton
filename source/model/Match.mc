@@ -18,8 +18,18 @@ class Match {
 	var stopTime;
 
 	var listener;
+	var maximum_points = MAXIMUM_POINTS;
+	var absolute_maximum_points = ABSOLUTE_MAXIMUM_POINTS;
 
-	function initialize(match_type) {
+	function initialize(match_type, mp, amp) {
+		if (null != mp) {
+			maximum_points = mp;
+		}
+
+		if (null != amp) {
+			absolute_maximum_points = amp;
+		}
+
 		type = match_type;
 		rallies = new List();
 		scores = {:player_1 => 0, :player_2 => 0};
@@ -104,10 +114,10 @@ class Match {
 	function getWinner() {
 		var scorePlayer1 = getScore(:player_1);
 		var scorePlayer2 = getScore(:player_2);
-		if(scorePlayer1 >= ABSOLUTE_MAXIMUM_POINTS || scorePlayer1 >= MAXIMUM_POINTS && (scorePlayer1 - scorePlayer2) > 1) {
+		if(scorePlayer1 >= absolute_maximum_points || scorePlayer1 >= maximum_points && (scorePlayer1 - scorePlayer2) > 1) {
 			return :player_1;
 		}
-		if(scorePlayer2 >= ABSOLUTE_MAXIMUM_POINTS || scorePlayer2 >= MAXIMUM_POINTS && (scorePlayer2 - scorePlayer1) > 1) {
+		if(scorePlayer2 >= absolute_maximum_points || scorePlayer2 >= maximum_points && (scorePlayer2 - scorePlayer1) > 1) {
 			return :player_2;
 		}
 		return null;

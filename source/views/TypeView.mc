@@ -29,8 +29,12 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function manageChoice(type) {
-		match = new Match(type);
-		match.listener = Application.getApp();
+		var app = Application.getApp();
+		var mp = app.getProperty("maximum_points");
+		var amp = app.getProperty("absolute_maximum_points");
+
+		match = new Match(type, mp, amp);
+		match.listener = app;
 		var view = new BeginnerView();
 		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 	}

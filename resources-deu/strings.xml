@@ -15,4 +15,8 @@
 	<string id="end_you_won">Gewonnen!</string>
 	<string id="end_opponent_won">Verloren!</string>
 	<string id="end_total_rallies">${rallies} Wechsel</string>
+
+	<string id="maximum_number_points_title">Maximale Punkte</string>
+	<string id="absolute_maximum_number_points_title">Absolute maximale Punkte</string>
+
 </resources>
