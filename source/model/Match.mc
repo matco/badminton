@@ -3,9 +3,6 @@ using Toybox.Time as Time;
 
 class Match {
 
-	const MAXIMUM_POINTS = 21;
-	const ABSOLUTE_MAXIMUM_POINTS = 30;
-
 	hidden var type; //type of the match, :single or :double
 	hidden var beginner; //store the beginner of the match, :player_1 or :player_2
 
@@ -18,19 +15,14 @@ class Match {
 	var stopTime;
 
 	var listener;
-	var maximum_points = MAXIMUM_POINTS;
-	var absolute_maximum_points = ABSOLUTE_MAXIMUM_POINTS;
+	var maximum_points;
+	var absolute_maximum_points;
 
 	function initialize(match_type, mp, amp) {
-		if (null != mp) {
-			maximum_points = mp;
-		}
-
-		if (null != amp) {
-			absolute_maximum_points = amp;
-		}
-
 		type = match_type;
+		maximum_points = mp;
+		absolute_maximum_points = amp;
+
 		rallies = new List();
 		scores = {:player_1 => 0, :player_2 => 0};
 	}
