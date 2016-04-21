@@ -15,4 +15,7 @@
 	<string id="end_you_won">Gagné !</string>
 	<string id="end_opponent_won">Perdu !</string>
 	<string id="end_total_rallies">${rallies} échanges</string>
+
+	<string id="maximum_number_points_title">Score gagnant</string>
+	<string id="absolute_maximum_number_points_title">Score gagnant après prolongation</string>
 </resources>
