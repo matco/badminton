@@ -1,10 +1,10 @@
 <resources>
 	<settings>
-		<setting propertyKey="@Properties.maximum_points" title="@Strings.maximum_number_points_title">
+		<setting propertyKey="@Properties.maximum_points" title="@Strings.settings_maximum_number_points_title">
 			<settingConfig type="numeric" required="true" min="1" />
 		</setting>
 
-		<setting propertyKey="@Properties.absolute_maximum_points" title="@Strings.absolute_maximum_number_points_title">
+		<setting propertyKey="@Properties.absolute_maximum_points" title="@Strings.settings_absolute_maximum_number_points_title">
 			<settingConfig type="numeric" required="true" min="1" />
 		</setting>
 	</settings>
