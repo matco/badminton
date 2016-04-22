@@ -26,12 +26,16 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 	}
 
 	function onMatchBegin() {
-		Attention.playTone(Attention.TONE_START);
+		if(getProperty("enable_sound")) {
+			Attention.playTone(Attention.TONE_START);
+		}
 		Attention.vibrate([new Attention.VibeProfile(80, 200)]);
 	}
 
 	function onMatchEnd(winner) {
-		Attention.playTone(winner == :player_1 ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
+		if(getProperty("enable_sound")) {
+			Attention.playTone(winner == :player_1 ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
+		}
 		Attention.vibrate([new Attention.VibeProfile(80, 200)]);
 	}
 }

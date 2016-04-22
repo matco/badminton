@@ -18,4 +18,5 @@
 
 	<string id="settings_maximum_number_points_title">Maximale Punkte</string>
 	<string id="settings_absolute_maximum_number_points_title">Absolute maximale Punkte</string>
+	<string id="settings_enable_sound">Sound einschalten</string>
 </resources>

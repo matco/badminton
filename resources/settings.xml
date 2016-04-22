@@ -7,5 +7,9 @@
 		<setting propertyKey="@Properties.absolute_maximum_points" title="@Strings.settings_absolute_maximum_number_points_title">
 			<settingConfig type="numeric" required="true" min="1" />
 		</setting>
+
+		<setting propertyKey="@Properties.enable_sound" title="@Strings.settings_enable_sound">
+			<settingConfig type="boolean" required="true" />
+		</setting>
 	</settings>
 </resources>
