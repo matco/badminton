@@ -21,10 +21,6 @@ class MatchView extends Ui.View {
 		boundaries = getFieldBoundaries();
 	}
 
-	//! Load your resources here
-	function onLayout(dc) {
-	}
-
 	//! Restore the state of the app and prepare the view to be shown
 	function onShow() {
 		timer.start(method(:onTimer), 1000, true);
@@ -205,8 +201,7 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		}
 		else {
 			//return to beginner screen if match has not started yet
-			var view = new BeginnerView();
-			Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+			Ui.switchToView(new BeginnerView(), new BeginnerViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		}
 		return true;
 	}
