@@ -5,20 +5,9 @@ using Toybox.Math as Math;
 
 class BeginnerView extends Ui.View {
 
-	//! Load your resources here
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.beginner(dc));
 	}
-
-	//! Restore the state of the app and prepare the view to be shown
-	function onShow() {
-	}
-
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
-	function onHide() {
-	}
-
 }
 
 class BeginnerViewDelegate extends Ui.BehaviorDelegate {
@@ -86,5 +75,4 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 		}
 		return true;
 	}
-
 }

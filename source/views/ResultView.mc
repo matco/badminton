@@ -4,21 +4,10 @@ using Toybox.System as Sys;
 
 class ResultView extends Ui.View {
 
-	//! Load your resources here
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.result(dc));
 	}
 
-	//! Restore the state of the app and prepare the view to be shown
-	function onShow() {
-	}
-
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
-	function onHide() {
-	}
-
-	//! Update the view
 	function onUpdate(dc) {
 		View.onUpdate(dc);
 		//draw end of match text
@@ -53,5 +42,4 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
-
 }

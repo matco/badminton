@@ -4,20 +4,9 @@ using Toybox.System as Sys;
 
 class TypeView extends Ui.View {
 
-	//! Load your resources here
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.type(dc));
 	}
-
-	//! Restore the state of the app and prepare the view to be shown
-	function onShow() {
-	}
-
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
-	function onHide() {
-	}
-
 }
 
 class TypeViewDelegate extends Ui.BehaviorDelegate {
@@ -67,5 +56,4 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 	function onBack() {
 		Sys.exit();
 	}
-
 }

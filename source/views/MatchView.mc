@@ -21,20 +21,12 @@ class MatchView extends Ui.View {
 		boundaries = getFieldBoundaries();
 	}
 
-	//! Load your resources here
-	function onLayout(dc) {
-	}
-
-	//! Restore the state of the app and prepare the view to be shown
 	function onShow() {
 		timer.start(method(:onTimer), 1000, true);
-
 		//when shown, ask for full update
 		need_full_update = true;
 	}
 
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
 	function onHide() {
 		timer.stop();
 	}
@@ -161,7 +153,6 @@ class MatchView extends Ui.View {
 		}
 		drawTimer(dc);
 	}
-
 }
 
 class MatchViewDelegate extends Ui.BehaviorDelegate {
@@ -223,5 +214,4 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		}
 		return true;
 	}
-
 }
