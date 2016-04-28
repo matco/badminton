@@ -3,6 +3,10 @@ using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.Math as Math;
 
+var random = null;
+var opponent = null;
+var you = null;
+
 class BeginnerView extends Ui.View {
 
 	//! Load your resources here
@@ -12,22 +16,19 @@ class BeginnerView extends Ui.View {
 
 	//! Restore the state of the app and prepare the view to be shown
 	function onShow() {
+		random = findDrawableById("beginner_random");
+		opponent = findDrawableById("beginner_opponent");
+		you = findDrawableById("beginner_you");
 	}
 
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
 	function onHide() {
+		random = null;
+		opponent = null;
+		you = null;
 	}
-
 }
 
 class BeginnerViewDelegate extends Ui.BehaviorDelegate {
-
-	hidden var view;
-
-	function initialize(view) {
-		self.view = view;
-	}
 
 	function manageRandomChoice() {
 		var beginner = Math.rand() % 2 == 0 ? :player_1 : :player_2;
@@ -65,20 +66,20 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 
 	function onBack() {
 		//return to type screen
-		var view = new TypeView();
-		Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onTap(event) {
-		var random = view.findDrawableById("beginner_random");
-		var opponent = view.findDrawableById("beginner_opponent");
-		var you = view.findDrawableById("beginner_you");
+		if (random == null || opponent == null || you == null) {
+			return false;
+		}
+
 		var tapped = UIHelpers.findTappedDrawable(event, [random, opponent, you]);
-		if("beginner_opponent".equals(tapped.identifier)) {
+		if(opponent.identifier == tapped.identifier) {
 			manageChoice(:player_2);
 		}
-		else if("beginner_you".equals(tapped.identifier)) {
+		else if(beginner.identifier == tapped.identifier) {
 			manageChoice(:player_1);
 		}
 		else {

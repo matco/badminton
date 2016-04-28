@@ -10,17 +10,7 @@ class ResultView extends Ui.View {
 	}
 
 	//! Restore the state of the app and prepare the view to be shown
-	function onShow() {
-	}
-
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
-	function onHide() {
-	}
-
-	//! Update the view
-	function onUpdate(dc) {
-		View.onUpdate(dc);
+	function onShow(dc) {
 		//draw end of match text
 		var winner = match.getWinner();
 		var won_text = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
@@ -40,8 +30,7 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 	function onKey(key) {
 		if(key.getKey() == Ui.KEY_ENTER) {
 			//return to type screen
-			var view = new TypeView();
-			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+			Ui.switchToView(new TypeView(), new TypeViewDelegate(), Ui.SLIDE_IMMEDIATE);
 			return true;
 		}
 		return false;

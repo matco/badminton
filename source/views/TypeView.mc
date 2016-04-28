@@ -2,31 +2,28 @@ using Toybox.WatchUi as Ui;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 
+var single = null;
+var double = null;
+
 class TypeView extends Ui.View {
 
 	//! Load your resources here
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.type(dc));
 	}
-
 	//! Restore the state of the app and prepare the view to be shown
 	function onShow() {
+		var single = view.findDrawableById("type_single");
+		var double = view.findDrawableById("type_double");
 	}
 
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
 	function onHide() {
+		single = null;
+		double = null;
 	}
-
 }
 
 class TypeViewDelegate extends Ui.BehaviorDelegate {
-
-	hidden var view;
-
-	function initialize(view) {
-		self.view = view;
-	}
 
 	function manageChoice(type) {
 		var app = Application.getApp();
@@ -35,8 +32,7 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 
 		match = new Match(type, mp, amp);
 		match.listener = app;
-		var view = new BeginnerView();
-		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		Ui.switchToView(new BeginnerView(), new BeginnerViewDelegate(), Ui.SLIDE_IMMEDIATE);
 	}
 
 	function onNextPage() {
@@ -52,10 +48,12 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function onTap(event) {
-		var single = view.findDrawableById("type_single");
-		var double = view.findDrawableById("type_double");
+		if (single == null || double == null) {
+			return false;
+		}
+
 		var tapped = UIHelpers.findTappedDrawable(event, [single, double]);
-		if("type_single".equals(tapped.identifier)) {
+		if(single.identifier == tapped.identifier) {
 			manageChoice(:single);
 		}
 		else {
