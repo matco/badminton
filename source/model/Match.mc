@@ -44,7 +44,7 @@ class Match {
 	}
 
 	function score(player) {
-		if(hasBegun()) {
+		if(hasBegun() && !hasEnded()) {
 			//in double, change server if player 1 (watch carrier) team regains service
 			if(type == :double) {
 				if(rallies.last() == :player_2 && player == :player_1) {
