@@ -9,17 +9,11 @@ var device = Sys.getDeviceSettings();
 
 class BadmintonScoreTrackerApp extends App.AppBase {
 
-	//! onStart() is called on application start up
-	function onStart() {
+	/*function onStart() {
 		//test
-		//Test.test();
-	}
+		Test.test();
+	}*/
 
-	//! onStop() is called when your application is exiting
-	function onStop() {
-	}
-
-	//! Return the initial view of your application here
 	function getInitialView() {
 		var view = new TypeView();
 		return [ view, new TypeViewDelegate(view) ];
