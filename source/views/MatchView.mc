@@ -40,8 +40,10 @@ class MatchView extends Ui.View {
 		var margin_height = device.screenHeight * (device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.1);
 		var margin_width = device.screenWidth * (device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.08);
 
+		//calculate timer height
 		var timer_height = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1;
 
+		//calculate strategic positions
 		var x_center = device.screenWidth / 2;
 		var y_top = margin_height;
 		var y_bottom = device.screenHeight - margin_height - timer_height;
@@ -63,21 +65,48 @@ class MatchView extends Ui.View {
 		}
 		half_width_middle = Geometry.middle(half_width_bottom, half_width_top, FIELD_RATIO);
 
-		//calculate score position
+		//caclulate corners coordinates
+		var corners = new [4];
+		//top left corner
+		corners[0] = [
+			[x_center - half_width_top, y_top],
+			[x_center - FIELD_PADDING, y_top],
+			[x_center - FIELD_PADDING, y_middle - FIELD_PADDING],
+			[x_center - half_width_middle, y_middle - FIELD_PADDING]
+		];
+		//top right corner
+		corners[1] = [
+			[x_center + FIELD_PADDING, y_top],
+			[x_center + half_width_top, y_top],
+			[x_center + half_width_middle, y_middle - FIELD_PADDING],
+			[x_center + FIELD_PADDING, y_middle - FIELD_PADDING]
+		];
+		//bottom left corner
+		corners[2] = [
+			[x_center - half_width_middle, y_middle + FIELD_PADDING],
+			[x_center - FIELD_PADDING, y_middle + FIELD_PADDING],
+			[x_center - FIELD_PADDING, y_bottom, y_middle - FIELD_PADDING],
+			[x_center - half_width_bottom, y_bottom]
+		];
+		//bottom right corner
+		corners[3] = [
+			[x_center + FIELD_PADDING, y_middle + FIELD_PADDING],
+			[x_center + half_width_middle, y_middle + FIELD_PADDING],
+			[x_center + half_width_bottom, y_bottom],
+			[x_center + FIELD_PADDING, y_bottom]
+		];
+
+		//calculate score positions
 		var score_2_container_y = Geometry.middle(y_middle, y_top, (1 - FIELD_SCORE_RATIO) / 2);
 		var score_2_container_height = (y_middle - y_top) * FIELD_SCORE_RATIO;
 		var score_1_container_y = Geometry.middle(y_bottom, y_middle, (1 - FIELD_SCORE_RATIO) / 2);
 		var score_1_container_height = (y_bottom - y_middle) * FIELD_SCORE_RATIO;
+
 		return {
 			"x_center" => x_center,
 			"y_middle" => y_middle,
 			"y_bottom" => y_bottom,
-			"corners" => [
-				[[x_center - half_width_top, y_top], [x_center - FIELD_PADDING, y_top], [x_center - FIELD_PADDING, y_middle - FIELD_PADDING], [x_center - half_width_middle, y_middle - FIELD_PADDING]],
-				[[x_center + FIELD_PADDING, y_top], [x_center + half_width_top, y_top], [x_center + half_width_middle, y_middle - FIELD_PADDING], [x_center + FIELD_PADDING, y_middle - FIELD_PADDING]],
-				[[x_center - half_width_middle, y_middle + FIELD_PADDING], [x_center - FIELD_PADDING, y_middle + FIELD_PADDING], [x_center - FIELD_PADDING, y_bottom, y_middle - FIELD_PADDING], [x_center - half_width_bottom, y_bottom]],
-				[[x_center + FIELD_PADDING, y_middle + FIELD_PADDING], [x_center + half_width_middle, y_middle + FIELD_PADDING], [x_center + half_width_bottom, y_bottom], [x_center + FIELD_PADDING, y_bottom]]
-			],
+			"corners" => corners,
 			"score_2_container_y" => score_2_container_y,
 			"score_2_container_height" => score_2_container_height,
 			"score_2_y" => (score_2_container_y + score_2_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MILD) / 2 - 4),
