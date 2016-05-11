@@ -20,16 +20,24 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 	}
 
 	function onMatchBegin() {
-		if(getProperty("enable_sound")) {
-			Attention.playTone(Attention.TONE_START);
+		if(Attention has :playTone) {
+			if(getProperty("enable_sound")) {
+				Attention.playTone(Attention.TONE_START);
+			}
 		}
-		Attention.vibrate([new Attention.VibeProfile(80, 200)]);
+		if(Attention has :vibrate) {
+			Attention.vibrate([new Attention.VibeProfile(80, 200)]);
+		}
 	}
 
 	function onMatchEnd(winner) {
-		if(getProperty("enable_sound")) {
-			Attention.playTone(winner == :player_1 ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
+		if(Attention has :playTone) {
+			if(getProperty("enable_sound")) {
+				Attention.playTone(winner == :player_1 ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
+			}
 		}
-		Attention.vibrate([new Attention.VibeProfile(80, 200)]);
+		if(Attention has :vibrate) {
+			Attention.vibrate([new Attention.VibeProfile(80, 200)]);
+		}
 	}
 }
