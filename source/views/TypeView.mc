@@ -44,7 +44,7 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		var single = view.findDrawableById("type_single");
 		var double = view.findDrawableById("type_double");
 		var tapped = UIHelpers.findTappedDrawable(event, [single, double]);
-		if("type_single".equals(tapped.identifier)) {
+		if(single.equals(tapped)) {
 			manageChoice(:single);
 		}
 		else {

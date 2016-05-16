@@ -64,10 +64,10 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 		var opponent = view.findDrawableById("beginner_opponent");
 		var you = view.findDrawableById("beginner_you");
 		var tapped = UIHelpers.findTappedDrawable(event, [random, opponent, you]);
-		if("beginner_opponent".equals(tapped.identifier)) {
+		if(opponent.equals(tapped)) {
 			manageChoice(:player_2);
 		}
-		else if("beginner_you".equals(tapped.identifier)) {
+		else if(you.equals(tapped)) {
 			manageChoice(:player_1);
 		}
 		else {
