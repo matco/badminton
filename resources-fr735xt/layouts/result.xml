@@ -1,0 +1,6 @@
+<layout id="result">
+	<label id="result_won_text" x="center" y="25" font="Gfx.FONT_LARGE" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="result_score" x="center" y="65" font="Gfx.FONT_LARGE" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="result_time" x="center" y="115" font="Gfx.FONT_SMALL" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="result_rallies" x="center" y="145" font="Gfx.FONT_SMALL" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+</layout>
