@@ -16,13 +16,18 @@
 	<string id="end_opponent_won">They won!</string>
 	<string id="end_total_rallies">${rallies} rallies</string>
 
-	<string id="settings_maximum_number_points_title">Maximum points</string>
-	<string id="settings_absolute_maximum_number_points_title">Absolute maximum points</string>
-	<string id="settings_enable_sound">Enable sound</string>
-
 	<string id="stats_title">Statistics</string>
 	<string id="stats_average_heart_rate">Average HR ${average_heart_rate}bpm</string>
 	<string id="stats_max_heart_rate">Max HR ${max_heart_rate}bpm</string>
 	<string id="stats_meters">Ran ${meters}meters</string>
 	<string id="stats_calories">Burnt ${calories}kcal</string>
+
+	<string id="settings_maximum_number_points_title">Maximum points</string>
+	<string id="settings_absolute_maximum_number_points_title">Absolute maximum points</string>
+	<string id="settings_enable_sound">Enable sound</string>
+
+	<string id="fit_chart_title_your_score">Your score</string>
+	<string id="fit_chart_title_opponent_score">Opponent score</string>
+	<string id="fit_chart_data_label">Score</string>
+	<string id="fit_chart_unit_label">points</string>
 </resources>

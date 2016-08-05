@@ -15,4 +15,25 @@
 		<shape type="polygon" points="[[110,85], [170,85], [190,160], [110,160]]" />
 	</drawable-list>
 	-->
+
+	<fitContributions>
+		<fitField
+			id="0"
+			displayInChart="false"
+			displayInActivitySummary="true"
+			sortOrder="0"
+			precision="0"
+			chartTitle="@Strings.fit_chart_title_your_score"
+			dataLabel="@Strings.fit_chart_data_label"
+			unitLabel="@Strings.fit_chart_unit_label" />
+		<fitField
+			id="1"
+			displayInChart="false"
+			displayInActivitySummary="true"
+			sortOrder="1"
+			precision="0"
+			chartTitle="@Strings.fit_chart_title_opponent_score"
+			dataLabel="@Strings.fit_chart_data_label"
+			unitLabel="@Strings.fit_chart_unit_label" />
+	</fitContributions>
 </resources>
