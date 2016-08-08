@@ -15,6 +15,7 @@
 
 		<iq:permissions>
 			<iq:uses-permission id="Fit"/>
+			<iq:uses-permission id="FitContributor"/>
 		</iq:permissions>
 
 		<iq:languages>
