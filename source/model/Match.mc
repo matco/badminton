@@ -13,8 +13,7 @@ class Match {
 	hidden var scores; //dictionnary containing players current scores
 	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
 
-	var session;
-	var activity;
+	hidden var session;
 
 	var listener;
 	var maximum_points;
@@ -33,7 +32,6 @@ class Match {
 		if(session != null) {
 			session.save();
 		}
-		activity = null;
 		session = null;
 	}
 
@@ -41,7 +39,6 @@ class Match {
 		if(session != null) {
 			session.discard();
 		}
-		activity = null;
 		session = null;
 	}
 
@@ -62,9 +59,6 @@ class Match {
 	hidden function end(winner) {
 		//manage activity session
 		session.stop();
-		//save();
-		//keep a hook on activity
-		activity = Activity.getActivityInfo();
 
 		if(listener != null && listener has :onMatchEnd) {
 			listener.onMatchEnd(winner);
@@ -107,7 +101,7 @@ class Match {
 	}
 
 	function getActivity() {
-		return activity;
+		return Activity.getActivityInfo();
 	}
 
 	function getRalliesNumber() {
@@ -115,7 +109,8 @@ class Match {
 	}
 
 	function getDuration() {
-		return Activity.getActivityInfo().elapsedTime / 1000;
+		var time = getActivity().elapsedTime;
+		return time != null ? time / 1000 : 0;
 	}
 
 	function getType() {
