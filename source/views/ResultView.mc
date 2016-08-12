@@ -27,6 +27,7 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 
 	function onKey(key) {
 		if(key.getKey() == Ui.KEY_ENTER) {
+			match.save();
 			//return to type screen
 			var view = new TypeView();
 			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
@@ -41,4 +42,10 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
+
+	function onNextPage() {
+		Ui.switchToView(new StatsView(), new StatsViewDelegate(), Ui.SLIDE_IMMEDIATE);
+		return true;
+	}
+
 }

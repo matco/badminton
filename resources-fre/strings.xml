@@ -16,6 +16,12 @@
 	<string id="end_opponent_won">Perdu !</string>
 	<string id="end_total_rallies">${rallies} échanges</string>
 
+	<string id="stats_title">Statistiques</string>
+	<string id="stats_average_heart_rate">HR moyen ${average_heart_rate}bpm</string>
+	<string id="stats_max_heart_rate">HR max ${max_heart_rate}bpm</string>
+	<string id="stats_meters">${meters}m parcourus</string>
+	<string id="stats_calories">${calories}kcal brulées</string>
+
 	<string id="settings_maximum_number_points_title">Score gagnant</string>
 	<string id="settings_absolute_maximum_number_points_title">Score gagnant après prolongation</string>
 	<string id="settings_enable_sound">Activer les sons</string>
