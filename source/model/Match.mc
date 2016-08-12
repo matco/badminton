@@ -5,9 +5,6 @@ using Toybox.Activity as Activity;
 
 class Match {
 
-	const MAXIMUM_POINTS = 21;
-	const ABSOLUTE_MAXIMUM_POINTS = 30;
-
 	hidden var type; //type of the match, :single or :double
 	hidden var beginner; //store the beginner of the match, :player_1 or :player_2
 
@@ -20,9 +17,14 @@ class Match {
 	var activity;
 
 	var listener;
+	var maximum_points;
+	var absolute_maximum_points;
 
-	function initialize(match_type) {
+	function initialize(match_type, mp, amp) {
 		type = match_type;
+		maximum_points = mp;
+		absolute_maximum_points = amp;
+
 		rallies = new List();
 		scores = {:player_1 => 0, :player_2 => 0};
 	}
@@ -70,7 +72,7 @@ class Match {
 	}
 
 	function score(player) {
-		if(hasBegun()) {
+		if(hasBegun() && !hasEnded()) {
 			//in double, change server if player 1 (watch carrier) team regains service
 			if(type == :double) {
 				if(rallies.last() == :player_2 && player == :player_1) {
@@ -135,10 +137,10 @@ class Match {
 	function getWinner() {
 		var scorePlayer1 = getScore(:player_1);
 		var scorePlayer2 = getScore(:player_2);
-		if(scorePlayer1 >= ABSOLUTE_MAXIMUM_POINTS || scorePlayer1 >= MAXIMUM_POINTS && (scorePlayer1 - scorePlayer2) > 1) {
+		if(scorePlayer1 >= absolute_maximum_points || scorePlayer1 >= maximum_points && (scorePlayer1 - scorePlayer2) > 1) {
 			return :player_1;
 		}
-		if(scorePlayer2 >= ABSOLUTE_MAXIMUM_POINTS || scorePlayer2 >= MAXIMUM_POINTS && (scorePlayer2 - scorePlayer1) > 1) {
+		if(scorePlayer2 >= absolute_maximum_points || scorePlayer2 >= maximum_points && (scorePlayer2 - scorePlayer1) > 1) {
 			return :player_2;
 		}
 		return null;

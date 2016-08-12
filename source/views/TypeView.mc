@@ -4,20 +4,9 @@ using Toybox.System as Sys;
 
 class TypeView extends Ui.View {
 
-	//! Load your resources here
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.type(dc));
 	}
-
-	//! Restore the state of the app and prepare the view to be shown
-	function onShow() {
-	}
-
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
-	function onHide() {
-	}
-
 }
 
 class TypeViewDelegate extends Ui.BehaviorDelegate {
@@ -37,10 +26,16 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 
 	function manageChoice(type) {
 		discardMatch();
-		match = new Match(type);
-		match.listener = Application.getApp();
+
+		var app = Application.getApp();
+		var mp = app.getProperty("maximum_points");
+		var amp = app.getProperty("absolute_maximum_points");
+
+		match = new Match(type, mp, amp);
+		match.listener = app;
+
 		var view = new BeginnerView();
-		Ui.pushView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 	}
 
 	function onNextPage() {
@@ -59,7 +54,7 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		var single = view.findDrawableById("type_single");
 		var double = view.findDrawableById("type_double");
 		var tapped = UIHelpers.findTappedDrawable(event, [single, double]);
-		if("type_single".equals(tapped.identifier)) {
+		if(single.equals(tapped)) {
 			manageChoice(:single);
 		}
 		else {
@@ -72,5 +67,4 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		discardMatch();
 		Sys.exit();
 	}
-
 }

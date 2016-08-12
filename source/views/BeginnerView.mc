@@ -5,20 +5,9 @@ using Toybox.Math as Math;
 
 class BeginnerView extends Ui.View {
 
-	//! Load your resources here
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.beginner(dc));
 	}
-
-	//! Restore the state of the app and prepare the view to be shown
-	function onShow() {
-	}
-
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
-	function onHide() {
-	}
-
 }
 
 class BeginnerViewDelegate extends Ui.BehaviorDelegate {
@@ -36,7 +25,7 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 
 	function manageChoice(player) {
 		match.begin(player);
-		Ui.pushView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
+		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 	}
 
 	function onKey(key) {
@@ -63,15 +52,22 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 		return true;
 	}
 
+	function onBack() {
+		//return to type screen
+		var view = new TypeView();
+		Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		return true;
+	}
+
 	function onTap(event) {
 		var random = view.findDrawableById("beginner_random");
 		var opponent = view.findDrawableById("beginner_opponent");
 		var you = view.findDrawableById("beginner_you");
 		var tapped = UIHelpers.findTappedDrawable(event, [random, opponent, you]);
-		if("beginner_opponent".equals(tapped.identifier)) {
+		if(opponent.equals(tapped)) {
 			manageChoice(:player_2);
 		}
-		else if("beginner_you".equals(tapped.identifier)) {
+		else if(you.equals(tapped)) {
 			manageChoice(:player_1);
 		}
 		else {
@@ -79,5 +75,4 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 		}
 		return true;
 	}
-
 }

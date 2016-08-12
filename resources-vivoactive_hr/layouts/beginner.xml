@@ -1,0 +1,6 @@
+<layout id="beginner">
+	<label x="center" y="2" text="@Strings.beginner_who" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="beginner_random" x="center" y="40" text="@Strings.beginner_random" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="beginner_opponent" x="center" y="100" text="@Strings.beginner_opponent" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="beginner_you" x="center" y="160" text="@Strings.beginner_you" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+</layout>

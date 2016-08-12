@@ -4,23 +4,11 @@ using Toybox.System as Sys;
 
 class ResultView extends Ui.View {
 
-	//! Load your resources here
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.result(dc));
 	}
 
-	//! Restore the state of the app and prepare the view to be shown
-	function onShow() {
-	}
-
-	//! Called when this View is removed from the screen. Save the
-	//! state of your app here.
-	function onHide() {
-	}
-
-	//! Update the view
-	function onUpdate(dc) {
-		View.onUpdate(dc);
+	function onShow(dc) {
 		//draw end of match text
 		var winner = match.getWinner();
 		var won_text = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
@@ -41,7 +29,7 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 		if(key.getKey() == Ui.KEY_ENTER) {
 			//return to type screen
 			var view = new TypeView();
-			Ui.pushView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 			return true;
 		}
 		return false;
@@ -50,8 +38,7 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 	function onBack() {
 		//undo last point
 		match.undo();
-		//let default behavior happen, back to previous view
-		return false;
+		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
-
 }

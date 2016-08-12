@@ -4,8 +4,13 @@
 
 		<iq:products>
 			<iq:product id="fr630"/>
+			<iq:product id="fr235"/>
+			<iq:product id="fr230"/>
+			<iq:product id="fr735xt"/>
 			<iq:product id="fenix3"/>
+			<iq:product id="fenix3_hr"/>
 			<iq:product id="vivoactive"/>
+			<iq:product id="vivoactive_hr"/>
 		</iq:products>
 
 		<iq:permissions>
@@ -15,6 +20,7 @@
 		<iq:languages>
 			<iq:language>eng</iq:language>
 			<iq:language>fre</iq:language>
+			<iq:language>deu</iq:language>
 		</iq:languages>
 
 	</iq:application>
