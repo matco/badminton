@@ -24,14 +24,14 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function manageChoice(player) {
-		match.begin(player);
+		$.match.begin(player);
 		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 	}
 
 	function onKey(key) {
 		if(key.getKey() == Ui.KEY_ENTER) {
 			//do not enable enter key on touch watches
-			if(!device.isTouchScreen) {
+			if(!$.device.isTouchScreen) {
 				//begin match with random player
 				manageRandomChoice();
 				return true;
