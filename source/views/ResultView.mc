@@ -43,6 +43,10 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 		return true;
 	}
 
+	function onPreviousPage() {
+		return onNextPage();
+	}
+
 	function onNextPage() {
 		Ui.switchToView(new StatsView(), new StatsViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
