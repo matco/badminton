@@ -15,6 +15,7 @@
 	<string id="end_you_won">You won!</string>
 	<string id="end_opponent_won">They won!</string>
 	<string id="end_total_rallies">${rallies} rallies</string>
+	<string id="end_save_garmin_connect">Save match?</string>
 
 	<string id="stats_title">Statistics</string>
 	<string id="stats_average_heart_rate">Average HR ${average_heart_rate}bpm</string>
