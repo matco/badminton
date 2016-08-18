@@ -9,7 +9,7 @@ var device = Sys.getDeviceSettings();
 
 class BadmintonScoreTrackerApp extends App.AppBase {
 
-	/*function onStart() {
+	/*function onStart(state) {
 		//test
 		Test.test();
 	}*/
