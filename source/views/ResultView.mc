@@ -8,7 +8,7 @@ class ResultView extends Ui.View {
 		setLayout(Rez.Layouts.result(dc));
 	}
 
-	function onShow(dc) {
+	function onShow() {
 		//draw end of match text
 		var winner = $.match.getWinner();
 		var won_text = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
