@@ -108,11 +108,11 @@ module MatchTest {
 
 		match.score(:player_1);
 		match.score(:player_1);
-		Assert.isEqual(match.getScore(:player_1), 3, "Score of player 1 is now 5");
+		Assert.isEqual(match.getScore(:player_1), 4, "Score of player 1 is now 4");
 		Assert.isTrue(match.hasEnded(), "Match has ended if absolute maximum point has been reached");
 
 		match.score(:player_1);
-		Assert.isEqual(match.getScore(:player_1), 5, "Score after match has ended does nothing");
+		Assert.isEqual(match.getScore(:player_1), 4, "Score after match has ended does nothing");
 		match.score(:player_2);
 		Assert.isEqual(match.getScore(:player_2), 2, "Score after match has ended does nothing");
 	}
