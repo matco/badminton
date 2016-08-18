@@ -9,7 +9,7 @@ module Test {
 		BetterMathTest.testMin();
 		BetterMathTest.testMax();
 
-		GeometryTest.testMiddle();
+		GeometryTest.testMean();
 
 		HelpersTest.testFormatString();
 		HelpersTest.testFormatDuration();
@@ -18,6 +18,6 @@ module Test {
 		MatchTest.testBeginMatch();
 		MatchTest.testScore();
 
-		Sys.println("Tests executed successfully");	
+		Sys.println("Tests executed successfully");
 	}
 }

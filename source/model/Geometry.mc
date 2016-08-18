@@ -3,11 +3,12 @@ using Toybox.Math as Math;
 
 module Geometry {
 
-	function middle(number1, number2, ratio) {
-		if(ratio == null) {
-			ratio = 0.5;
-		}
-		return (number1 - number2).abs() * ratio + BetterMath.min(number1, number2);
+	function mean(number1, number2) {
+		return weightedMean(number1, number2, 0.5);
+	}
+
+	function weightedMean(number1, number2, weight) {
+		return (number1 - number2).abs() * weight + BetterMath.min(number1, number2);
 	}
 
 	function chordLength(radius, height) {
