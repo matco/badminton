@@ -47,7 +47,7 @@ class MatchView extends Ui.View {
 		var x_center = $.device.screenWidth / 2;
 		var y_top = margin_height;
 		var y_bottom = $.device.screenHeight - margin_height - timer_height;
-		var y_middle = Geometry.weightedMean(y_bottom, y_top, FIELD_RATIO);
+		var y_middle = BetterMath.weightedMean(y_bottom, y_top, FIELD_RATIO);
 
 		//calculate half width of the top, the middle and the base of the field
 		var half_width_top, half_width_middle, half_width_bottom;
@@ -63,7 +63,7 @@ class MatchView extends Ui.View {
 			half_width_top = Geometry.chordLength(radius, y_top) / 2 - margin_width;
 			half_width_bottom = Geometry.chordLength(radius, timer_height + margin_height) / 2 - margin_width;
 		}
-		half_width_middle = Geometry.weightedMean(half_width_bottom, half_width_top, FIELD_RATIO);
+		half_width_middle = BetterMath.weightedMean(half_width_bottom, half_width_top, FIELD_RATIO);
 
 		//caclulate corners coordinates
 		var corners = new [4];
@@ -97,9 +97,9 @@ class MatchView extends Ui.View {
 		];
 
 		//calculate score positions
-		var score_2_container_y = Geometry.weightedMean(y_middle, y_top, (1 - FIELD_SCORE_RATIO) / 2);
+		var score_2_container_y = BetterMath.weightedMean(y_middle, y_top, (1 - FIELD_SCORE_RATIO) / 2);
 		var score_2_container_height = (y_middle - y_top) * FIELD_SCORE_RATIO;
-		var score_1_container_y = Geometry.weightedMean(y_bottom, y_middle, (1 - FIELD_SCORE_RATIO) / 2);
+		var score_1_container_y = BetterMath.weightedMean(y_bottom, y_middle, (1 - FIELD_SCORE_RATIO) / 2);
 		var score_1_container_height = (y_bottom - y_middle) * FIELD_SCORE_RATIO;
 
 		return {
@@ -149,7 +149,7 @@ class MatchView extends Ui.View {
 			var player_corner = $.match.getPlayerCorner();
 			if(player_corner != null) {
 				var offset = FIELD_SCORE_WIDTH_PLAYER_1 / 2 + 20;
-				var y_dot = Geometry.mean($.boundaries.get("y_middle"), $.boundaries.get("y_bottom"));
+				var y_dot = BetterMath.mean($.boundaries.get("y_middle"), $.boundaries.get("y_bottom"));
 				var x_position = player_corner == 2 ? x_center - offset : x_center + offset;
 				dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
 				dc.fillCircle(x_position, y_dot, 7);

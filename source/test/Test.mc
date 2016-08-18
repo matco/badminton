@@ -8,8 +8,9 @@ module Test {
 
 		BetterMathTest.testMin();
 		BetterMathTest.testMax();
+		BetterMathTest.testMean();
+		BetterMathTest.testWeightedMean();
 
-		GeometryTest.testMean();
 		GeometryTest.testChordLength();
 
 		HelpersTest.testFormatString();
