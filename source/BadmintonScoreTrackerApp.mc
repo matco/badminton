@@ -9,11 +9,6 @@ var device = Sys.getDeviceSettings();
 
 class BadmintonScoreTrackerApp extends App.AppBase {
 
-	/*function onStart(state) {
-		//test
-		Test.test();
-	}*/
-
 	function getInitialView() {
 		var view = new TypeView();
 		return [ view, new TypeViewDelegate(view) ];
