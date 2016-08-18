@@ -13,4 +13,8 @@ module GeometryTest {
 		Assert.isEqual(Geometry.weightedMean(0, 4, 1), 4, "1 of path between 0 and 4 is 4");
 	}
 
+	function testChordLength() {
+		Assert.isEqual(Geometry.chordLength(5, 1), 6f, "Chord length at distance 1 in a circle with radius equals to 5 is 6");
+	}
+
 }

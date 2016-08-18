@@ -10,6 +10,7 @@ module Test {
 		BetterMathTest.testMax();
 
 		GeometryTest.testMean();
+		GeometryTest.testChordLength();
 
 		HelpersTest.testFormatString();
 		HelpersTest.testFormatDuration();
