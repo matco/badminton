@@ -17,6 +17,8 @@ module Test {
 		MatchTest.testNewMatch();
 		MatchTest.testBeginMatch();
 		MatchTest.testScore();
+		MatchTest.testUndo();
+		MatchTest.testEnd();
 
 		Sys.println("Tests executed successfully");
 	}
