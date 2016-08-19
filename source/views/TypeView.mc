@@ -31,8 +31,8 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		var mp = app.getProperty("maximum_points");
 		var amp = app.getProperty("absolute_maximum_points");
 
-		match = new Match(type, mp, amp);
-		match.listener = app;
+		$.match = new Match(type, mp, amp);
+		$.match.listener = app;
 
 		var view = new BeginnerView();
 		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
