@@ -9,7 +9,7 @@ class StatsView extends Ui.View {
 		setLayout(Rez.Layouts.stats(dc));
 	}
 
-	function onShow(dc) {
+	function onShow() {
 		//retrieve stats from activity
 		var activity = match.getActivity();
 		var stats_available = false;
