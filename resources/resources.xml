@@ -24,7 +24,7 @@
 			sortOrder="0"
 			precision="0"
 			chartTitle="@Strings.fit_chart_title_your_score"
-			dataLabel="@Strings.fit_chart_data_label"
+			dataLabel="@Strings.fit_data_label"
 			unitLabel="@Strings.fit_unit_label" />
 		<fitField
 			id="1"
@@ -33,7 +33,7 @@
 			sortOrder="1"
 			precision="0"
 			chartTitle="@Strings.fit_chart_title_opponent_score"
-			dataLabel="@Strings.fit_chart_data_label"
+			dataLabel="@Strings.fit_data_label"
 			unitLabel="@Strings.fit_unit_label" />
 	</fitContributions>
 </resources>

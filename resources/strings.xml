@@ -30,7 +30,7 @@
 
 	<string id="fit_activity_name">Your score</string>
 	<string id="fit_unit_label">points</string>
+	<string id="fit_data_label">Score</string>
 	<string id="fit_chart_title_your_score">Your score</string>
 	<string id="fit_chart_title_opponent_score">Opponent score</string>
-	<string id="fit_chart_data_label">Score</string>
 </resources>
