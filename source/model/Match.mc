@@ -3,6 +3,7 @@ using Toybox.Time as Time;
 using Toybox.ActivityRecording as Recording;
 using Toybox.Activity as Activity;
 using Toybox.FitContributor as Contributor;
+using Toybox.WatchUi as Ui;
 
 class Match {
 
@@ -56,9 +57,9 @@ class Match {
 
 		//manage activity session
 		discard();
-		session = Recording.createSession({:sport => Recording.SPORT_GENERIC, :subSport => Recording.SUB_SPORT_MATCH, :name => "Badminton"});
-		session_field_player_1 = session.createField("score_player_1", SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => "points" });
-		session_field_player_2 = session.createField("score_player_2", SCORE_PLAYER_2_FIELD_ID,	Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => "points" });
+		session = Recording.createSession({:sport => Recording.SPORT_GENERIC, :subSport => Recording.SUB_SPORT_MATCH, :name => Ui.loadResource(Rez.Strings.fit_activity_name)});
+		session_field_player_1 = session.createField("score_player_1", SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_unit_label)});
+		session_field_player_2 = session.createField("score_player_2", SCORE_PLAYER_2_FIELD_ID,	Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_unit_label)});
 		session.start();
 
 		if(listener != null && listener has :onMatchBegin) {
