@@ -23,8 +23,7 @@
 			displayInActivitySummary="true"
 			sortOrder="0"
 			precision="0"
-			chartTitle="@Strings.fit_chart_title_your_score"
-			dataLabel="@Strings.fit_data_label"
+			dataLabel="@Strings.fit_player_1_label"
 			unitLabel="@Strings.fit_unit_label" />
 		<fitField
 			id="1"
@@ -32,8 +31,7 @@
 			displayInActivitySummary="true"
 			sortOrder="1"
 			precision="0"
-			chartTitle="@Strings.fit_chart_title_opponent_score"
-			dataLabel="@Strings.fit_data_label"
+			dataLabel="@Strings.fit_player_2_label"
 			unitLabel="@Strings.fit_unit_label" />
 	</fitContributions>
 </resources>
