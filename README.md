@@ -1,4 +1,4 @@
-#Badminton
+# Badminton
 Badminton is an application for Garmin watches that will help you to track your score when you're playing badminton.
 
 It is available on the Garmin store here:
