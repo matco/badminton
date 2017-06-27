@@ -1,7 +1,14 @@
 using Toybox.System as Sys;
 using Toybox.Time as Time;
+using Toybox.ActivityRecording as Recording;
+using Toybox.Activity as Activity;
+using Toybox.FitContributor as Contributor;
+using Toybox.WatchUi as Ui;
 
 class Match {
+
+	const SCORE_PLAYER_1_FIELD_ID = 0;
+	const SCORE_PLAYER_2_FIELD_ID = 1;
 
 	hidden var type; //type of the match, :single or :double
 	hidden var beginner; //store the beginner of the match, :player_1 or :player_2
@@ -11,8 +18,9 @@ class Match {
 	hidden var scores; //dictionnary containing players current scores
 	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
 
-	var startTime;
-	var stopTime;
+	hidden var session;
+	hidden var session_field_player_1;
+	hidden var session_field_player_2;
 
 	var listener;
 	var maximum_points;
@@ -27,17 +35,42 @@ class Match {
 		scores = {:player_1 => 0, :player_2 => 0};
 	}
 
+	function save() {
+		if(session != null) {
+			session_field_player_1.setData(scores[:player_1]);
+			session_field_player_2.setData(scores[:player_2]);
+			session.save();
+		}
+		session = null;
+	}
+
+	function discard() {
+		if(session != null) {
+			session.discard();
+		}
+		session = null;
+	}
+
 	function begin(player) {
 		beginner = player;
 		server = true;
-		startTime = Time.now();
+
+		//manage activity session
+		discard();
+		session = Recording.createSession({:sport => Recording.SPORT_GENERIC, :subSport => Recording.SUB_SPORT_MATCH, :name => Ui.loadResource(Rez.Strings.fit_activity_name)});
+		session_field_player_1 = session.createField("score_player_1", SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_unit_label)});
+		session_field_player_2 = session.createField("score_player_2", SCORE_PLAYER_2_FIELD_ID,	Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_unit_label)});
+		session.start();
+
 		if(listener != null && listener has :onMatchBegin) {
 			listener.onMatchBegin();
 		}
 	}
 
 	hidden function end(winner) {
-		stopTime = Time.now();
+		//manage activity session
+		session.stop();
+
 		if(listener != null && listener has :onMatchEnd) {
 			listener.onMatchEnd(winner);
 		}
@@ -62,7 +95,6 @@ class Match {
 	}
 
 	function undo() {
-		stopTime = null;
 		if(rallies.size() > 0) {
 			var rally = rallies.pop();
 			//in double, change server if player 1 (watch carrier) team looses service
@@ -72,7 +104,15 @@ class Match {
 				}
 			}
 			scores[rally]--;
+			//manage activity session
+			if(session.isRecording()) {
+				session.start();
+			}
 		}
+	}
+
+	function getActivity() {
+		return Activity.getActivityInfo();
 	}
 
 	function getRalliesNumber() {
@@ -80,11 +120,8 @@ class Match {
 	}
 
 	function getDuration() {
-		if(startTime == null) {
-			return null;
-		}
-		var time = stopTime != null ? stopTime : Time.now();
-		return time.subtract(startTime);
+		var time = getActivity().elapsedTime;
+		return time != null ? time / 1000 : 0;
 	}
 
 	function getType() {

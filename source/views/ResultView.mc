@@ -2,6 +2,17 @@ using Toybox.WatchUi as Ui;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 
+class SaveMatchConfirmationDelegate extends Ui.ConfirmationDelegate {
+	function onResponse(value) {
+		if(value == CONFIRM_YES) {
+			match.save();
+		}
+		//return to type screen
+		var view = new TypeView();
+		Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+	}
+}
+
 class ResultView extends Ui.View {
 
 	function onLayout(dc) {
@@ -25,14 +36,10 @@ class ResultView extends Ui.View {
 
 class ResultViewDelegate extends Ui.BehaviorDelegate {
 
-	function onKey(key) {
-		if(key.getKey() == Ui.KEY_ENTER) {
-			//return to type screen
-			var view = new TypeView();
-			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
-			return true;
-		}
-		return false;
+	function onSelect() {
+		var save_match_confirmation = new Ui.Confirmation(Ui.loadResource(Rez.Strings.end_save_garmin_connect));
+		Ui.pushView(save_match_confirmation, new SaveMatchConfirmationDelegate(), Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 
 	function onBack() {
@@ -41,4 +48,14 @@ class ResultViewDelegate extends Ui.BehaviorDelegate {
 		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
+
+	function onPreviousPage() {
+		return onNextPage();
+	}
+
+	function onNextPage() {
+		Ui.switchToView(new StatsView(), new StatsViewDelegate(), Ui.SLIDE_IMMEDIATE);
+		return true;
+	}
+
 }

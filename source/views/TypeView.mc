@@ -17,13 +17,23 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 		self.view = view;
 	}
 
+	function discardMatch() {
+		if(match != null) {
+			match.discard();
+			match = null;
+		}
+	}
+
 	function manageChoice(type) {
+		discardMatch();
+
 		var app = Application.getApp();
 		var mp = app.getProperty("maximum_points");
 		var amp = app.getProperty("absolute_maximum_points");
 
 		$.match = new Match(type, mp, amp);
 		$.match.listener = app;
+
 		var view = new BeginnerView();
 		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 	}
@@ -54,6 +64,7 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function onBack() {
+		discardMatch();
 		Sys.exit();
 	}
 }
