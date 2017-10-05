@@ -1,6 +1,8 @@
-using Toybox.WatchUi as Ui;
+using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
+using Toybox.Time.Gregorian as Calendar;
+using Toybox.WatchUi as Ui;
 
 var boundaries;
 var need_full_update;
@@ -15,6 +17,10 @@ class MatchView extends Ui.View {
 	const FIELD_SCORE_WIDTH_PLAYER_2 = 40;
 
 	hidden var timer;
+	hidden var display_time;
+	hidden var clock_24_hour;
+	hidden var time_am_str;
+	hidden var time_pm_str;
 
 	function initialize() {
 		timer = new Timer.Timer();
@@ -22,6 +28,10 @@ class MatchView extends Ui.View {
 	}
 
 	function onShow() {
+		display_time = App.getApp().getProperty("display_time");
+		clock_24_hour = System.getDeviceSettings().is24Hour;
+		time_am_str = Ui.loadResource(Rez.Strings.time_am);
+		time_pm_str = Ui.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
 		//when shown, ask for full update
 		$.need_full_update = true;
@@ -166,9 +176,37 @@ class MatchView extends Ui.View {
 		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 		dc.fillRectangle(0, y_bottom, dc.getWidth(), timer_height);
 
-		//draw timer
+		//draw timer or time
+		var time_str = "";
+		if (display_time) {
+			var time_now = Calendar.info(Time.now(), Time.FORMAT_SHORT);
+			var hour = time_now.hour;
+			var am_pm = time_am_str;
+			if (!clock_24_hour) {
+				if (hour >= 12) {
+					am_pm = time_pm_str;
+				}
+				if (hour > 12) {
+					hour -= 12;
+					am_pm = time_pm_str;
+				} else if (hour == 0) {
+					hour = 12;
+					am_pm = time_am_str;
+				}
+			}
+			time_str = Lang.format(hour < 10 ? "0$1$" : "$1$", [hour]);
+			time_str += ":";
+			time_str += Lang.format(time_now.min < 10 ? "0$1$" : "$1$", [time_now.min]);
+			time_str += ":";
+			time_str += Lang.format(time_now.sec < 10 ? "0$1$" : "$1$", [time_now.sec]);
+			if (!clock_24_hour) {
+				time_str += " " + am_pm;
+			}
+		} else {
+			time_str = Helpers.formatDuration($.match.getDuration());
+		}
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.drawText(x_center, y_bottom + timer_height * 0.1, Gfx.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, y_bottom + timer_height * 0.1, Gfx.FONT_SMALL, time_str, Gfx.TEXT_JUSTIFY_CENTER);
 	}
 
 	//! Update the view
