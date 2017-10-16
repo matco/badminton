@@ -3,5 +3,6 @@
 		<property id="maximum_points" type="number">21</property>
 		<property id="absolute_maximum_points" type="number">30</property>
 		<property id="enable_sound" type="boolean">true</property>
+		<property id="display_time" type="boolean">false</property>
 	</properties>
 </resources>

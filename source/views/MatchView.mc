@@ -1,6 +1,8 @@
-using Toybox.WatchUi as Ui;
+using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
+using Toybox.Time.Gregorian as Calendar;
+using Toybox.WatchUi as Ui;
 
 var boundaries;
 var need_full_update;
@@ -15,13 +17,21 @@ class MatchView extends Ui.View {
 	const FIELD_SCORE_WIDTH_PLAYER_2 = 40;
 
 	hidden var timer;
+	hidden var display_time;
+	hidden var clock_24_hour;
+	hidden var time_am_str;
+	hidden var time_pm_str;
 
 	function initialize() {
 		timer = new Timer.Timer();
+		display_time = App.getApp().getProperty("display_time");
 		$.boundaries = getFieldBoundaries();
 	}
 
 	function onShow() {
+		clock_24_hour = System.getDeviceSettings().is24Hour;
+		time_am_str = Ui.loadResource(Rez.Strings.time_am);
+		time_pm_str = Ui.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
 		//when shown, ask for full update
 		$.need_full_update = true;
@@ -46,6 +56,9 @@ class MatchView extends Ui.View {
 		//calculate strategic positions
 		var x_center = $.device.screenWidth / 2;
 		var y_top = margin_height;
+		if (display_time) {
+			y_top += timer_height;
+		}
 		var y_bottom = $.device.screenHeight - margin_height - timer_height;
 		var y_middle = BetterMath.weightedMean(y_bottom, y_top, FIELD_RATIO);
 
@@ -60,7 +73,7 @@ class MatchView extends Ui.View {
 		//round watches
 		else {
 			var radius = $.device.screenWidth / 2;
-			half_width_top = Geometry.chordLength(radius, y_top) / 2 - margin_width;
+			half_width_top = Geometry.chordLength(radius, margin_height) / 2 - margin_width;
 			half_width_bottom = Geometry.chordLength(radius, timer_height + margin_height) / 2 - margin_width;
 		}
 		half_width_middle = BetterMath.weightedMean(half_width_bottom, half_width_top, FIELD_RATIO);
@@ -106,6 +119,8 @@ class MatchView extends Ui.View {
 			"x_center" => x_center,
 			"y_middle" => y_middle,
 			"y_bottom" => y_bottom,
+			"y_top" => y_top,
+			"margin_height" => margin_height,
 			"corners" => corners,
 			"score_2_container_y" => score_2_container_y,
 			"score_2_container_height" => score_2_container_height,
@@ -160,12 +175,45 @@ class MatchView extends Ui.View {
 	function drawTimer(dc) {
 		var x_center = $.boundaries.get("x_center");
 		var y_bottom = $.boundaries.get("y_bottom");
+		var margin_height = $.boundaries.get("margin_height");
+		var y_top = $.boundaries.get("y_top");
 		var timer_height = $.boundaries.get("timer_height");
+
+		if (display_time) {
+			var time_now = Calendar.info(Time.now(), Time.FORMAT_SHORT);
+			var hour = time_now.hour;
+			var am_pm = time_am_str;
+			if (!clock_24_hour) {
+				if (hour >= 12) {
+					am_pm = time_pm_str;
+				}
+				if (hour > 12) {
+					hour -= 12;
+					am_pm = time_pm_str;
+				} else if (hour == 0) {
+					hour = 12;
+					am_pm = time_am_str;
+				}
+			}
+			var time_str = Lang.format(hour < 10 ? "0$1$" : "$1$", [hour]);
+			time_str += ":";
+			time_str += Lang.format(time_now.min < 10 ? "0$1$" : "$1$", [time_now.min]);
+			time_str += ":";
+			time_str += Lang.format(time_now.sec < 10 ? "0$1$" : "$1$", [time_now.sec]);
+			if (!clock_24_hour) {
+				time_str += " " + am_pm;
+			}
+			//clean only the area of the time
+			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
+			dc.fillRectangle(0, 0, dc.getWidth(), y_top);
+			//draw time
+			dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+			dc.drawText(x_center, margin_height - timer_height * 0.1, Gfx.FONT_SMALL, time_str, Gfx.TEXT_JUSTIFY_CENTER);
+		}
 
 		//clean only the area of the timer
 		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 		dc.fillRectangle(0, y_bottom, dc.getWidth(), timer_height);
-
 		//draw timer
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 		dc.drawText(x_center, y_bottom + timer_height * 0.1, Gfx.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
