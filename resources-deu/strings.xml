@@ -17,6 +17,9 @@
 	<string id="end_total_rallies">${rallies} Wechsel</string>
 	<string id="end_save_garmin_connect">Spiel speichern?</string>
 
+	<string id="time_am">am</string>
+	<string id="time_pm">pm</string>
+
 	<string id="stats_title">Statistik</string>
 	<string id="stats_average_heart_rate">Durchschn. HF ${average_heart_rate}bpm</string>
 	<string id="stats_max_heart_rate">Max HF ${max_heart_rate}bpm</string>
@@ -27,6 +30,7 @@
 	<string id="settings_maximum_number_points_title">Maximale Punkte</string>
 	<string id="settings_absolute_maximum_number_points_title">Absolute maximale Punkte</string>
 	<string id="settings_enable_sound">Sound einschalten</string>
+	<string id="settings_display_time">Anzeige der Uhrzeit</string>
 
 	<string id="fit_activity_name">Badminton</string>
 	<string id="fit_unit_label">Punkte</string>

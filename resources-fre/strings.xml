@@ -17,6 +17,9 @@
 	<string id="end_total_rallies">${rallies} échanges</string>
 	<string id="end_save_garmin_connect">Sauver le match?</string>
 
+	<string id="time_am">am</string>
+	<string id="time_pm">pm</string>
+
 	<string id="stats_title">Statistiques</string>
 	<string id="stats_average_heart_rate">HR moyen ${average_heart_rate}bpm</string>
 	<string id="stats_max_heart_rate">HR max ${max_heart_rate}bpm</string>
