@@ -1,7 +1,6 @@
 using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
-using Toybox.Time.Gregorian as Calendar;
 using Toybox.WatchUi as Ui;
 
 var boundaries;
@@ -19,8 +18,8 @@ class MatchView extends Ui.View {
 	hidden var timer;
 	hidden var display_time;
 	hidden var clock_24_hour;
-	hidden var time_am_str;
-	hidden var time_pm_str;
+	hidden var time_am_label;
+	hidden var time_pm_label;
 
 	function initialize() {
 		timer = new Timer.Timer();
@@ -30,8 +29,8 @@ class MatchView extends Ui.View {
 
 	function onShow() {
 		clock_24_hour = System.getDeviceSettings().is24Hour;
-		time_am_str = Ui.loadResource(Rez.Strings.time_am);
-		time_pm_str = Ui.loadResource(Rez.Strings.time_pm);
+		time_am_label = Ui.loadResource(Rez.Strings.time_am);
+		time_pm_label = Ui.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
 		//when shown, ask for full update
 		$.need_full_update = true;
@@ -180,35 +179,13 @@ class MatchView extends Ui.View {
 		var timer_height = $.boundaries.get("timer_height");
 
 		if (display_time) {
-			var time_now = Calendar.info(Time.now(), Time.FORMAT_SHORT);
-			var hour = time_now.hour;
-			var am_pm = time_am_str;
-			if (!clock_24_hour) {
-				if (hour >= 12) {
-					am_pm = time_pm_str;
-				}
-				if (hour > 12) {
-					hour -= 12;
-					am_pm = time_pm_str;
-				} else if (hour == 0) {
-					hour = 12;
-					am_pm = time_am_str;
-				}
-			}
-			var time_str = Lang.format(hour < 10 ? "0$1$" : "$1$", [hour]);
-			time_str += ":";
-			time_str += Lang.format(time_now.min < 10 ? "0$1$" : "$1$", [time_now.min]);
-			time_str += ":";
-			time_str += Lang.format(time_now.sec < 10 ? "0$1$" : "$1$", [time_now.sec]);
-			if (!clock_24_hour) {
-				time_str += " " + am_pm;
-			}
+			var time_label = Helpers.formatCurrentTime(clock_24_hour, time_am_label, time_pm_label);
 			//clean only the area of the time
 			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 			dc.fillRectangle(0, 0, dc.getWidth(), y_top);
 			//draw time
 			dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-			dc.drawText(x_center, margin_height - timer_height * 0.1, Gfx.FONT_SMALL, time_str, Gfx.TEXT_JUSTIFY_CENTER);
+			dc.drawText(x_center, margin_height - timer_height * 0.1, Gfx.FONT_SMALL, time_label, Gfx.TEXT_JUSTIFY_CENTER);
 		}
 
 		//clean only the area of the timer
