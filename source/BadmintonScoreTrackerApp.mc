@@ -4,6 +4,7 @@ using Toybox.System as Sys;
 using Toybox.Attention as Attention;
 using Toybox.Timer as Timer;
 
+var config;
 var match;
 var device = Sys.getDeviceSettings();
 

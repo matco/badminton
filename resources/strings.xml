@@ -7,15 +7,21 @@
 	<string id="type_what">Choose your match</string>
 	<string id="type_single">Single</string>
 	<string id="type_double">Double</string>
+	
+	<string id="sets_number">Number of sets?</string>
 
 	<string id="beginner_who">Who starts?</string>
 	<string id="beginner_opponent">Opponent</string>
 	<string id="beginner_you">You</string>
 	<string id="beginner_random">Random</string>
 
+	<string id="set_end_you_won">Set won!</string>
+	<string id="set_end_opponent_won">Set lost!</string>
+	<string id="set_end_rallies">${rallies} rallies</string>
+
 	<string id="end_you_won">You won!</string>
 	<string id="end_opponent_won">They won!</string>
-	<string id="end_total_rallies">${rallies} rallies</string>
+	<string id="end_total_rallies">${rallies} total rallies</string>
 	<string id="end_save_garmin_connect">Save match?</string>
 
 	<string id="time_am">am</string>
@@ -34,7 +40,10 @@
 	<string id="settings_display_time">Display time</string>
 
 	<string id="fit_activity_name">Badminton</string>
-	<string id="fit_unit_label">points</string>
-	<string id="fit_player_1_label">Your score</string>
-	<string id="fit_player_2_label">Opponent score</string>
+	<string id="fit_set_unit_label">sets</string>
+	<string id="fit_score_unit_label">points</string>
+	<string id="fit_set_player_1_label">Set won</string>
+	<string id="fit_set_player_2_label">Set lost</string>
+	<string id="fit_score_player_1_label">Your score</string>
+	<string id="fit_score_player_2_label">Opponent score</string>
 </resources>

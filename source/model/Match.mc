@@ -7,59 +7,50 @@ using Toybox.WatchUi as Ui;
 
 class Match {
 
-	const SCORE_PLAYER_1_FIELD_ID = 0;
-	const SCORE_PLAYER_2_FIELD_ID = 1;
+	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
+	const TOTAL_SCORE_PLAYER_2_FIELD_ID = 1;
+	const SET_WON_PLAYER_1_FIELD_ID = 2;
+	const SET_WON_PLAYER_2_FIELD_ID = 3;
 
 	hidden var type; //type of the match, :single or :double
-	hidden var beginner; //store the beginner of the match, :player_1 or :player_2
+	hidden var sets; //array of all sets containing -1 for a set not played
 
-	hidden var rallies; //list of all rallies
-
-	hidden var scores; //dictionnary containing players current scores
 	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
+	hidden var winner; //store the winner of the match, :player_1 or :player_2
+
+	hidden var maximum_points;
+	hidden var absolute_maximum_points;
 
 	hidden var session;
-	hidden var session_field_player_1;
-	hidden var session_field_player_2;
+	hidden var session_field_set_player_1;
+	hidden var session_field_set_player_2;
+	hidden var session_field_score_player_1;
+	hidden var session_field_score_player_2;
 
-	var listener;
-	var maximum_points;
-	var absolute_maximum_points;
+	hidden var listener;
 
-	function initialize(match_type, mp, amp) {
+	function initialize(match_type, sets_number, match_beginner, mp, amp, match_listener) {
 		type = match_type;
+		server = true;
+
+		//prepare array of sets and create forst set
+		sets = new [sets_number];
+		sets[0] = new MatchSet(match_beginner);
+		for(var i = 1; i < sets_number; i++) {
+			sets[i] = -1;
+		}
+
 		maximum_points = mp;
 		absolute_maximum_points = amp;
 
-		rallies = new List();
-		scores = {:player_1 => 0, :player_2 => 0};
-	}
-
-	function save() {
-		if(session != null) {
-			session_field_player_1.setData(scores[:player_1]);
-			session_field_player_2.setData(scores[:player_2]);
-			session.save();
-		}
-		session = null;
-	}
-
-	function discard() {
-		if(session != null) {
-			session.discard();
-		}
-		session = null;
-	}
-
-	function begin(player) {
-		beginner = player;
-		server = true;
+		listener = match_listener;
 
 		//manage activity session
-		discard();
 		session = Recording.createSession({:sport => Recording.SPORT_GENERIC, :subSport => Recording.SUB_SPORT_MATCH, :name => Ui.loadResource(Rez.Strings.fit_activity_name)});
-		session_field_player_1 = session.createField("score_player_1", SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_unit_label)});
-		session_field_player_2 = session.createField("score_player_2", SCORE_PLAYER_2_FIELD_ID,	Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_unit_label)});
+		session_field_set_player_1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_set_unit_label)});
+		session_field_set_player_2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_set_unit_label)});
+		session_field_score_player_1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_score_player_2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
 		session.start();
 
 		if(listener != null && listener has :onMatchBegin) {
@@ -67,7 +58,21 @@ class Match {
 		}
 	}
 
-	hidden function end(winner) {
+	function save() {
+		//session can only be save once
+		session_field_set_player_1.setData(getSetsWon(:player_1));
+		session_field_set_player_2.setData(getSetsWon(:player_2));
+		session_field_score_player_1.setData(getTotalScore(:player_1));
+		session_field_score_player_2.setData(getTotalScore(:player_2));
+		session.save();
+	}
+
+	function discard() {
+		session.discard();
+	}
+
+	hidden function end(winner_player) {
+		winner = winner_player;
 		//manage activity session
 		session.stop();
 
@@ -76,47 +81,105 @@ class Match {
 		}
 	}
 
-	function score(player) {
-		if(hasBegun() && !hasEnded()) {
+	function nextSet() {
+		var i = getCurrentSetIndex();
+
+		//alternate beginner
+		var beginner = sets[i].getBeginner();
+		if(beginner == :player_1) {
+			beginner = :player_2;
+		}
+		else {
+			beginner = :player_1;
+		}
+
+		//create next set
+		sets[i +1] = new MatchSet(beginner);
+	}
+
+	function getSetsNumber() {
+		return sets.size();
+	}
+
+	function getCurrentSetIndex() {
+		var i = 0;
+		while(i < sets.size() && sets[i] != -1) {
+			i++;
+		}
+		return i - 1;
+	}
+
+	function getCurrentSet() {
+		return sets[getCurrentSetIndex()];
+	}
+
+	function score(scorer) {
+		if(!hasEnded()) {
+			var set = getCurrentSet();
+			var previous_rally = set.getRallies().last();
+			set.score(scorer);
+
 			//in double, change server if player 1 (watch carrier) team regains service
 			if(type == :double) {
-				if(rallies.last() == :player_2 && player == :player_1) {
+				if(previous_rally == :player_2 && scorer == :player_1) {
 					server = !server;
 				}
 			}
-			rallies.push(player);
-			scores[player]++;
-			//detect if match has a winner
-			var winner = getWinner();
-			if(winner != null) {
-				end(winner);
+
+			//detect if match has a set winner
+			var set_winner = isSetWon(set);
+			if(set_winner != null) {
+				set.end(set_winner);
+				var match_winner = isWon();
+				if(match_winner != null) {
+					end(match_winner);
+				}
 			}
 		}
 	}
 
+	hidden function isSetWon(set) {
+		var scorePlayer1 = set.getScore(:player_1);
+		var scorePlayer2 = set.getScore(:player_2);
+		if(scorePlayer1 >= absolute_maximum_points || scorePlayer1 >= maximum_points && (scorePlayer1 - scorePlayer2) > 1) {
+			return :player_1;
+		}
+		if(scorePlayer2 >= absolute_maximum_points || scorePlayer2 >= maximum_points && (scorePlayer2 - scorePlayer1) > 1) {
+			return :player_2;
+		}
+		return null;
+	}
+
+	hidden function isWon() {
+		var winning_sets = sets.size() / 2;
+		var player_1_sets = getSetsWon(:player_1);
+		if(player_1_sets > winning_sets) {
+			return :player_1;
+		}
+		var player_2_sets = getSetsWon(:player_2);
+		if(player_2_sets > winning_sets) {
+			return :player_2;
+		}
+		return null;
+	}
+
 	function undo() {
-		if(rallies.size() > 0) {
-			var rally = rallies.pop();
-			//in double, change server if player 1 (watch carrier) team looses service
-			if(type == :double) {
-				if(rally == :player_1 && rallies.last() == :player_2) {
-					server = !server;
-				}
-			}
-			scores[rally]--;
-			//manage activity session
-			if(session.isRecording()) {
-				session.start();
+		winner = null;
+
+		var set = getCurrentSet();
+		var undone_rally = set.getRallies().last();
+		set.undo();
+
+		//in double, change server if player 1 (watch carrier) team looses service
+		if(type == :double) {
+			if(undone_rally == :player_1 && set.getRallies().last() == :player_2) {
+				server = !server;
 			}
 		}
 	}
 
 	function getActivity() {
 		return Activity.getActivityInfo();
-	}
-
-	function getRalliesNumber() {
-		return rallies.size();
 	}
 
 	function getDuration() {
@@ -129,53 +192,57 @@ class Match {
 		return type;
 	}
 
-	function hasBegun() {
-		return beginner != null;
+	function getSets() {
+		return sets;
 	}
 
 	function hasEnded() {
-		return getWinner() != null;
+		return winner != null;
 	}
 
-	function getScore(player) {
-		return scores[player];
+	function getTotalRalliesNumber() {
+		var i = 0;
+		var number = 0;
+		while(i < sets.size() && sets[i] != -1) {
+			number += sets[i].getRalliesNumber();
+			i++;
+		}
+		return number;
+	}
+
+	function getTotalScore(player) {
+		var score = 0;
+		for(var i = 0; i <= getCurrentSetIndex(); i++) {
+			score = score + sets[i].getScore(player);
+		}
+		return score;
+	}
+
+	function getSetsWon(player) {
+		var won = 0;
+		for(var i = 0; i <= getCurrentSetIndex(); i++) {
+			if(sets[i].getWinner() == player) {
+				won++;
+			}
+		}
+		return won;
 	}
 
 	function getWinner() {
-		var scorePlayer1 = getScore(:player_1);
-		var scorePlayer2 = getScore(:player_2);
-		if(scorePlayer1 >= absolute_maximum_points || scorePlayer1 >= maximum_points && (scorePlayer1 - scorePlayer2) > 1) {
-			return :player_1;
-		}
-		if(scorePlayer2 >= absolute_maximum_points || scorePlayer2 >= maximum_points && (scorePlayer2 - scorePlayer1) > 1) {
-			return :player_2;
-		}
-		return null;
+		return winner;
 	}
 
-	function getServer() {
-		//beginning of the match
-		if(rallies.isEmpty()) {
-			return beginner;
-		}
-		//last team who score
-		return rallies.last();
+	function getServerTeam() {
+		return getCurrentSet().getServerTeam();
 	}
 
 	function getHighlightedCorner() {
-		var server = getServer();
-		var server_score = getScore(server);
-		//player 1 serves from corner 2 or 3
-		if(server == :player_1) {
-			return 3 - server_score % 2;
-		}
-		//player 2 serves from corner 0 or 1
-		return server_score % 2;
+		return getCurrentSet().getHighlightedCorner();
 	}
 
 	//methods used from perspective of player 1 (watch carrier)
 	hidden function getPlayerTeamIsServer() {
-		return getServer() == :player_1;
+		return getServerTeam() == :player_1;
 	}
 
 	function getPlayerCorner() {

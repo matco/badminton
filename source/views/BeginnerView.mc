@@ -29,7 +29,21 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function manageChoice(player) {
-		$.match.begin(player);
+		//discard previous match if any
+		if($.match != null) {
+			$.match.discard();
+		}
+
+		//create match
+		var type = $.config[:type];
+		var sets_number = $.config[:sets_number];
+
+		var app = Application.getApp();
+		var mp = app.getProperty("maximum_points");
+		var amp = app.getProperty("absolute_maximum_points");
+
+		$.match = new Match(type, sets_number, player, mp, amp, app);
+
 		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
 	}
 
@@ -58,9 +72,10 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function onBack() {
-		//return to type screen
+		//return to type screen and push set screen over because it is not possible to swith to a picker view
 		var view = new TypeView();
 		Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		Ui.pushView(new SetPicker(), new SetPickerDelegate(), Ui.SLIDE_IMMEDIATE);
 		return true;
 	}
 
