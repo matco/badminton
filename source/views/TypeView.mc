@@ -4,6 +4,10 @@ using Toybox.System as Sys;
 
 class TypeView extends Ui.View {
 
+	function initialize() {
+		View.initialize();
+	}
+
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.type(dc));
 	}
@@ -14,6 +18,7 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 	hidden var view;
 
 	function initialize(view) {
+		BehaviorDelegate.initialize();
 		self.view = view;
 	}
 

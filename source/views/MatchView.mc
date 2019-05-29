@@ -22,6 +22,8 @@ class MatchView extends Ui.View {
 	hidden var time_pm_label;
 
 	function initialize() {
+		View.initialize();
+
 		timer = new Timer.Timer();
 		display_time = App.getApp().getProperty("display_time");
 		$.boundaries = getFieldBoundaries();
@@ -210,6 +212,10 @@ class MatchView extends Ui.View {
 }
 
 class MatchViewDelegate extends Ui.BehaviorDelegate {
+
+	function initialize() {
+		BehaviorDelegate.initialize();
+	}
 
 	function onMenu() {
 		Ui.pushView(new Rez.Menus.MainMenu(), new MenuDelegate(), Ui.SLIDE_IMMEDIATE);

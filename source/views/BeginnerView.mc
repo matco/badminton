@@ -5,6 +5,10 @@ using Toybox.Math as Math;
 
 class BeginnerView extends Ui.View {
 
+	function initialize() {
+		View.initialize();
+	}
+
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.beginner(dc));
 	}
@@ -15,6 +19,7 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 	hidden var view;
 
 	function initialize(view) {
+		BehaviorDelegate.initialize();
 		self.view = view;
 	}
 

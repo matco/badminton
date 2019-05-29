@@ -3,6 +3,10 @@ using Toybox.System as Sys;
 
 class MenuDelegate extends Ui.MenuInputDelegate {
 
+	function initialize() {
+		MenuInputDelegate.initialize();
+	}
+
 	function onMenuItem(item) {
 		if(item == :menu_reset_game) {
 			//return to type screen

@@ -3,6 +3,11 @@ using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 
 class SaveMatchConfirmationDelegate extends Ui.ConfirmationDelegate {
+
+	function initialize() {
+		ConfirmationDelegate.initialize();
+	}
+
 	function onResponse(value) {
 		if(value == CONFIRM_YES) {
 			match.save();
@@ -14,6 +19,10 @@ class SaveMatchConfirmationDelegate extends Ui.ConfirmationDelegate {
 }
 
 class ResultView extends Ui.View {
+
+	function initialize() {
+		View.initialize();
+	}
 
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.result(dc));
@@ -35,6 +44,10 @@ class ResultView extends Ui.View {
 }
 
 class ResultViewDelegate extends Ui.BehaviorDelegate {
+
+	function initialize() {
+		BehaviorDelegate.initialize();
+	}
 
 	function onSelect() {
 		var save_match_confirmation = new Ui.Confirmation(Ui.loadResource(Rez.Strings.end_save_garmin_connect));
