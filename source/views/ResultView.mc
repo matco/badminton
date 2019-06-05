@@ -12,7 +12,8 @@ class SaveMatchConfirmationDelegate extends Ui.ConfirmationDelegate {
 		if(value == CONFIRM_YES) {
 			match.save();
 		}
-		//return to type screen
+		//remove confirmation from view stack before going to back to type screen
+		Ui.popView(Ui.SLIDE_IMMEDIATE);
 		var view = new TypeView();
 		Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 	}
