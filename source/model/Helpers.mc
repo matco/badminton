@@ -27,9 +27,10 @@ module Helpers {
 	}
 
 	function formatDuration(duration) {
-		var seconds = duration % 60;
-		var minutes = (duration / 60) % 60;
-		var hours = duration / 3600;
+		var time = duration.value();
+		var seconds = time % 60;
+		var minutes = (time / 60) % 60;
+		var hours = time / 3600;
 		return Lang.format("$1$:$2$:$3$", [hours.format("%02d"), minutes.format("%02d"), seconds.format("%02d")]);
 	}
 

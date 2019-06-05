@@ -1,3 +1,5 @@
+using Toybox.System as Sys;
+
 module MatchTest {
 
 	(:test)
@@ -7,7 +9,7 @@ module MatchTest {
 		BetterTest.assertFalse(match.hasEnded(), "Newly created match has not ended");
 		BetterTest.assertEqual(match.getRalliesNumber(), 0, "Newly created match has 0 rally");
 		BetterTest.assertNull(match.getWinner(), "Newly created match has no winner");
-		BetterTest.assertNull(match.getDuration(), "Newly created match has no duration");
+		BetterTest.assertEqual(match.getDuration().value(), 0, "Newly created match has no duration");
 		return true;
 	}
 

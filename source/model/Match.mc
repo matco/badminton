@@ -121,7 +121,8 @@ class Match {
 
 	function getDuration() {
 		var time = getActivity().elapsedTime;
-		return time != null ? time / 1000 : 0;
+		var seconds = time != null ? time / 1000 : 0;
+		return new Time.Duration(seconds);
 	}
 
 	function getType() {
