@@ -13,7 +13,7 @@ class Match {
 	hidden var type; //type of the match, :single or :double
 	hidden var beginner; //store the beginner of the match, :player_1 or :player_2
 
-	hidden var rallies; //array of all rallies
+	hidden var rallies; //list of all rallies
 
 	hidden var scores; //dictionnary containing players current scores
 	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server

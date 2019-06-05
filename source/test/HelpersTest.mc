@@ -19,10 +19,10 @@ module HelpersTest {
 	(:test)
 	function testFormatDuration(logger) {
 		var duration = 2 * 3600 + 28 * 60 + 42;
-		BetterTest.assertEqual(Helpers.formatDuration(new Time.Duration(duration)), "02:28:42", "Formating a duration gives the good string");
+		BetterTest.assertEqual(Helpers.formatDuration(new Time.Duration(duration)), "02:28:42", "Formatting a duration gives the good string");
 
 		duration = 355 * 3600 + 2 * 60 + 4;
-		BetterTest.assertEqual(Helpers.formatDuration(new Time.Duration(duration)), "355:02:04", "Formating a duration gives the good string");
+		BetterTest.assertEqual(Helpers.formatDuration(new Time.Duration(duration)), "355:02:04", "Formatting a duration gives the good string");
 		return true;
 	}
 }
