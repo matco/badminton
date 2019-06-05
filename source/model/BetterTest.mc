@@ -3,11 +3,6 @@ using Toybox.Test as Test;
 
 module BetterTest {
 
-	function fail(message) {
-		Sys.println("assert fails " + message);
-		throw new AssertException(message);
-	}
-
 	function assertTrue(condition, message) {
 		return Test.assertMessage(condition, message);
 	}
@@ -17,28 +12,30 @@ module BetterTest {
 	}
 
 	function assertNull(condition, message) {
-		return Test.assertEqualMessage(condition, null, message);
+		return assertSame(condition, null, message);
 	}
 
 	function assertNotNull(condition, message) {
-		return Test.assertNotEqualMessage(condition, null, message);
+		return assertNotSame(condition, null, message);
 	}
 
 	function assertEqual(actual, expected, message) {
-		if(actual has :equals) {
-			if(!actual.equals(expected)) {
-				throw new AssertException("assert equal [" + message + "] fails: expected " + expected + " - actual " + actual );
-				fail(message);
-			}
-		}
-		else {
-			assertSame(actual, expected, message);
-		}
+		return Test.assertEqualMessage(actual, expected, message);
+	}
+
+	function assertNotEqual(actual, expected, message) {
+		return Test.assertNotEqualMessage(actual, expected, message);
 	}
 
 	function assertSame(actual, expected, message) {
 		if(actual != expected) {
-			throw new AssertException("assert same [" + message + "] fails: expected " + expected + " - actual " + actual);
+			throw new Test.AssertException("ASSERTION FAILED: " + message + " (expected [" + expected + "], actual [" + actual, "]");
+		}
+	}
+
+	function assertNotSame(actual, expected, message) {
+		if(actual == expected) {
+			throw new Test.AssertException("ASSERTION FAILED: " + message);
 		}
 	}
 
