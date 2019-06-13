@@ -180,10 +180,8 @@ class Match {
 
 	function getPlayerCorner() {
 		if(getPlayerTeamIsServer()) {
-			Sys.println("player team is server");
 			var highlighted_corner = getHighlightedCorner();
 			if(server) {
-				Sys.println("player is server");
 				return highlighted_corner;
 			}
 			//return other corner

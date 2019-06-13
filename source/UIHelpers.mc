@@ -18,7 +18,7 @@ module UIHelpers {
 			if(event_y >= drawable.locY && event_y <= (drawable.locY + drawable.height)) {
 				//drawable.locX is the center of the drawable because of the justification
 				if(event_x >= (drawable.locX - drawable.width / 2) && event_x <= (drawable.locX + drawable.width / 2)) {
-					Sys.println("tap on drawable " + drawable.identifier);
+					//Sys.println("tap on drawable " + drawable.identifier);
 					return drawable;
 				}
 			}
@@ -35,7 +35,7 @@ module UIHelpers {
 				closest.put("drawable", drawable);
 			}
 		}
-		Sys.println("tap close to drawable " + closest.get("drawable").identifier);
+		//Sys.println("tap close to drawable " + closest.get("drawable").identifier);
 		return closest.get("drawable");
 	}
 }

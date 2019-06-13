@@ -137,7 +137,6 @@ class MatchView extends Ui.View {
 		var x_center = $.boundaries.get("x_center");
 
 		var highlighted_corner = $.match.getHighlightedCorner();
-		Sys.println("highlighted corner " + highlighted_corner);
 
 		var corners = $.boundaries.get("corners");
 		//draw corners
