@@ -4,10 +4,15 @@ using Toybox.System as Sys;
 using Toybox.Attention as Attention;
 using Toybox.Timer as Timer;
 
+var config;
 var match;
 var device = Sys.getDeviceSettings();
 
 class BadmintonScoreTrackerApp extends App.AppBase {
+
+	function initialize() {
+		AppBase.initialize();
+	}
 
 	function getInitialView() {
 		var view = new TypeView();

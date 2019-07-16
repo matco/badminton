@@ -5,6 +5,10 @@ using Toybox.Activity as Activity;
 
 class StatsView extends Ui.View {
 
+	function initialize() {
+		View.initialize();
+	}
+
 	function onLayout(dc) {
 		setLayout(Rez.Layouts.stats(dc));
 	}
@@ -42,6 +46,10 @@ class StatsView extends Ui.View {
 }
 
 class StatsViewDelegate extends Ui.BehaviorDelegate {
+
+	function initialize() {
+		BehaviorDelegate.initialize();
+	}
 
 	function onBack() {
 		//undo last point

@@ -21,17 +21,33 @@
 			id="0"
 			displayInChart="false"
 			displayInActivitySummary="true"
-			sortOrder="0"
+			sortOrder="2"
 			precision="0"
-			dataLabel="@Strings.fit_player_1_label"
-			unitLabel="@Strings.fit_unit_label" />
+			dataLabel="@Strings.fit_score_player_1_label"
+			unitLabel="@Strings.fit_score_unit_label" />
 		<fitField
 			id="1"
 			displayInChart="false"
 			displayInActivitySummary="true"
+			sortOrder="3"
+			precision="0"
+			dataLabel="@Strings.fit_score_player_2_label"
+			unitLabel="@Strings.fit_score_unit_label" />
+		<fitField
+			id="2"
+			displayInChart="false"
+			displayInActivitySummary="true"
+			sortOrder="0"
+			precision="0"
+			dataLabel="@Strings.fit_set_player_1_label"
+			unitLabel="@Strings.fit_set_unit_label" />
+		<fitField
+			id="3"
+			displayInChart="false"
+			displayInActivitySummary="true"
 			sortOrder="1"
 			precision="0"
-			dataLabel="@Strings.fit_player_2_label"
-			unitLabel="@Strings.fit_unit_label" />
+			dataLabel="@Strings.fit_set_player_2_label"
+			unitLabel="@Strings.fit_set_unit_label" />
 	</fitContributions>
 </resources>
