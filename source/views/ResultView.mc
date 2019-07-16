@@ -10,7 +10,10 @@ class SaveMatchConfirmationDelegate extends Ui.ConfirmationDelegate {
 
 	function onResponse(value) {
 		if(value == CONFIRM_YES) {
-			match.save();
+			$.match.save();
+		}
+		else {
+			$.match.discard();
 		}
 		//remove confirmation from view stack before going to back to type screen
 		Ui.popView(Ui.SLIDE_IMMEDIATE);

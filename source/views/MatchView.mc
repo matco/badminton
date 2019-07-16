@@ -295,6 +295,7 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 			Ui.requestUpdate();
 		}
 		else if($.match.getCurrentSetIndex() == 0) {
+			$.match.discard();
 			//return to beginner screen if match has not started yet
 			var view = new BeginnerView();
 			Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);

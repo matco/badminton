@@ -29,11 +29,6 @@ class BeginnerViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function manageChoice(player) {
-		//discard previous match if any
-		if($.match != null) {
-			$.match.discard();
-		}
-
 		//create match
 		var type = $.config[:type];
 		var sets_number = $.config[:sets_number];
