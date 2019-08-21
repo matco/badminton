@@ -52,16 +52,16 @@ class MatchView extends Ui.View {
 		var margin_height = $.device.screenHeight * ($.device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.1);
 		var margin_width = $.device.screenWidth * ($.device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
 
-		//calculate timer height
-		var timer_height = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1;
+		//calculate time (timer and clock) height
+		var time_height = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1;
 
 		//calculate strategic positions
 		var x_center = $.device.screenWidth / 2;
 		var y_top = margin_height;
 		if (display_time) {
-			y_top += timer_height;
+			y_top += time_height;
 		}
-		var y_bottom = $.device.screenHeight - margin_height - timer_height;
+		var y_bottom = $.device.screenHeight - margin_height - time_height;
 		var y_middle = BetterMath.weightedMean(y_bottom, y_top, FIELD_RATIO);
 
 		//calculate half width of the top, the middle and the base of the field
@@ -76,7 +76,7 @@ class MatchView extends Ui.View {
 		else {
 			var radius = $.device.screenWidth / 2;
 			half_width_top = Geometry.chordLength(radius, margin_height) / 2 - margin_width;
-			half_width_bottom = Geometry.chordLength(radius, timer_height + margin_height) / 2 - margin_width;
+			half_width_bottom = Geometry.chordLength(radius, time_height + margin_height) / 2 - margin_width;
 		}
 		half_width_middle = BetterMath.weightedMean(half_width_bottom, half_width_top, FIELD_RATIO);
 
@@ -141,7 +141,7 @@ class MatchView extends Ui.View {
 			"score_1_container_y" => score_1_container_y,
 			"score_1_container_height" => score_1_container_height,
 			"score_1_y" => (score_1_container_y + score_1_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MEDIUM) / 2 - 4),
-			"timer_height" => timer_height
+			"time_height" => time_height
 		};
 	}
 
@@ -218,7 +218,7 @@ class MatchView extends Ui.View {
 		var y_bottom = $.boundaries.get("y_bottom");
 		var margin_height = $.boundaries.get("margin_height");
 		var y_top = $.boundaries.get("y_top");
-		var timer_height = $.boundaries.get("timer_height");
+		var time_height = $.boundaries.get("time_height");
 
 		if (display_time) {
 			var time_label = Helpers.formatCurrentTime(clock_24_hour, time_am_label, time_pm_label);
@@ -227,18 +227,17 @@ class MatchView extends Ui.View {
 			dc.fillRectangle(0, 0, dc.getWidth(), y_top);
 			//draw time
 			dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-			dc.drawText(x_center, margin_height - timer_height * 0.1, Gfx.FONT_SMALL, time_label, Gfx.TEXT_JUSTIFY_CENTER);
+			dc.drawText(x_center, margin_height - time_height * 0.1, Gfx.FONT_SMALL, time_label, Gfx.TEXT_JUSTIFY_CENTER);
 		}
 
 		//clean only the area of the timer
 		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
-		dc.fillRectangle(0, y_bottom, dc.getWidth(), timer_height);
+		dc.fillRectangle(0, y_bottom, dc.getWidth(), time_height);
 		//draw timer
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.drawText(x_center, y_bottom + timer_height * 0.1, Gfx.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x_center, y_bottom + time_height * 0.1, Gfx.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
 	}
 
-	//! Update the view
 	function onUpdate(dc) {
 		if($.need_full_update) {
 			$.need_full_update = false;
