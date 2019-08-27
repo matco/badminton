@@ -11,11 +11,17 @@
 			<iq:product id="fenix3"/>
 			<iq:product id="fenix3_hr"/>
 			<iq:product id="fenix5"/>
+			<iq:product id="fenix5plus"/>
 			<iq:product id="fenix5s"/>
+			<iq:product id="fenix5splus"/>
 			<iq:product id="fenix5x"/>
+			<iq:product id="fenix5xplus"/>
 			<iq:product id="vivoactive"/>
 			<iq:product id="vivoactive_hr"/>
 			<iq:product id="vivoactive3"/>
+			<iq:product id="vivoactive3d"/>
+			<iq:product id="vivoactive3m"/>
+			<iq:product id="vivoactive3mlte"/>
 		</iq:products>
 
 		<iq:permissions>
