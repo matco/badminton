@@ -9,7 +9,10 @@ var need_full_update;
 class MatchView extends Ui.View {
 
 	const MAX_SETS = 5;
-	const FIELD_RATIO = 0.4;
+	const SET_BALL_RADIUS = 7; //width reserved to display sets
+
+	const FIELD_HEIGHT_RATIO = 0.4; //height of opponent part compared to total height of field
+	const FIELD_WIDTH_RATIO = 0.8;  //width of top opponent part compared to total width of field
 	const FIELD_PADDING = 2;
 	const FIELD_SCORE_RATIO = 0.7;
 
@@ -62,23 +65,23 @@ class MatchView extends Ui.View {
 			y_top += time_height;
 		}
 		var y_bottom = $.device.screenHeight - margin_height - time_height;
-		var y_middle = BetterMath.weightedMean(y_bottom, y_top, FIELD_RATIO);
+		var y_middle = BetterMath.weightedMean(y_bottom, y_top, FIELD_HEIGHT_RATIO);
 
 		//calculate half width of the top, the middle and the base of the field
 		var half_width_top, half_width_middle, half_width_bottom;
 
 		//rectangular watches
 		if($.device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE) {
-			half_width_top = ($.device.screenWidth / 2 * 0.6) - margin_width;
-			half_width_bottom = ($.device.screenWidth / 2 * 0.9) - margin_width;
+			half_width_top = ($.device.screenWidth / 2) * FIELD_WIDTH_RATIO - SET_BALL_RADIUS * 2 - margin_width;
+			half_width_bottom = ($.device.screenWidth / 2) - SET_BALL_RADIUS * 2 - margin_width;
 		}
 		//round watches
 		else {
 			var radius = $.device.screenWidth / 2;
-			half_width_top = Geometry.chordLength(radius, margin_height) / 2 - margin_width;
-			half_width_bottom = Geometry.chordLength(radius, time_height + margin_height) / 2 - margin_width;
+			half_width_top = Geometry.chordLength(radius, margin_height) / 2 - SET_BALL_RADIUS - margin_width;
+			half_width_bottom = Geometry.chordLength(radius, time_height + margin_height) / 2 - SET_BALL_RADIUS - margin_width;
 		}
-		half_width_middle = BetterMath.weightedMean(half_width_bottom, half_width_top, FIELD_RATIO);
+		half_width_middle = BetterMath.weightedMean(half_width_bottom, half_width_top, FIELD_HEIGHT_RATIO);
 
 		//caclulate corners coordinates
 		var corners = new [4];
@@ -122,7 +125,7 @@ class MatchView extends Ui.View {
 		var x_increment = (half_width_bottom - half_width_top) / MAX_SETS;
 		var y_increment = (y_bottom - y_top) / MAX_SETS;
 		for(var i = 0; i < MAX_SETS; i++) {
-			var x = x_center - half_width_bottom - 15 + x_increment * i;
+			var x = x_center - half_width_bottom - SET_BALL_RADIUS - 2 * FIELD_PADDING + x_increment * i;
 			var y = y_bottom - 15 - y_increment * i;
 			board[i] = [x, y];
 		}
@@ -196,7 +199,7 @@ class MatchView extends Ui.View {
 						}
 					}
 				}
-				dc.fillCircle(board[i][0], board[i][1], 7);
+				dc.fillCircle(board[i][0], board[i][1], SET_BALL_RADIUS);
 			}
 		}
 
