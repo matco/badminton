@@ -2,6 +2,7 @@ using Toybox.Application as App;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 using Toybox.WatchUi as Ui;
+using Toybox.Timer;
 
 var boundaries;
 var need_full_update;
