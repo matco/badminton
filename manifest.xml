@@ -3,9 +3,11 @@
 	<iq:application entry="BadmintonScoreTrackerApp" id="DE89FD8121D14E04A71ACC7FB81E156A" launcherIcon="@Drawables.application_launcher_icon" minSdkVersion="1.3.1" name="@Strings.application_name" type="watch-app">
 
 		<iq:products>
-			<iq:product id="fr630"/>
-			<iq:product id="fr235"/>
 			<iq:product id="fr230"/>
+			<iq:product id="fr235"/>
+			<iq:product id="fr630"/>
+			<iq:product id="fr645"/>
+			<iq:product id="fr645m"/>
 			<iq:product id="fr735xt"/>
 			<iq:product id="fr935"/>
 			<iq:product id="fenix3"/>
