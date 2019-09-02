@@ -15,6 +15,7 @@ class MenuDelegate extends Ui.MenuInputDelegate {
 			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 		}
 		else if(item == :menu_exit_app) {
+			$.match.discard();
 			Ui.popView(Ui.SLIDE_IMMEDIATE);
 		}
 	}
