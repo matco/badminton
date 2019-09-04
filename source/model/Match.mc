@@ -11,6 +11,8 @@ class Match {
 	const TOTAL_SCORE_PLAYER_2_FIELD_ID = 1;
 	const SET_WON_PLAYER_1_FIELD_ID = 2;
 	const SET_WON_PLAYER_2_FIELD_ID = 3;
+	const SET_SCORE_PLAYER_1_FIELD_ID = 4;
+	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
 	hidden var type; //type of the match, :single or :double
 	hidden var sets; //array of all sets containing -1 for a set not played
@@ -24,6 +26,8 @@ class Match {
 	hidden var session;
 	hidden var session_field_set_player_1;
 	hidden var session_field_set_player_2;
+	hidden var session_field_set_score_player_1;
+	hidden var session_field_set_score_player_2;
 	hidden var session_field_score_player_1;
 	hidden var session_field_score_player_2;
 
@@ -51,6 +55,8 @@ class Match {
 		session_field_set_player_2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_set_unit_label)});
 		session_field_score_player_1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
 		session_field_score_player_2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_set_score_player_1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_LAP, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_set_score_player_2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_LAP, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
 		session.start();
 
 		if(listener != null && listener has :onMatchBegin) {
@@ -60,10 +66,6 @@ class Match {
 
 	function save() {
 		//session can only be save once
-		session_field_set_player_1.setData(getSetsWon(:player_1));
-		session_field_set_player_2.setData(getSetsWon(:player_2));
-		session_field_score_player_1.setData(getTotalScore(:player_1));
-		session_field_score_player_2.setData(getTotalScore(:player_2));
 		session.save();
 	}
 
@@ -73,8 +75,6 @@ class Match {
 
 	hidden function end(winner_player) {
 		winner = winner_player;
-		//manage activity session
-		session.stop();
 
 		if(listener != null && listener has :onMatchEnd) {
 			listener.onMatchEnd(winner);
@@ -82,9 +82,11 @@ class Match {
 	}
 
 	function nextSet() {
-		var i = getCurrentSetIndex();
+		//manage activity session
+		session.addLap();
 
 		//alternate beginner
+		var i = getCurrentSetIndex();
 		var beginner = sets[i].getBeginner();
 		if(beginner == :player_1) {
 			beginner = :player_2;
@@ -130,9 +132,21 @@ class Match {
 			var set_winner = isSetWon(set);
 			if(set_winner != null) {
 				set.end(set_winner);
+
+				//manage activity session
+				session_field_set_score_player_1.setData(set.getScore(:player_1));
+				session_field_set_score_player_2.setData(set.getScore(:player_2));
+
 				var match_winner = isWon();
 				if(match_winner != null) {
 					end(match_winner);
+
+					//manage activity session
+					session_field_set_player_1.setData(getSetsWon(:player_1));
+					session_field_set_player_2.setData(getSetsWon(:player_2));
+					session_field_score_player_1.setData(getTotalScore(:player_1));
+					session_field_score_player_2.setData(getTotalScore(:player_2));
+					session.stop();
 				}
 			}
 		}

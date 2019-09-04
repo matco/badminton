@@ -44,6 +44,8 @@
 	<string id="fit_score_unit_label">points</string>
 	<string id="fit_set_player_1_label">Set won</string>
 	<string id="fit_set_player_2_label">Set lost</string>
-	<string id="fit_score_player_1_label">Your score</string>
-	<string id="fit_score_player_2_label">Opponent score</string>
+	<string id="fit_set_score_player_1_label">Your score for the set</string>
+	<string id="fit_set_score_player_2_label">Opponent score for the set</string>
+	<string id="fit_score_player_1_label">Your total score</string>
+	<string id="fit_score_player_2_label">Opponent total score</string>
 </resources>

@@ -7,7 +7,7 @@
 	<string id="type_what">Choisir le type</string>
 	<string id="type_single">Simple</string>
 	<string id="type_double">Double</string>
-	
+
 	<string id="sets_number">Nombre de sets?</string>
 
 	<string id="beginner_who">Qui commence ?</string>
@@ -44,6 +44,8 @@
 	<string id="fit_score_unit_label">points</string>
 	<string id="fit_set_player_1_label">Set gagnés</string>
 	<string id="fit_set_player_2_label">Set perdus</string>
-	<string id="fit_score_player_1_label">Votre score</string>
-	<string id="fit_score_player_2_label">Score de l'adversaire</string>
+	<string id="fit_set_score_player_1_label">Votre score (set)</string>
+	<string id="fit_set_score_player_2_label">Score de l'adversaire (set)</string>
+	<string id="fit_score_player_1_label">Votre score total</string>
+	<string id="fit_score_player_2_label">Score total de l'adversaire</string>
 </resources>
