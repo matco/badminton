@@ -44,6 +44,8 @@
 	<string id="fit_score_unit_label">Punkte</string>
 	<string id="fit_set_player_1_label">Satzen gewonnen</string>
 	<string id="fit_set_player_2_label">Satzen verloren</string>
-	<string id="fit_score_player_1_label">Deine Punktzahl</string>
-	<string id="fit_score_player_2_label">Gegner Punktzahl</string>
+	<string id="fit_set_score_player_1_label">Deine Punktzahl für den Satz</string>
+	<string id="fit_set_score_player_2_label">Gegner Punktzahl für den Satz</string>
+	<string id="fit_score_player_1_label">Deine voll Punktzahl</string>
+	<string id="fit_score_player_2_label">Gegner voll Punktzahl</string>
 </resources>
