@@ -1,5 +1,5 @@
 project.manifest = manifest.xml
 
-vivoactive3d.resourcePath=resources;resources-vivoactive3
-vivoactive3m.resourcePath=resources;resources-vivoactive3
-vivoactive3mlte.resourcePath=resources;resources-vivoactive3
+vivoactive3d.resourcePath = resources;resources-vivoactive3
+vivoactive3m.resourcePath = resources;resources-vivoactive3
+vivoactive3mlte.resourcePath = resources;resources-vivoactive3

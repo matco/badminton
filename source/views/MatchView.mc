@@ -17,8 +17,8 @@ class MatchView extends Ui.View {
 	const FIELD_PADDING = 2;
 	const FIELD_SCORE_RATIO = 0.7;
 
-	const FIELD_SCORE_WIDTH_PLAYER_1 = 50;
-	const FIELD_SCORE_WIDTH_PLAYER_2 = 40;
+	const FIELD_SCORE_WIDTH_PLAYER_1 = 60;
+	const FIELD_SCORE_WIDTH_PLAYER_2 = 50;
 
 	hidden var timer;
 	hidden var display_time;
@@ -141,10 +141,10 @@ class MatchView extends Ui.View {
 			"board" => board,
 			"score_2_container_y" => score_2_container_y,
 			"score_2_container_height" => score_2_container_height,
-			"score_2_y" => (score_2_container_y + score_2_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MILD) / 2 - 4),
+			"score_2_y" => (score_2_container_y + score_2_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MILD) / 2 - 2),
 			"score_1_container_y" => score_1_container_y,
 			"score_1_container_height" => score_1_container_height,
-			"score_1_y" => (score_1_container_y + score_1_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MEDIUM) / 2 - 4),
+			"score_1_y" => (score_1_container_y + score_1_container_height / 2 - Gfx.getFontHeight(Gfx.FONT_NUMBER_MEDIUM) / 2 - 2),
 			"time_height" => time_height
 		};
 	}
