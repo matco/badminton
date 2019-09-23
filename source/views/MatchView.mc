@@ -208,7 +208,7 @@ class MatchView extends Ui.View {
 		if($.match.getType() == :double) {
 			var player_corner = $.match.getPlayerCorner();
 			if(player_corner != null) {
-				var offset = FIELD_SCORE_WIDTH_PLAYER_1 / 2 + 20;
+				var offset = FIELD_SCORE_WIDTH_PLAYER_1 / 2 + 15;
 				var y_dot = BetterMath.mean($.boundaries.get("y_middle"), $.boundaries.get("y_bottom"));
 				var x_position = player_corner == 2 ? x_center - offset : x_center + offset;
 				dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
