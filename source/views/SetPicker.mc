@@ -39,15 +39,13 @@ class SetPickerDelegate extends Ui.PickerDelegate {
 	function onCancel() {
 		//remove picker from view stack
 		Ui.popView(Ui.SLIDE_IMMEDIATE);
-		//var view = new TypeView();
-		//Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 	}
 
 	function onAccept(values) {
 		//configure match and go to next view
 		$.config[:sets_number] = values[0];
 		//remove picker from view stack before going to next one
-		//Ui.popView(Ui.SLIDE_IMMEDIATE);
+		Ui.popView(Ui.SLIDE_IMMEDIATE);
 		var view = new BeginnerView();
 		Ui.switchToView(view, new BeginnerViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 	}

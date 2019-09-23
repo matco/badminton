@@ -10,6 +10,8 @@ class MenuDelegate extends Ui.MenuInputDelegate {
 	function onMenuItem(item) {
 		if(item == :menu_reset_game) {
 			$.match.discard();
+			//pop once to close the menu
+			Ui.popView(Ui.SLIDE_IMMEDIATE);
 			//return to type screen
 			var view = new TypeView();
 			Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
