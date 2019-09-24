@@ -7,3 +7,6 @@ vivoactive3m.resourcePath = resources;resources-vivoactive3;icons/40x33
 vivoactive3mlte.resourcePath = resources;resources-vivoactive3;icons/40x33
 
 fenix5s.resourcePath = resources;icons/36x36
+
+vivoactive4.resourcePath = resources;resources-vivoactive3;icons/35x35
+vivoactive4s.resourcePath = $(vivoactive4s.resourcePath);icons/30x30
