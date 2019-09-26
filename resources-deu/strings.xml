@@ -8,7 +8,7 @@
 	<string id="type_single">Einzel</string>
 	<string id="type_double">Doppel</string>
 
-	<string id="sets_number">Anzahl der Satze?</string>
+	<string id="sets_number">Sätze?</string>
 
 	<string id="beginner_who">Wer fängt an?</string>
 	<string id="beginner_opponent">Gegner</string>
@@ -30,22 +30,22 @@
 	<string id="stats_title">Statistik</string>
 	<string id="stats_average_heart_rate">Durchschn. HF ${average_heart_rate}bpm</string>
 	<string id="stats_max_heart_rate">Max HF ${max_heart_rate}bpm</string>
-	<string id="stats_meters">Strecke ${meters}meters</string>
-	<string id="stats_calories">KCal Verbrauch ${calories}</string>
+	<string id="stats_meters">Strecke ${meters}m</string>
+	<string id="stats_calories">Verbrauch ${calories} KCal</string>
 	<string id="stats_no_stats">Keine Anzeige</string>
 
 	<string id="settings_maximum_number_points_title">Maximale Punkte</string>
-	<string id="settings_absolute_maximum_number_points_title">Absolute maximale Punkte</string>
-	<string id="settings_enable_sound">Sound einschalten</string>
+	<string id="settings_absolute_maximum_number_points_title">Absolut maximale Punkte</string>
+	<string id="settings_enable_sound">Töne einschalten</string>
 	<string id="settings_display_time">Anzeige der Uhrzeit</string>
 
 	<string id="fit_activity_name">Badminton</string>
-	<string id="fit_set_unit_label">Satzen</string>
+	<string id="fit_set_unit_label">Sätze</string>
 	<string id="fit_score_unit_label">Punkte</string>
-	<string id="fit_set_player_1_label">Satzen gewonnen</string>
-	<string id="fit_set_player_2_label">Satzen verloren</string>
+	<string id="fit_set_player_1_label">Sätze gewonnen</string>
+	<string id="fit_set_player_2_label">Sätze verloren</string>
 	<string id="fit_set_score_player_1_label">Deine Punktzahl für den Satz</string>
 	<string id="fit_set_score_player_2_label">Gegner Punktzahl für den Satz</string>
-	<string id="fit_score_player_1_label">Deine voll Punktzahl</string>
-	<string id="fit_score_player_2_label">Gegner voll Punktzahl</string>
+	<string id="fit_score_player_1_label">Deine volle Punktzahl</string>
+	<string id="fit_score_player_2_label">Gegner volle Punktzahl</string>
 </resources>

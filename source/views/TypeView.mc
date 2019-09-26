@@ -54,6 +54,7 @@ class TypeViewDelegate extends Ui.BehaviorDelegate {
 	}
 
 	function onBack() {
-		Sys.exit();
+		//pop the main view to close the application
+		Ui.popView(Ui.SLIDE_IMMEDIATE);
 	}
 }

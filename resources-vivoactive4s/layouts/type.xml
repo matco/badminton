@@ -1,0 +1,5 @@
+<layout id="type">
+	<label x="center" y="20" text="@Strings.type_what" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="type_single" x="center" y="75" text="@Strings.type_single" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+	<label id="type_double" x="center" y="150" text="@Strings.type_double" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
+</layout>

@@ -8,7 +8,7 @@
 	<string id="type_single">Single</string>
 	<string id="type_double">Double</string>
 	
-	<string id="sets_number">Number of sets?</string>
+	<string id="sets_number">Sets?</string>
 
 	<string id="beginner_who">Who starts?</string>
 	<string id="beginner_opponent">Opponent</string>
