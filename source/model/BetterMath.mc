@@ -12,7 +12,7 @@ module BetterMath {
 		return weightedMean(number1, number2, 0.5);
 	}
 
-	function weightedMean(number1, number2, weight) {
-		return (number1 - number2).abs() * weight + min(number1, number2);
+	function weightedMean(number1, number2, weight_ratio) {
+		return (number1 - number2).abs() * weight_ratio + min(number1, number2);
 	}
 }
