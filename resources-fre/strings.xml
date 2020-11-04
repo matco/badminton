@@ -4,6 +4,8 @@
 	<string id="menu_title">Match</string>
 	<string id="menu_reset_game">Reset</string>
 	<string id="menu_end_game">Terminer</string>
+	<string id="menu_resume_later">Reprendre plus tard</string>
+	<string id="menu_exit_app">Quitter</string>
 
 	<string id="type_what">Type</string>
 	<string id="type_single">Simple</string>
