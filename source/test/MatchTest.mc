@@ -15,7 +15,7 @@ module MatchTest {
 
 	(:test)
 	function testNewMatch(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30), false);
 		BetterTest.assertEqual(match.getType(), SINGLE, "Match is created with correct type");
 		BetterTest.assertEqual(match.getMaximumSets(), 1, "Match is created with corret maximum number of set");
 		BetterTest.assertEqual(match.getSets().size(), 1, "Match has only one set at the beginning");
@@ -36,7 +36,7 @@ module MatchTest {
 
 	(:test)
 	function testBeginMatch(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30), false);
 		//BetterTest.assertEqual(match.beginner, YOU, "Beginner of match began with player 1 is player 1");
 
 		BetterTest.assertFalse(match.hasEnded(), "Began match has not ended");
@@ -49,7 +49,7 @@ module MatchTest {
 
 	(:test)
 	function testScore(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30), false);
 		var set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -71,14 +71,14 @@ module MatchTest {
 
 		match.score(YOU);
 		match.score(OPPONENT);
-		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 who scored twice is 2");
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 who scored three times is 3");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 who scored once is 1");
 		return true;
 	}
 
 	(:test)
 	function testUndo(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30), false);
 		var set = match.getCurrentSet();
 
 		match.undo();
@@ -118,7 +118,7 @@ module MatchTest {
 
 	(:test)
 	function testNextSet(logger) {
-		var match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5));
+		var match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5), false);
 		var set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -148,7 +148,7 @@ module MatchTest {
 	(:test)
 	function testEnd(logger) {
 		//single set match, using undo
-		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5), false);
 		var set = match.getCurrentSet();
 		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if no rallies have been played");
 
@@ -180,7 +180,7 @@ module MatchTest {
 		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its single set has ended");
 
 		//multi sets match
-		match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5));
+		match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5), false);
 		set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -224,7 +224,7 @@ module MatchTest {
 	(:test)
 	function testEndless(logger) {
 		//match ended while no set has been ended
-		var match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		var match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5), false);
 		var set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -238,7 +238,7 @@ module MatchTest {
 		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the highest score");
 
 		//match ended while second set is being played
-		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5), false);
 		set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -260,7 +260,7 @@ module MatchTest {
 		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the most sets won");
 
 		//match draw while no set has been ended
-		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5), false);
 		set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -275,7 +275,7 @@ module MatchTest {
 		BetterTest.assertNull(match.getWinner(), "There is no winner if both players have the same score in the first set");
 
 		//match draw in the third set
-		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5), false);
 
 		//first set
 		match.score(YOU);
@@ -306,7 +306,7 @@ module MatchTest {
 		BetterTest.assertNull(match.getWinner(), "There is no winner if both players have the same number of sets won and the same total score");
 
 		//match ended after the same number of sets won but different total scores
-		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5), false);
 
 		//first set
 		match.score(YOU);
@@ -341,7 +341,7 @@ module MatchTest {
 	(:test)
 	function testServer(logger) {
 		//single, player begins the match
-		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30), false);
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it begins a match");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he begins the match");
 		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In singles, the player serves from the right if his score is even");
@@ -369,7 +369,7 @@ module MatchTest {
 		match.discard();
 
 		//single, opponent begins the match
-		match = new Match(create_match_config(SINGLE, 1, OPPONENT, true, 21, 30));
+		match = new Match(create_match_config(SINGLE, 1, OPPONENT, true, 21, 30), false);
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In singles, player team does not serve if the opponent begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In singles, the player is not the server if the opponent begins the match");
 		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In singles, the player receives the service on the right if the opponent serves and his score is even");
@@ -397,7 +397,7 @@ module MatchTest {
 		match.discard();
 
 		//double, player team begins the match and is the first server
-		match = new Match(create_match_config(DOUBLE, 1, YOU, true, 21, 30));
+		match = new Match(create_match_config(DOUBLE, 1, YOU, true, 21, 30), false);
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if his team begins the match and he is the first server");
 		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player serves from the right if his team's score is even");
@@ -455,7 +455,7 @@ module MatchTest {
 		match.discard();
 
 		//double, player team begins the match and his teammate is the first server
-		match = new Match(create_match_config(DOUBLE, 1, YOU, false, 21, 30));
+		match = new Match(create_match_config(DOUBLE, 1, YOU, false, 21, 30), false);
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, player is not the server if his team begins the match and his teammate is the first server");
 		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is even");
@@ -513,7 +513,7 @@ module MatchTest {
 		match.discard();
 
 		//double, opponent team begins the match and the player is the first server
-		match = new Match(create_match_config(DOUBLE, 1, OPPONENT, true, 21, 30));
+		match = new Match(create_match_config(DOUBLE, 1, OPPONENT, true, 21, 30), false);
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
 		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player is ready to be serving when he will regain the service if the opponent team serves first");
@@ -571,7 +571,7 @@ module MatchTest {
 		match.discard();
 
 		//double, opponent team begins the match and his teammate is the first server
-		match = new Match(create_match_config(DOUBLE, 1, OPPONENT, false, 21, 30));
+		match = new Match(create_match_config(DOUBLE, 1, OPPONENT, false, 21, 30), false);
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
 		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player is ready to be non serving when his team will regain the service if the opponent team serves first");
@@ -639,7 +639,7 @@ module MatchTest {
 	(:test)
 	function testMemory(logger) {
 		//create a very complex match
-		var match = new Match(create_match_config(SINGLE, Match.MAX_SETS, YOU, true, 21, 30));
+		var match = new Match(create_match_config(SINGLE, Match.MAX_SETS, YOU, true, 21, 30), false);
 		//set 1, won by YOU
 		scorePoints(match, 29);
 		match.score(YOU);
@@ -664,6 +664,27 @@ module MatchTest {
 		BetterTest.assertEqual(match.getTotalScore(YOU), 148, "Total score of player 1 is 148");
 		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 147, "Total score of player 2 is 147");
 
+		return true;
+	}
+
+	(:test)
+	function testSaveAndResume(logger) {
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30), false);
+		var set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+		match.score(OPPONENT);
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is 3");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 is 1");
+
+		match.saveToStorage();
+
+		match = Match.fromStorage();
+		set = match.getCurrentSet();
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is 3");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 is 1");
 		return true;
 	}
 }

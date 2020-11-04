@@ -1,16 +1,39 @@
 import Toybox.Lang;
+import Toybox.Application.Storage;
 
 class MatchSet {
 	private var beginner as Player; //store the beginner of the set, YOU or OPPONENT
-	private var rallies as List; //list of all rallies
+	//TODO set following fields private
+	//these fields are now public because they are updated in the static method fromStorage
+	//MonkeyC does not support the update of private fields from a static method in the same class
+	public var rallies as List; //list of all rallies
 
-	private var scores as Dictionary<Player, Number>; //dictionnary containing players current scores
-	private var winner as Player?; //store the winner of the match, ME or OPPONENT
+	public var scores as Dictionary<Player, Number>; //dictionnary containing players current scores
+	public var winner as Player?; //store the winner of the match, ME or OPPONENT
 
 	function initialize(player as Player) {
 		beginner = player;
 		rallies = new List();
 		scores = {YOU => 0, OPPONENT => 0} as Dictionary<Player, Number>;
+	}
+
+	function saveToStorage(prefix) {
+		Storage.setValue(prefix + ".beginner", beginner);
+		Storage.setValue(prefix + ".rallies", rallies.toArray());
+		Storage.setValue(prefix + ".scores", scores);
+		Storage.setValue(prefix + ".winner", winner);
+	}
+
+	static function fromStorage(prefix) {
+		var beginner = Storage.getValue(prefix + ".beginner");
+		if(beginner == null) {
+			return null;
+		}
+		var set = new MatchSet(beginner);
+		set.rallies = List.fromArray(Storage.getValue(prefix + ".rallies"));
+		set.scores = Storage.getValue(prefix + ".scores");
+		set.winner = Storage.getValue(prefix + ".winner");
+		return set;
 	}
 
 	function end(player as Player) as Void {
