@@ -1,4 +1,0 @@
-<drawable-list id="pointers_2">
-	<shape type="polygon" points="[[0,140], [10,130], [10,150]]" color="Gfx.COLOR_BLUE" />
-	<shape type="polygon" points="[[20,210], [25,195], [35,215]]" color="Gfx.COLOR_BLUE" />
-</drawable-list>

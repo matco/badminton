@@ -1,8 +1,0 @@
-<layout id="beginner">
-	<drawable id="pointers_3" />
-
-	<label x="center" y="25" text="@Strings.beginner_who" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
-	<label x="210" y="70" text="@Strings.beginner_random" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_RIGHT" />
-	<label x="25" y="120" text="@Strings.beginner_opponent" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
-	<label x="50" y="180" text="@Strings.beginner_you" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
-</layout>

@@ -1,7 +1,0 @@
-<layout id="type">
-	<drawable id="pointers_2" />
-
-	<label x="center" y="50" text="@Strings.type_what" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
-	<label x="25" y="95" text="@Strings.type_single" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
-	<label x="40" y="145" text="@Strings.type_double" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_LEFT" />
-</layout>

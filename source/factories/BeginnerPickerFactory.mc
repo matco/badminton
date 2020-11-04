@@ -2,7 +2,10 @@ using Toybox.Graphics as Gfx;
 using Toybox.WatchUi as Ui;
 using Toybox.System as Sys;
 
-class SetPickerFactory extends Ui.PickerFactory {
+class BeginnerPickerFactory extends Ui.PickerFactory {
+
+	var beginners = [:player_1, :player_2];
+	var beginners_label = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent];
 
 	function initialize() {
 		PickerFactory.initialize();
@@ -10,20 +13,20 @@ class SetPickerFactory extends Ui.PickerFactory {
 
 	function getDrawable(index, selected) {
 		return new Ui.Text({
-			:text => getValue(index).format("%d"),
+			:text => Ui.loadResource(beginners_label[index]),
 			:color => Gfx.COLOR_WHITE,
-			:font=> Gfx.FONT_NUMBER_HOT,
+			:font=> Gfx.FONT_MEDIUM,
 			:locX => Ui.LAYOUT_HALIGN_CENTER,
 			:locY=> Ui.LAYOUT_VALIGN_CENTER
 		});
 	}
 
 	function getValue(index) {
-		return index * 2 + 1;
+		return beginners[index];
 	}
 
 	function getSize() {
-		return 3;
+		return beginners.size();
 	}
 
 }
