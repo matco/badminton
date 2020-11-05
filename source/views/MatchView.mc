@@ -281,6 +281,9 @@ class MatchView extends Ui.View {
 			//clean the entire screen
 			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
 			dc.clear();
+			if(dc has :setAntiAlias) {
+				dc.setAntiAlias(true);
+			}
 			drawCourt(dc);
 			drawScores(dc);
 			drawSets(dc);
