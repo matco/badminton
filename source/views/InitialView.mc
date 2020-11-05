@@ -23,7 +23,6 @@ class InitialView extends Ui.View {
 	}
 
 	function onShow() {
-		Sys.println("show initial view");
 		var step = $.config.get(:step);
 		//when step is negative, close the application
 		if(step == -1) {
