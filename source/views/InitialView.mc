@@ -14,10 +14,6 @@ class InitialView extends Ui.View {
 		//and it's not possible to push a view during the initialization of an other view
 	}
 
-	function onLayout(dc) {
-		setLayout(Rez.Layouts.initial(dc));
-	}
-
 	function initializeConfig() {
 		$.config = {:step => 0};
 	}

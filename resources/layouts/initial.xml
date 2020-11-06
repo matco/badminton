@@ -1,3 +1,0 @@
-<layout id="initial">
-	<label x="center" y="center" text="@Strings.application_name" color="Gfx.COLOR_WHITE" justification="Gfx.TEXT_JUSTIFY_CENTER" />
-</layout>
