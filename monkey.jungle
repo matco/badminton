@@ -1,8 +1,11 @@
 project.manifest = manifest.xml
 
-venu.resourcePath = resources;icons/40x40
+venu.resourcePath = resources;icons/60x60
+venud.resourcePath = resources;icons/60x60
 venusq.resourcePath = resources;icons/36x36
 venusqm.resourcePath = resources;icons/36x36
+
+vivoactive.resourcePath = resources;icons/61x43
 
 vivoactive_hr.resourcePath = resources;icons/40x33
 
