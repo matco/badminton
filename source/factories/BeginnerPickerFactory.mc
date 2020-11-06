@@ -15,7 +15,7 @@ class BeginnerPickerFactory extends Ui.PickerFactory {
 		return new Ui.Text({
 			:text => Ui.loadResource(beginners_label[index]),
 			:color => Gfx.COLOR_WHITE,
-			:font=> Gfx.FONT_MEDIUM,
+			:font=> Gfx.FONT_SMALL,
 			:locX => Ui.LAYOUT_HALIGN_CENTER,
 			:locY=> Ui.LAYOUT_VALIGN_CENTER
 		});

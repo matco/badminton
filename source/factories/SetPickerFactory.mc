@@ -12,7 +12,7 @@ class SetPickerFactory extends Ui.PickerFactory {
 		return new Ui.Text({
 			:text => getValue(index).format("%d"),
 			:color => Gfx.COLOR_WHITE,
-			:font=> Gfx.FONT_NUMBER_HOT,
+			:font=> Gfx.FONT_NUMBER_MILD,
 			:locX => Ui.LAYOUT_HALIGN_CENTER,
 			:locY=> Ui.LAYOUT_VALIGN_CENTER
 		});
