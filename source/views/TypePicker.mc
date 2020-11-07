@@ -3,13 +3,13 @@ using Toybox.Application;
 using Toybox.Graphics as Gfx;
 using Toybox.System as Sys;
 
-class SetPicker extends Ui.Picker {
+class TypePicker extends Ui.Picker {
 
 	function initialize() {
-		var factory = new SetPickerFactory();
+		var factory = new TypePickerFactory();
 
 		var title = new Ui.Text({
-			:text => Ui.loadResource(Rez.Strings.sets_number),
+			:text => Ui.loadResource(Rez.Strings.type_what),
 			:locX => Ui.LAYOUT_HALIGN_CENTER,
 			:locY => Ui.LAYOUT_VALIGN_BOTTOM,
 			:color => Gfx.COLOR_WHITE
@@ -30,7 +30,7 @@ class SetPicker extends Ui.Picker {
 
 }
 
-class SetPickerDelegate extends Ui.PickerDelegate {
+class TypePickerDelegate extends Ui.PickerDelegate {
 
 	function initialize() {
 		PickerDelegate.initialize();
@@ -44,7 +44,7 @@ class SetPickerDelegate extends Ui.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		$.config.put(:sets_number, values[0]);
+		$.config.put(:type, values[0]);
 		$.config.put(:step, $.config.get(:step) + 1);
 		//remove picker from view stack to go back to initial view
 		Ui.popView(Ui.SLIDE_IMMEDIATE);

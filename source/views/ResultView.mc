@@ -17,8 +17,8 @@ class SaveMatchConfirmationDelegate extends Ui.ConfirmationDelegate {
 		}
 		//remove confirmation from view stack before going to back to type screen
 		Ui.popView(Ui.SLIDE_IMMEDIATE);
-		var view = new TypeView();
-		Ui.switchToView(view, new TypeViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		var view = new InitialView();
+		Ui.switchToView(view, new InitialViewDelegate(view), Ui.SLIDE_IMMEDIATE);
 	}
 }
 

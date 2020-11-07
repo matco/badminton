@@ -1,5 +1,6 @@
 using Toybox.System as Sys;
 using Toybox.Math as Math;
+using Toybox.Graphics as Gfx;
 
 module UIHelpers {
 
@@ -37,5 +38,21 @@ module UIHelpers {
 		}
 		//Sys.println("tap close to drawable " + closest.get("drawable").identifier);
 		return closest.get("drawable");
+	}
+
+	function drawPolygon(dc, points) {
+		var counts = points.size();
+		for(var i = 0; i < counts; i++) {
+			var next_index = (i + 1) % counts;
+			dc.drawLine(points[i][0], points[i][1], points[next_index][0], points[next_index][1]);
+		}
+	}
+
+	function drawHighlightedText(dc, x, y, font, text, padding) {
+		var dimensions = dc.getTextDimensions(text, font);
+		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
+		dc.fillRoundedRectangle(x - dimensions[0] / 2 - padding, y - dimensions[1] / 2, dimensions[0] + 2 * padding, dimensions[1], 5);
+		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+		dc.drawText(x, y, font, text, Gfx.TEXT_JUSTIFY_CENTER | Gfx.TEXT_JUSTIFY_VCENTER);
 	}
 }

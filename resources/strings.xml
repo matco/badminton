@@ -4,11 +4,11 @@
 	<string id="menu_reset_game">Reset</string>
 	<string id="menu_exit_app">Exit</string>
 
-	<string id="type_what">Choose type</string>
+	<string id="type_what">Type</string>
 	<string id="type_single">Single</string>
 	<string id="type_double">Double</string>
 	
-	<string id="sets_number">Sets?</string>
+	<string id="sets_number">Sets</string>
 
 	<string id="beginner_who">Who starts?</string>
 	<string id="beginner_opponent">Opponent</string>
