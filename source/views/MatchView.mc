@@ -57,7 +57,7 @@ class MatchView extends Ui.View {
 		//calculate strategic positions
 		var x_center = $.device.screenWidth / 2;
 		var y_top = margin_height;
-		if (display_time) {
+		if(display_time) {
 			y_top += TIME_HEIGHT;
 		}
 		var y_bottom = $.device.screenHeight - margin_height - TIME_HEIGHT;
@@ -280,7 +280,7 @@ class MatchView extends Ui.View {
 		drawScores(dc);
 		drawSets(dc);
 		drawTimer(dc);
-		if (display_time) {
+		if(display_time) {
 			drawTime(dc);
 		}
 	}
