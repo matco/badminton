@@ -36,7 +36,7 @@ class InitialView extends Ui.View {
 			var mp = app.getProperty("maximum_points");
 			var amp = app.getProperty("absolute_maximum_points");
 
-			$.match = new Match(type, sets_number, player, mp, amp, app);
+			$.match = new Match(type, sets_number, player, mp, amp);
 
 			//go to match view
 			Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);

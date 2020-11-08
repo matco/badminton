@@ -4,6 +4,7 @@ using Toybox.System as Sys;
 using Toybox.Attention as Attention;
 using Toybox.Timer as Timer;
 
+var bus;
 var match;
 var device = Sys.getDeviceSettings();
 
@@ -11,11 +12,15 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 
 	function initialize() {
 		AppBase.initialize();
+
+		//create bus for the whole application
+		$.bus = new Bus();
+		$.bus.register(self);
 	}
 
 	function getInitialView() {
 		var view = new InitialView();
-		return [ view, new InitialViewDelegate(view) ];
+		return [view, new InitialViewDelegate(view)];
 	}
 
 	function onMatchBegin() {
