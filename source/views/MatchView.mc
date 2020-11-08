@@ -21,7 +21,6 @@ class MatchView extends Ui.View {
 	const TIME_HEIGHT = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1; //height of timer and clock
 
 	hidden var timer;
-	hidden var display_time;
 	hidden var clock_24_hour;
 	hidden var time_am_label;
 	hidden var time_pm_label;
@@ -30,7 +29,6 @@ class MatchView extends Ui.View {
 		View.initialize();
 
 		timer = new Timer.Timer();
-		display_time = App.getApp().getProperty("display_time");
 		$.boundaries = getCourtBoundaries();
 	}
 
@@ -39,14 +37,24 @@ class MatchView extends Ui.View {
 		time_am_label = Ui.loadResource(Rez.Strings.time_am);
 		time_pm_label = Ui.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
+
+		$.bus.register(self);
 	}
 
 	function onHide() {
 		timer.stop();
+
+		$.bus.unregister(self);
 	}
 
 	function onTimer() {
 		Ui.requestUpdate();
+	}
+
+	function onUpdateSettings() {
+		//recalculate boundaries as they may change if "diplay time" setting is updated
+		$.boundaries = getCourtBoundaries();
+		WatchUi.requestUpdate();
 	}
 
 	function getCourtBoundaries() {
@@ -57,7 +65,7 @@ class MatchView extends Ui.View {
 		//calculate strategic positions
 		var x_center = $.device.screenWidth / 2;
 		var y_top = margin_height;
-		if(display_time) {
+		if(App.getApp().getProperty("display_time")) {
 			y_top += TIME_HEIGHT;
 		}
 		var y_bottom = $.device.screenHeight - margin_height - TIME_HEIGHT;
@@ -280,7 +288,7 @@ class MatchView extends Ui.View {
 		drawScores(dc);
 		drawSets(dc);
 		drawTimer(dc);
-		if(display_time) {
+		if(App.getApp().getProperty("display_time")) {
 			drawTime(dc);
 		}
 	}

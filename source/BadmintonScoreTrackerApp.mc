@@ -44,4 +44,11 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 			Attention.vibrate([new Attention.VibeProfile(80, 200)]);
 		}
 	}
+
+	function onSettingsChanged() {
+		//dispatch updated settings event
+		//do not name the event "onSettingsChanged" to avoid recursion
+		//"onSettingsChanged" is the native event and "onUpdateSettings" is the custom event for this app (that views can catch)
+		$.bus.dispatch(new BusEvent(:onUpdateSettings, null));
+	}
 }
