@@ -18,7 +18,19 @@ class List {
 	}
 
 	function get(index) {
+		if(index >= length) {
+			throw new Toybox.Lang.ValueOutOfBoundsException("Index " + index + " is bigger than list size (" + length + ")");
+		}
 		return elements[index];
+	}
+
+	function indexOf(element) {
+		return elements.indexOf(element);
+	}
+
+	function remove(element) {
+		length--;
+		return elements.remove(element);
 	}
 
 	function push(element) {

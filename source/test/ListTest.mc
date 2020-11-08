@@ -1,3 +1,5 @@
+using Toybox.System as Sys;
+
 module ListTest {
 
 	(:test)
@@ -29,6 +31,58 @@ module ListTest {
 		BetterTest.assertEqual(list.size(), 2, "List containing 2 elements has a size 2");
 		BetterTest.assertEqual(list.first(), 3, "Getting first element of a list returns the first element");
 		BetterTest.assertEqual(list.last(), 5, "Getting last element of a list returns the last element");
+		return true;
+	}
+
+	(:test)
+	function testRetrieval(logger) {
+		var list = new List();
+		list.push(3);
+		list.push(5);
+		BetterTest.assertEqual(list.get(0), 3, "Get method retrieve the good element");
+		BetterTest.assertEqual(list.get(1), 5, "Get method retrieve the good element");
+		try {
+			list.get(2);
+			BetterTest.fail("Should throw an out of bound exception");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Index 2 is bigger than list size (2)", "Retrieving an element with an index too big throws an exception");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.ValueOutOfBoundsException, "Retrieving an element with an index too big throws an exception");
+		}
+		return true;
+	}
+
+	(:test)
+	function testIndexOf(logger) {
+		var list = new List();
+		list.push(3);
+		list.push(4);
+		list.push(5);
+		BetterTest.assertEqual(list.indexOf(3), 0, "IndexOf method returns the good index");
+		BetterTest.assertEqual(list.indexOf(5), 2, "IndexOf method returns the good index");
+		BetterTest.assertEqual(list.indexOf(4), 1, "IndexOf method returns the good index");
+		return true;
+	}
+
+	(:test)
+	function testRemoval(logger) {
+		var list = new List();
+		list.push(3);
+		list.push(4);
+		list.push(5);
+		BetterTest.assertEqual(list.get(1), 4, "Get method retrieve the good element");
+		list.remove(4);
+		BetterTest.assertEqual(list.get(0), 3, "Removal shift the indices properly");
+		BetterTest.assertEqual(list.get(1), 5, "Removal shift the indices properly");
+		try {
+			list.get(2);
+			BetterTest.fail("Should throw an out of bound exception");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Index 2 is bigger than list size (2)", "Retrieving an element with an index too big throws an exception");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.ValueOutOfBoundsException, "Retrieving an element with an index too big throws an exception");
+		}
+
 		return true;
 	}
 }

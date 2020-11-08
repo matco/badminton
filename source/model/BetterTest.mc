@@ -1,7 +1,14 @@
-using Toybox.System as Sys;
 using Toybox.Test as Test;
 
 module BetterTest {
+
+	function success(message) {
+		return Test.assertMessage(true, message);
+	}
+
+	function fail(message) {
+		return Test.assertMessage(false, message);
+	}
 
 	function assertTrue(condition, message) {
 		return Test.assertMessage(condition, message);
@@ -38,5 +45,4 @@ module BetterTest {
 			throw new Test.AssertException("ASSERTION FAILED: " + message);
 		}
 	}
-
 }
