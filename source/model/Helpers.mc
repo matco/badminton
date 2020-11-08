@@ -38,20 +38,20 @@ module Helpers {
 		var now = Calendar.info(Time.now(), Time.FORMAT_SHORT);
 		var hour = now.hour;
 		var am_pm_label = am_label;
-		if (!clock_24) {
-			if (hour >= 12) {
+		if(!clock_24) {
+			if(hour >= 12) {
 				am_pm_label = pm_label;
 			}
-			if (hour > 12) {
+			if(hour > 12) {
 				hour -= 12;
 				am_pm_label = pm_label;
-			} else if (hour == 0) {
+			} else if(hour == 0) {
 				hour = 12;
 				am_pm_label = pm_label;
 			}
 		}
 		var time_label = Lang.format("$1$:$2$:$3$", [hour.format("%02d"), now.min.format("%02d"), now.sec.format("%02d")]);
-		if (!clock_24) {
+		if(!clock_24) {
 			time_label += " " + am_pm_label;
 		}
 		return time_label;

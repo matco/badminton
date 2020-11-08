@@ -5,7 +5,6 @@ using Toybox.WatchUi as Ui;
 using Toybox.Timer;
 
 var boundaries;
-var need_full_update;
 
 class MatchView extends Ui.View {
 
@@ -22,7 +21,6 @@ class MatchView extends Ui.View {
 	const TIME_HEIGHT = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1; //height of timer and clock
 
 	hidden var timer;
-	hidden var display_time;
 	hidden var clock_24_hour;
 	hidden var time_am_label;
 	hidden var time_pm_label;
@@ -31,7 +29,6 @@ class MatchView extends Ui.View {
 		View.initialize();
 
 		timer = new Timer.Timer();
-		display_time = App.getApp().getProperty("display_time");
 		$.boundaries = getCourtBoundaries();
 	}
 
@@ -40,16 +37,24 @@ class MatchView extends Ui.View {
 		time_am_label = Ui.loadResource(Rez.Strings.time_am);
 		time_pm_label = Ui.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
-		//when shown, ask for full update
-		$.need_full_update = true;
+
+		$.bus.register(self);
 	}
 
 	function onHide() {
 		timer.stop();
+
+		$.bus.unregister(self);
 	}
 
 	function onTimer() {
 		Ui.requestUpdate();
+	}
+
+	function onUpdateSettings() {
+		//recalculate boundaries as they may change if "diplay time" setting is updated
+		$.boundaries = getCourtBoundaries();
+		WatchUi.requestUpdate();
 	}
 
 	function getCourtBoundaries() {
@@ -60,7 +65,7 @@ class MatchView extends Ui.View {
 		//calculate strategic positions
 		var x_center = $.device.screenWidth / 2;
 		var y_top = margin_height;
-		if (display_time) {
+		if(App.getApp().getProperty("display_time")) {
 			y_top += TIME_HEIGHT;
 		}
 		var y_bottom = $.device.screenHeight - margin_height - TIME_HEIGHT;
@@ -253,9 +258,6 @@ class MatchView extends Ui.View {
 		var x_center = $.boundaries.get("x_center");
 		var y_bottom = $.boundaries.get("y_bottom");
 
-		//clean only the area of the timer
-		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
-		dc.fillRectangle(0, y_bottom + 1, dc.getWidth(), dc.getHeight());
 		//draw timer
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 		dc.drawText(x_center, y_bottom + TIME_HEIGHT * 0.1, Gfx.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
@@ -267,29 +269,26 @@ class MatchView extends Ui.View {
 		var y_top = $.boundaries.get("y_top");
 
 		var time_label = Helpers.formatCurrentTime(clock_24_hour, time_am_label, time_pm_label);
-		//clean only the area of the time
-		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
-		dc.fillRectangle(0, 0, dc.getWidth(), y_top - 1);
 		//draw time
 		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
 		dc.drawText(x_center, margin_height - TIME_HEIGHT * 0.1, Gfx.FONT_SMALL, time_label, Gfx.TEXT_JUSTIFY_CENTER);
 	}
 
 	function onUpdate(dc) {
-		if($.need_full_update) {
-			$.need_full_update = false;
-			//clean the entire screen
-			dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
-			dc.clear();
-			if(dc has :setAntiAlias) {
-				dc.setAntiAlias(true);
-			}
-			drawCourt(dc);
-			drawScores(dc);
-			drawSets(dc);
+		//when onUpdate is called, the entire view is cleared (hence the badminton field) on some watches (reported by users with vivoactive 4 and venu)
+		//in the simulator it's not the case for all watches
+		//do not try to update only a part of the view
+		//clean the entire screen
+		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
+		dc.clear();
+		if(dc has :setAntiAlias) {
+			dc.setAntiAlias(true);
 		}
+		drawCourt(dc);
+		drawScores(dc);
+		drawSets(dc);
 		drawTimer(dc);
-		if (display_time) {
+		if(App.getApp().getProperty("display_time")) {
 			drawTime(dc);
 		}
 	}
@@ -313,7 +312,6 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 			Ui.switchToView(new SetResultView(), new SetResultViewDelegate(), Ui.SLIDE_IMMEDIATE);
 		}
 		else {
-			$.need_full_update = true;
 			Ui.requestUpdate();
 		}
 	}
@@ -335,7 +333,6 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		if($.match.getTotalRalliesNumber() > 0) {
 			//undo last rally
 			$.match.undo();
-			$.need_full_update = true;
 			Ui.requestUpdate();
 		}
 		else if($.match.getCurrentSetIndex() == 0) {

@@ -33,7 +33,7 @@ class Match {
 
 	hidden var listener;
 
-	function initialize(match_type, sets_number, match_beginner, mp, amp, match_listener) {
+	function initialize(match_type, sets_number, match_beginner, mp, amp) {
 		type = match_type;
 		server = true;
 
@@ -47,8 +47,6 @@ class Match {
 		maximum_points = mp;
 		absolute_maximum_points = amp;
 
-		listener = match_listener;
-
 		//manage activity session
 		session = Recording.createSession({:sport => Recording.SPORT_GENERIC, :subSport => Recording.SUB_SPORT_MATCH, :name => Ui.loadResource(Rez.Strings.fit_activity_name)});
 		session_field_set_player_1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_set_unit_label)});
@@ -59,9 +57,7 @@ class Match {
 		session_field_set_score_player_2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_LAP, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
 		session.start();
 
-		if(listener != null && listener has :onMatchBegin) {
-			listener.onMatchBegin();
-		}
+		$.bus.dispatch(new BusEvent(:onMatchBegin, null));
 	}
 
 	function save() {
@@ -76,9 +72,7 @@ class Match {
 	hidden function end(winner_player) {
 		winner = winner_player;
 
-		if(listener != null && listener has :onMatchEnd) {
-			listener.onMatchEnd(winner);
-		}
+		$.bus.dispatch(new BusEvent(:onMatchEnd, winner));
 	}
 
 	function nextSet() {
