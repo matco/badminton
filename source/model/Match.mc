@@ -31,13 +31,11 @@ class Match {
 	hidden var session_field_score_player_1;
 	hidden var session_field_score_player_2;
 
-	hidden var listener;
-
 	function initialize(match_type, sets_number, match_beginner, mp, amp) {
 		type = match_type;
 		server = true;
 
-		//prepare array of sets and create forst set
+		//prepare array of sets and create first set
 		sets = new [sets_number];
 		sets[0] = new MatchSet(match_beginner);
 		for(var i = 1; i < sets_number; i++) {
