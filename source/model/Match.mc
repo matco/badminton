@@ -79,14 +79,8 @@ class Match {
 
 		//alternate beginner
 		var i = getCurrentSetIndex();
-		var beginner = sets[i].getBeginner();
-		if(beginner == :player_1) {
-			beginner = :player_2;
-		}
-		else {
-			beginner = :player_1;
-		}
-
+		var beginner = sets[i].getWinner();
+		
 		//create next set
 		sets[i +1] = new MatchSet(beginner);
 	}
