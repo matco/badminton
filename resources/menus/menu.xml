@@ -1,4 +1,4 @@
 <menu id="MainMenu">
 	<menu-item id="menu_reset_game" label="@Strings.menu_reset_game"></menu-item>
-	<menu-item id="menu_exit_app" label="@Strings.menu_exit_app"></menu-item>
+	<menu-item id="menu_end_game" label="@Strings.menu_end_game"></menu-item>
 </menu>

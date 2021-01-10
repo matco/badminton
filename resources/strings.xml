@@ -2,7 +2,7 @@
 	<string id="application_name">Badminton</string>
 
 	<string id="menu_reset_game">Reset</string>
-	<string id="menu_exit_app">Exit</string>
+	<string id="menu_end_game">End</string>
 
 	<string id="type_what">Type</string>
 	<string id="type_single">Single</string>
