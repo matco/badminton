@@ -15,10 +15,15 @@ class TypePicker extends Ui.Picker {
 			:color => Gfx.COLOR_WHITE
 		});
 
+		var default_type = Application.getApp().getProperty("default_match_type");
+		if(default_type == null) {
+			default_type = 0;
+		}
+
 		Picker.initialize({
 			:title => title,
 			:pattern => [factory],
-			:defaults => [0]
+			:defaults => [default_type]
 		});
 	}
 
