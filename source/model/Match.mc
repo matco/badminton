@@ -31,13 +31,11 @@ class Match {
 	hidden var session_field_score_player_1;
 	hidden var session_field_score_player_2;
 
-	hidden var listener;
-
 	function initialize(match_type, sets_number, match_beginner, mp, amp) {
 		type = match_type;
 		server = true;
 
-		//prepare array of sets and create forst set
+		//prepare array of sets and create first set
 		sets = new [sets_number];
 		sets[0] = new MatchSet(match_beginner);
 		for(var i = 1; i < sets_number; i++) {
@@ -79,15 +77,9 @@ class Match {
 		//manage activity session
 		session.addLap();
 
-		//alternate beginner
+		//the player who won the previous game will serve first in the next set
 		var i = getCurrentSetIndex();
-		var beginner = sets[i].getBeginner();
-		if(beginner == :player_1) {
-			beginner = :player_2;
-		}
-		else {
-			beginner = :player_1;
-		}
+		var beginner = sets[i].getWinner();
 
 		//create next set
 		sets[i +1] = new MatchSet(beginner);

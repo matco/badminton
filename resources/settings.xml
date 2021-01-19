@@ -15,5 +15,20 @@
 		<setting propertyKey="@Properties.display_time" title="@Strings.settings_display_time">
 			<settingConfig type="boolean" required="true" />
 		</setting>
+		
+		<setting propertyKey="@Properties.default_match_type" title="@Strings.settings_default_match_type">
+			<settingConfig type="list">
+				<listEntry value="0">@Strings.type_single</listEntry>
+				<listEntry value="1">@Strings.type_double</listEntry>
+			</settingConfig>
+		</setting>
+		
+		<setting propertyKey="@Properties.default_match_number_of_sets" title="@Strings.settings_default_match_number_of_sets">
+			<settingConfig type="list">
+				<listEntry value="0">@Strings.set_1</listEntry>
+				<listEntry value="1">@Strings.set_3</listEntry>
+				<listEntry value="2">@Strings.set_5</listEntry>
+			</settingConfig>
+		</setting>
 	</settings>
 </resources>

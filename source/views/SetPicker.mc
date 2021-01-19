@@ -15,10 +15,15 @@ class SetPicker extends Ui.Picker {
 			:color => Gfx.COLOR_WHITE
 		});
 
+		var default_number_of_sets = Application.getApp().getProperty("default_match_number_of_sets");
+		if(default_number_of_sets == null) {
+			default_number_of_sets = 0;
+		}
+
 		Picker.initialize({
 			:title => title,
 			:pattern => [factory],
-			:defaults => [0]
+			:defaults => [default_number_of_sets]
 		});
 	}
 

@@ -2,13 +2,16 @@
 	<string id="application_name">Badminton</string>
 
 	<string id="menu_reset_game">Reset</string>
-	<string id="menu_exit_app">Quitter</string>
+	<string id="menu_end_game">Terminer</string>
 
 	<string id="type_what">Type</string>
 	<string id="type_single">Simple</string>
 	<string id="type_double">Double</string>
 
 	<string id="sets_number">Sets</string>
+	<string id="set_1">1</string>
+	<string id="set_3">3</string>
+	<string id="set_5">5</string>
 
 	<string id="beginner_who">Qui commence ?</string>
 	<string id="beginner_opponent">Adversaire</string>
@@ -38,6 +41,8 @@
 	<string id="settings_absolute_maximum_number_points_title">Score gagnant après prolongation</string>
 	<string id="settings_enable_sound">Activer les sons</string>
 	<string id="settings_display_time">Afficher l'heure</string>
+	<string id="settings_default_match_type">Type de match par défaut</string>
+	<string id="settings_default_match_number_of_sets">Nombre de sets par défaut</string>
 
 	<string id="fit_activity_name">Badminton</string>
 	<string id="fit_set_unit_label">sets</string>
