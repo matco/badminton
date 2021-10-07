@@ -6,6 +6,7 @@
 			<iq:product id="fr230"/>
 			<iq:product id="fr235"/>
 			<iq:product id="fr245"/>
+			<iq:product id="fr55"/>
 			<iq:product id="fr630"/>
 			<iq:product id="fr645"/>
 			<iq:product id="fr645m"/>
@@ -13,6 +14,7 @@
 			<iq:product id="fr745"/>
 			<iq:product id="fr935"/>
 			<iq:product id="fr945"/>
+			<iq:product id="fr945lte"/>
 			<iq:product id="fenix3"/>
 			<iq:product id="fenix3_hr"/>
 			<iq:product id="fenix5"/>
@@ -30,6 +32,8 @@
 			<iq:product id="venud"/>
 			<iq:product id="venusq"/>
 			<iq:product id="venusqm"/>
+			<iq:product id="venu2"/>
+			<iq:product id="venu2s"/>
 			<iq:product id="vivoactive"/>
 			<iq:product id="vivoactive_hr"/>
 			<iq:product id="vivoactive3"/>
