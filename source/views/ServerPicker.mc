@@ -1,3 +1,4 @@
+import Toybox.Lang;
 using Toybox.WatchUi;
 using Toybox.Graphics;
 
@@ -7,7 +8,7 @@ class ServerPicker extends WatchUi.Picker {
 		var factory = new ServerPickerFactory();
 
 		var title = new WatchUi.Text({
-			:text => WatchUi.loadResource(Rez.Strings.server_who),
+			:text => WatchUi.loadResource(Rez.Strings.server_who) as String,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
 			:locY => WatchUi.LAYOUT_VALIGN_BOTTOM,
 			:color => Graphics.COLOR_WHITE
@@ -42,7 +43,7 @@ class ServerPickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.server = values[0];
+		InitialView.config.server = values[0] as Boolean;
 		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

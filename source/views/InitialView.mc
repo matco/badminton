@@ -1,9 +1,9 @@
+import Toybox.Lang;
 using Toybox.WatchUi;
 using Toybox.Graphics;
-using Toybox.Timer;
 
 class InitialView extends WatchUi.View {
-	public static var config;
+	public static var config as MatchConfig;
 
 	function initialize() {
 		View.initialize();
@@ -19,7 +19,7 @@ class InitialView extends WatchUi.View {
 		}
 		//if config is valid, start the match
 		else if(config.isValid()) {
-			var app = Application.getApp();
+			var app = Application.getApp() as BadmintonScoreTrackerApp;
 
 			//adjust match configuration with app configuration
 			config.maximumPoints = app.getProperty("maximum_points");

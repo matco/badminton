@@ -1,4 +1,6 @@
+import Toybox.Lang;
 using Toybox.WatchUi;
+using Toybox.Application;
 using Toybox.Graphics;
 
 class BeginnerPicker extends WatchUi.Picker {
@@ -7,7 +9,7 @@ class BeginnerPicker extends WatchUi.Picker {
 		var factory = new BeginnerPickerFactory();
 
 		var title = new WatchUi.Text({
-			:text => WatchUi.loadResource(Rez.Strings.beginner_who),
+			:text => WatchUi.loadResource(Rez.Strings.beginner_who) as String,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
 			:locY => WatchUi.LAYOUT_VALIGN_BOTTOM,
 			:color => Graphics.COLOR_WHITE
@@ -33,16 +35,16 @@ class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
 		PickerDelegate.initialize();
 	}
 
-	function onCancel() {
+	function onCancel() as Boolean {
 		InitialView.config.step--;
 		//remove picker from view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
-	function onAccept(values) {
+	function onAccept(values) as Boolean {
 		//update match configuration
-		InitialView.config.beginner = values[0];
+		InitialView.config.beginner = values[0] as Player;
 		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

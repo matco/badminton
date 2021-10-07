@@ -1,3 +1,4 @@
+import Toybox.Lang;
 using Toybox.WatchUi;
 
 class MenuDelegate extends WatchUi.MenuInputDelegate {
@@ -10,11 +11,11 @@ class MenuDelegate extends WatchUi.MenuInputDelegate {
 		if(item == :menu_end_game) {
 			//pop once to close the menu
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-			var save_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.end_save_garmin_connect));
+			var save_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.end_save_garmin_connect) as String);
 			WatchUi.pushView(save_match_confirmation, new SaveMatchConfirmationDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else if(item == :menu_reset_game) {
-			var match = Application.getApp().getMatch();
+			var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
 			match.discard();
 			//pop once to close the menu
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

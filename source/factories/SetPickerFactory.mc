@@ -1,3 +1,4 @@
+import Toybox.Lang;
 using Toybox.Graphics;
 using Toybox.WatchUi;
 
@@ -9,7 +10,7 @@ class SetPickerFactory extends WatchUi.PickerFactory {
 
 	function getDrawable(index, selected) {
 		return new WatchUi.Text({
-			:text => getValue(index).format("%d"),
+			:text => (getValue(index) as Number).format("%d"),
 			:color => Graphics.COLOR_WHITE,
 			:font=> Graphics.FONT_NUMBER_MILD,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,

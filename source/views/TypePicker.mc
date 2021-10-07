@@ -1,3 +1,4 @@
+import Toybox.Lang;
 using Toybox.WatchUi;
 using Toybox.Application;
 using Toybox.Graphics;
@@ -8,7 +9,7 @@ class TypePicker extends WatchUi.Picker {
 		var factory = new TypePickerFactory();
 
 		var title = new WatchUi.Text({
-			:text => WatchUi.loadResource(Rez.Strings.type_what),
+			:text => WatchUi.loadResource(Rez.Strings.type_what) as String,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
 			:locY => WatchUi.LAYOUT_VALIGN_BOTTOM,
 			:color => Graphics.COLOR_WHITE
@@ -48,7 +49,7 @@ class TypePickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.type = values[0];
+		InitialView.config.type = values[0] as MatchType;
 		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

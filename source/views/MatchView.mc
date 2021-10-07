@@ -1,7 +1,9 @@
+import Toybox.Lang;
+import Toybox.Timer;
+import Toybox.Graphics;
+import Toybox.WatchUi;
+import Toybox.System;
 using Toybox.Application;
-using Toybox.Graphics;
-using Toybox.WatchUi;
-using Toybox.Timer;
 
 class MatchBoundaries {
 	static const COURT_WIDTH_RATIO = 0.7; //width of the back compared to the front of the court
@@ -14,13 +16,13 @@ class MatchBoundaries {
 		[0.5 - COURT_SIDELINE_SIZE, 1],
 		[0.5 - COURT_SIDELINE_SIZE, 0],
 		[-0.5 + COURT_SIDELINE_SIZE, 0]
-	];
+	] as Array<Array>;
 	static const COURT_DOUBLE = [
 		[-0.5, 1],
 		[0.5, 1],
 		[0.5, 0],
 		[-0.5, 0]
-	];
+	] as Array<Array>;
 	//corners boundaries coordinate
 	static const COURT_SINGLE_CORNERS = {
 		//OPPONENT_RIGHT is the top left corner
@@ -87,22 +89,22 @@ class MatchBoundaries {
 	static const SET_BALL_RADIUS = 7; //width reserved to display sets
 
 	//center of the watch
-	public var xCenter;
-	public var yCenter;
+	public var xCenter as Float;
+	public var yCenter as Float;
 
-	public var yMiddle;
-	public var yFront;
-	public var yBack;
+	public var yMiddle as Float;
+	public var yFront as Float;
+	public var yBack as Float;
 
-	public var marginHeight;
+	public var marginHeight as Float;
 
-	public var perspective;
+	public var perspective as Perspective;
 
-	public var court;
-	public var corners;
-	public var board;
+	public var court as Array<Array>;
+	public var corners as Dictionary<Corner, Array>;
+	public var board as Array<Array>;
 
-	function initialize(match, device) {
+	function initialize(match as Match, device as DeviceSettings) {
 		//calculate margins
 		marginHeight = device.screenHeight * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
 		var margin_width = device.screenWidth * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
@@ -136,8 +138,8 @@ class MatchBoundaries {
 
 		//perspective is defined by its two side vanishing lines
 		perspective = new Perspective(
-			[xCenter - front_width, yFront], [xCenter - back_width, yBack],
-			[xCenter + front_width, yFront], [xCenter + back_width, yBack]
+			[xCenter - front_width, yFront] as Array<Float>, [xCenter - back_width, yBack] as Array<Float>,
+			[xCenter + front_width, yFront] as Array<Float>, [xCenter + back_width, yBack] as Array<Float>
 		);
 
 		//select court boundaries coordinates (clockwise, starting from top left point)
@@ -146,19 +148,19 @@ class MatchBoundaries {
 		//calculate court corners boundaries coordinates
 		var corner_coordinates = match.getType() == SINGLE ? COURT_SINGLE_CORNERS : COURT_DOUBLE_CORNERS;
 		corners = {
-			OPPONENT_RIGHT => perspective.transformArray(corner_coordinates[OPPONENT_RIGHT]),
-			OPPONENT_LEFT => perspective.transformArray(corner_coordinates[OPPONENT_LEFT]),
-			YOU_LEFT => perspective.transformArray(corner_coordinates[YOU_LEFT]),
-			YOU_RIGHT => perspective.transformArray(corner_coordinates[YOU_RIGHT])
+			OPPONENT_RIGHT => perspective.transformArray(corner_coordinates[OPPONENT_RIGHT]) as Array<Array>,
+			OPPONENT_LEFT => perspective.transformArray(corner_coordinates[OPPONENT_LEFT]) as Array<Array>,
+			YOU_LEFT => perspective.transformArray(corner_coordinates[YOU_LEFT]) as Array<Array>,
+			YOU_RIGHT => perspective.transformArray(corner_coordinates[YOU_RIGHT]) as Array<Array>
 		};
 
 		//calculate set positions
-		board = new [Match.MAX_SETS];
+		board = new [Match.MAX_SETS] as Array<Array>;
 		for(var i = 0; i < Match.MAX_SETS; i++) {
 			var y = 0.1 + 0.7 * i / Match.MAX_SETS;
 			//dot not align the balls using the real perspective
 			//display them parallel to the left side of the court instead
-			var transformed_coordinates = perspective.transform([-0.5, y]);
+			var transformed_coordinates = perspective.transform([-0.5, y] as Array<Float>);
 			board[i] = [transformed_coordinates[0] - SET_BALL_RADIUS * 2, transformed_coordinates[1]];
 		}
 	}
@@ -168,50 +170,48 @@ class MatchView extends WatchUi.View {
 	const SCORE_PLAYER_1_FONT = Graphics.FONT_LARGE;
 	const SCORE_PLAYER_2_FONT = Graphics.FONT_MEDIUM;
 
-	public var boundaries;
+	public var boundaries as MatchBoundaries?;
 
-	private var timer;
-	private var clock24Hour;
-	private var timeAMLabel;
-	private var timePMLabel;
+	private var timer as Timer.Timer;
+	private var clock24Hour as Boolean;
+	private var timeAMLabel as String;
+	private var timePMLabel as String;
 
 	function initialize() {
 		View.initialize();
+		clock24Hour = System.getDeviceSettings().is24Hour;
+		timeAMLabel = WatchUi.loadResource(Rez.Strings.time_am) as String;
+		timePMLabel = WatchUi.loadResource(Rez.Strings.time_pm) as String;
 		calculateBoundaries();
 		timer = new Timer.Timer();
 	}
 
-	function calculateBoundaries() {
-		var match = Application.getApp().getMatch();
+	function calculateBoundaries() as Void {
+		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
 		boundaries = new MatchBoundaries(match, System.getDeviceSettings());
 	}
 
 	function onShow() {
-		clock24Hour = System.getDeviceSettings().is24Hour;
-		timeAMLabel = WatchUi.loadResource(Rez.Strings.time_am);
-		timePMLabel = WatchUi.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
-
-		Application.getApp().getBus().register(self);
+		(Application.getApp() as BadmintonScoreTrackerApp).getBus().register(self);
 	}
 
-	function onHide() {
+	function onHide() as Void {
 		timer.stop();
-
-		Application.getApp().getBus().unregister(self);
+		(Application.getApp() as BadmintonScoreTrackerApp).getBus().unregister(self);
 	}
 
-	function onTimer() {
+	function onTimer() as Void {
 		WatchUi.requestUpdate();
 	}
 
-	function onUpdateSettings() {
+	function onUpdateSettings() as Void {
 		//recalculate boundaries as they may change if "display time" setting is updated
 		calculateBoundaries();
 		WatchUi.requestUpdate();
 	}
 
-	function drawCourt(dc, match) {
+	function drawCourt(dc as Dc, match as Match) as Void {
 		//draw background
 		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon(boundaries.court);
@@ -220,8 +220,8 @@ class MatchView extends WatchUi.View {
 		var serving_corner = match.getServingCorner();
 		var receiving_corner = match.getReceivingCorner();
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-		dc.fillPolygon(boundaries.corners[serving_corner]);
-		dc.fillPolygon(boundaries.corners[receiving_corner]);
+		dc.fillPolygon(boundaries.corners[serving_corner] as Array<Array>);
+		dc.fillPolygon(boundaries.corners[receiving_corner] as Array<Array>);
 
 		//draw bounds
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -231,15 +231,15 @@ class MatchView extends WatchUi.View {
 		//draw left sideline for singles
 		boundaries.perspective.drawVanishingLine(dc, -0.5 + MatchBoundaries.COURT_SIDELINE_SIZE);
 		//draw middle line in two parts
-		boundaries.perspective.drawPartialVanishingLine(dc, 0, 0, 0.4);
-		boundaries.perspective.drawPartialVanishingLine(dc, 0, 0.6, 1);
+		boundaries.perspective.drawPartialVanishingLine(dc, 0f, 0f, 0.4);
+		boundaries.perspective.drawPartialVanishingLine(dc, 0f, 0.6, 1f);
 		//draw right sideline for singles
 		boundaries.perspective.drawVanishingLine(dc, 0.5 - MatchBoundaries.COURT_SIDELINE_SIZE);
 		//draw right sideline for doubles
 		boundaries.perspective.drawVanishingLine(dc, 0.5);
 
 		//draw front long service line for singles
-		boundaries.perspective.drawTransversalLine(dc, 0);
+		boundaries.perspective.drawTransversalLine(dc, 0f);
 		//draw front long service line for doubles
 		boundaries.perspective.drawTransversalLine(dc, MatchBoundaries.COURT_LONG_SERVICE_SIZE);
 		//draw front short service line
@@ -249,30 +249,30 @@ class MatchView extends WatchUi.View {
 		//draw back short service line
 		boundaries.perspective.drawTransversalLine(dc, 0.5 + MatchBoundaries.COURT_SHORT_SERVICE_SIZE);
 		//draw back long service line for doubles
-		boundaries.perspective.drawTransversalLine(dc, 1 - MatchBoundaries.COURT_LONG_SERVICE_SIZE);
+		boundaries.perspective.drawTransversalLine(dc, 1f - MatchBoundaries.COURT_LONG_SERVICE_SIZE);
 		//draw back long service line for singles
-		boundaries.perspective.drawTransversalLine(dc, 1);
+		boundaries.perspective.drawTransversalLine(dc, 1f);
 
 		//draw a dot for the player 1 (watch carrier) position
-		var player_x = match.getPlayerCorner() == YOU_LEFT ? -0.28 : 0.28;
-		var player_coordinates = boundaries.perspective.transform([player_x, 0.12]);
+		var player_x = match.getPlayerCorner() == YOU_LEFT ? -0.28 : 0.28 as Float;
+		var player_coordinates = boundaries.perspective.transform([player_x, 0.12] as Array<Float>) as Array<Float>;
 		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 		dc.fillCircle(player_coordinates[0], player_coordinates[1], 7);
 	}
 
-	function drawScores(dc, match) {
+	function drawScores(dc as Dc, match as Match) as Void {
 		var set = match.getCurrentSet();
 		var server_team = set.getServerTeam();
 
-		var player_1_coordinates = boundaries.perspective.transform([0, 0.25]);
-		var player_2_coordinates = boundaries.perspective.transform([0, 0.75]);
+		var player_1_coordinates = boundaries.perspective.transform([0f, 0.25] as Array<Float>);
+		var player_2_coordinates = boundaries.perspective.transform([0f, 0.75] as Array<Float>);
 		var player_1_color = server_team == YOU ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
 		var player_2_color = server_team == OPPONENT ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
 		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), player_1_color, 2, 4);
 		UIHelpers.drawHighlightedNumber(dc, player_2_coordinates[0], player_2_coordinates[1], SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), player_2_color, 2, 4);
 	}
 
-	function drawSets(dc, match) {
+	function drawSets(dc as Dc, match as Match) as Void {
 		var sets = match.getSets();
 		if(sets.size() > 1) {
 			var current_set = match.getCurrentSetIndex();
@@ -292,23 +292,35 @@ class MatchView extends WatchUi.View {
 					}
 				}
 				dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-				dc.fillCircle(boundaries.board[i][0], boundaries.board[i][1], MatchBoundaries.SET_BALL_RADIUS);
+				dc.fillCircle(boundaries.board[i][0] as Float, boundaries.board[i][1] as Float, MatchBoundaries.SET_BALL_RADIUS);
 			}
 		}
 	}
 
-	function drawTimer(dc, match) {
+	function drawTimer(dc as Dc, match as Match) as Void {
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-		dc.drawText(boundaries.xCenter, boundaries.yFront + MatchBoundaries.TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Graphics.TEXT_JUSTIFY_CENTER);
+		dc.drawText(
+			boundaries.xCenter,
+			boundaries.yFront + MatchBoundaries.TIME_HEIGHT * 0.1 as Float,
+			Graphics.FONT_SMALL,
+			Helpers.formatDuration(match.getDuration()),
+			Graphics.TEXT_JUSTIFY_CENTER
+		);
 	}
 
-	function drawTime(dc) {
+	function drawTime(dc as Dc) as Void {
 		var time_label = Helpers.formatCurrentTime(clock24Hour, timeAMLabel, timePMLabel);
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-		dc.drawText(boundaries.xCenter, boundaries.marginHeight - MatchBoundaries.TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, time_label, Graphics.TEXT_JUSTIFY_CENTER);
+		dc.drawText(
+			boundaries.xCenter,
+			boundaries.marginHeight - MatchBoundaries.TIME_HEIGHT * 0.1 as Float,
+			Graphics.FONT_SMALL,
+			time_label,
+			Graphics.TEXT_JUSTIFY_CENTER
+		);
 	}
 
-	function onUpdate(dc) {
+	function onUpdate(dc as Dc) {
 		//when onUpdate is called, the entire view is cleared (hence the badminton court) on some watches (reported by users with vivoactive 4 and venu)
 		//in the simulator it's not the case for all watches
 		//do not try to update only a part of the view
@@ -319,7 +331,7 @@ class MatchView extends WatchUi.View {
 			dc.setAntiAlias(true);
 		}
 
-		var app = Application.getApp();
+		var app = (Application.getApp() as BadmintonScoreTrackerApp);
 
 		var match = app.getMatch();
 		drawCourt(dc, match);
@@ -335,9 +347,9 @@ class MatchView extends WatchUi.View {
 
 class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
-	private var view;
+	private var view as MatchView;
 
-	function initialize(v) {
+	function initialize(v as MatchView) {
 		view = v;
 		BehaviorDelegate.initialize();
 	}
@@ -347,8 +359,8 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		return true;
 	}
 
-	function manageScore(player) {
-		var match = Application.getApp().getMatch();
+	function manageScore(player as Player) as Boolean {
+		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
 		match.score(player);
 		var winner = match.getCurrentSet().getWinner();
 		if(winner != null) {
@@ -372,7 +384,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
 	//undo last action
 	function onBack() {
-		var match = Application.getApp().getMatch();
+		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
 		if(match.getTotalRalliesNumber() > 0) {
 			//undo last rally
 			match.undo();

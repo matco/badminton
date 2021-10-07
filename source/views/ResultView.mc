@@ -1,4 +1,5 @@
-using Toybox.WatchUi;
+import Toybox.Lang;
+import Toybox.WatchUi;
 using Toybox.Graphics;
 
 class SaveMatchConfirmationDelegate extends WatchUi.ConfirmationDelegate {
@@ -7,8 +8,8 @@ class SaveMatchConfirmationDelegate extends WatchUi.ConfirmationDelegate {
 		ConfirmationDelegate.initialize();
 	}
 
-	function onResponse(value) {
-		var match = Application.getApp().getMatch();
+	function onResponse(value) as Boolean {
+		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
 		if(value == CONFIRM_YES) {
 			match.save();
 		}
@@ -33,19 +34,19 @@ class ResultView extends WatchUi.View {
 	}
 
 	function onShow() {
-		var match = Application.getApp().getMatch();
+		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
 		//draw end of match text
 		var winner = match.getWinner();
-		var won_text = WatchUi.loadResource(winner == YOU ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
-		findDrawableById("result_won_text").setText(won_text);
+		var won_text = WatchUi.loadResource(winner == YOU ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won) as String;
+		(findDrawableById("result_won_text") as Text).setText(won_text);
 		//draw match score or last set score
 		var score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();
-		findDrawableById("result_score").setText(score_text);
+		(findDrawableById("result_score") as Text).setText(score_text);
 		//draw match time
-		findDrawableById("result_time").setText(Helpers.formatDuration(match.getDuration()));
+		(findDrawableById("result_time") as Text).setText(Helpers.formatDuration(match.getDuration()));
 		//draw rallies
-		var rallies_text = WatchUi.loadResource(Rez.Strings.end_total_rallies);
-		findDrawableById("result_rallies").setText(Helpers.formatString(rallies_text, {"rallies" => match.getTotalRalliesNumber().toString()}));
+		var rallies_text = WatchUi.loadResource(Rez.Strings.end_total_rallies) as String;
+		(findDrawableById("result_rallies") as Text).setText(Helpers.formatString(rallies_text, {"rallies" => match.getTotalRalliesNumber().toString()}));
 	}
 }
 
@@ -56,7 +57,7 @@ class ResultViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onSelect() {
-		var save_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.end_save_garmin_connect));
+		var save_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.end_save_garmin_connect) as String);
 		WatchUi.pushView(save_match_confirmation, new SaveMatchConfirmationDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
@@ -70,7 +71,7 @@ class ResultViewDelegate extends WatchUi.BehaviorDelegate {
 		return onNextPage();
 	}
 
-	function onNextPage() {
+	function onNextPage() as Boolean {
 		WatchUi.switchToView(new ActivityStatsView(), new ActivityStatsViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}

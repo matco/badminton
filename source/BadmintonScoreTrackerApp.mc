@@ -1,13 +1,14 @@
+import Toybox.Lang;
+import Toybox.System;
+import Toybox.WatchUi;
+import Toybox.Attention;
 using Toybox.Application;
-using Toybox.WatchUi;
-using Toybox.Attention;
 using Toybox.Timer;
-using Toybox.System;
 
 class BadmintonScoreTrackerApp extends Application.AppBase {
 	//create bus for the whole application
 	private const bus = new Bus();
-	private var match;
+	private var match as Match?;
 
 	function initialize() {
 		AppBase.initialize();
@@ -17,40 +18,40 @@ class BadmintonScoreTrackerApp extends Application.AppBase {
 	}
 
 	function getInitialView() {
-		return [new InitialView(), new InitialViewDelegate()];
+		return [new InitialView(), new InitialViewDelegate()] as Array<InputDelegate or View>;
 	}
 
-	function getBus() {
+	function getBus() as Bus {
 		return bus;
 	}
 
-	function getMatch() {
+	function getMatch() as Match {
 		return match;
 	}
 
-	function setMatch(m) {
+	function setMatch(m as Match) as Void {
 		match = m;
 	}
 
-	function onMatchBegin() {
+	function onMatchBegin() as Void {
 		if(Attention has :playTone) {
 			if(getProperty("enable_sound")) {
 				Attention.playTone(Attention.TONE_START);
 			}
 		}
 		if(Attention has :vibrate) {
-			Attention.vibrate([new Attention.VibeProfile(80, 200)]);
+			Attention.vibrate([new Attention.VibeProfile(80, 200)] as Array<VibeProfile>);
 		}
 	}
 
-	function onMatchEnd(winner) {
+	function onMatchEnd(winner as Player) as Void {
 		if(Attention has :playTone) {
 			if(getProperty("enable_sound")) {
 				Attention.playTone(winner == YOU ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
 			}
 		}
 		if(Attention has :vibrate) {
-			Attention.vibrate([new Attention.VibeProfile(80, 200)]);
+			Attention.vibrate([new Attention.VibeProfile(80, 200)] as Array<VibeProfile>);
 		}
 	}
 

@@ -1,46 +1,47 @@
+import Toybox.Lang;
 using Toybox.Test;
 
 module BetterTest {
 
-	function success(message) {
+	function success(message as String) as Void {
 		Test.assertMessage(true, message);
 	}
 
-	function fail(message) {
+	function fail(message as String) as Void {
 		Test.assertMessage(false, message);
 	}
 
-	function assertTrue(condition, message) {
+	function assertTrue(condition as Boolean, message as String) as Void {
 		Test.assertMessage(condition, message);
 	}
 
-	function assertFalse(condition, message) {
+	function assertFalse(condition as Boolean, message as String) as Void {
 		Test.assertMessage(!condition, message);
 	}
 
-	function assertNull(condition, message) {
+	function assertNull(condition as Object?, message as String) as Void {
 		assertSame(condition, null, message);
 	}
 
-	function assertNotNull(condition, message) {
+	function assertNotNull(condition as Object?, message as String) as Void {
 		assertNotSame(condition, null, message);
 	}
 
-	function assertEqual(actual, expected, message) {
+	function assertEqual(actual as Object, expected as Object?, message as String) as Void {
 		Test.assertEqualMessage(actual, expected, message);
 	}
 
-	function assertNotEqual(actual, expected, message) {
+	function assertNotEqual(actual as Object, expected as Object?, message as String) as Void {
 		Test.assertNotEqualMessage(actual, expected, message);
 	}
 
-	function assertSame(actual, expected, message) {
+	function assertSame(actual as Object?, expected as Object?, message as String) as Void {
 		if(actual != expected) {
 			throw new Test.AssertException(message + " (expected [" + expected + "], actual [" + actual + "])");
 		}
 	}
 
-	function assertNotSame(actual, expected, message) {
+	function assertNotSame(actual as Object?, expected as Object?, message as String) as Void {
 		if(actual == expected) {
 			throw new Test.AssertException(message);
 		}

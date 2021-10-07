@@ -1,3 +1,6 @@
+import Toybox.Lang;
+import Toybox.Graphics;
+import Toybox.WatchUi;
 using Toybox.Math;
 using Toybox.Graphics;
 using Toybox.System;
@@ -6,7 +9,7 @@ module UIHelpers {
 
 	//for now consider all drawables are labels and are justified
 	//improve this as soon as a method getJustification exists
-	function findTappedDrawable(event, drawables) {
+	function findTappedDrawable(event as ClickEvent, drawables as Array<Drawable>) as Drawable {
 		var coordinate = event.getCoordinates();
 		var event_x = coordinate[0];
 		var event_y = coordinate[1];
@@ -25,7 +28,7 @@ module UIHelpers {
 			}
 		}
 		//second loop to find closest drawable
-		var closest_distance = null;
+		var closest_distance = null as Float;
 		var closest_drawable = null;
 		for(var i = 0; i < drawables.size(); i++) {
 			var drawable = drawables[i];
@@ -41,21 +44,21 @@ module UIHelpers {
 		return closest_drawable;
 	}
 
-	function drawPolygon(dc, points) {
+	function drawPolygon(dc as Dc, points as Array<Array>) as Void {
 		var counts = points.size();
 		for(var i = 0; i < counts; i++) {
 			var next_index = (i + 1) % counts;
-			dc.drawLine(points[i][0], points[i][1], points[next_index][0], points[next_index][1]);
+			dc.drawLine(points[i][0] as Number, points[i][1] as Number, points[next_index][0] as Number, points[next_index][1] as Number);
 		}
 	}
 
-	function drawHighlightedNumber(dc, x, y, font, text, color, vertical_padding, horizontal_padding) {
+	function drawHighlightedNumber(dc as Dc, x as Float, y as Float, font as FontType, text as String, color as Number, vertical_padding as Number, horizontal_padding as Number) as Void {
 		var dimensions = dc.getTextDimensions(text, font);
 		//the font height includes a default top margin that is useless
 		var offset = dimensions[1] * 0.12;
 		//calculate the real height of the text that will be actually be displayed
 		//remove the font descent because numbers don't have any descent
-		var font_height = (dimensions[1] - dc.getFontDescent(font));
+		var font_height = (dimensions[1] - Graphics.getFontDescent(font));
 		//calculate the dimensions of the highlighting rectangle
 		var width = dimensions[0] + 2 * horizontal_padding;
 		var height = font_height + 2 * vertical_padding;

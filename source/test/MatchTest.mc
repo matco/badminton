@@ -1,6 +1,8 @@
+import Toybox.Lang;
+
 module MatchTest {
 
-	function create_match_config(type, sets, beginner, server, maximum_points, absolute_maximum_points) {
+	function create_match_config(type as MatchType, sets as Number, beginner as Player, server as Boolean, maximum_points as Number, absolute_maximum_points as Number) as MatchConfig {
 		var config = new MatchConfig();
 		config.type = type;
 		config.sets = sets;
