@@ -19,6 +19,7 @@ class SaveMatchConfirmationDelegate extends Ui.ConfirmationDelegate {
 		Ui.popView(Ui.SLIDE_IMMEDIATE);
 		var view = new InitialView();
 		Ui.switchToView(view, new InitialViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 }
 
