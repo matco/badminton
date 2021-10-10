@@ -45,6 +45,7 @@ class TypePickerDelegate extends Ui.PickerDelegate {
 		$.config.put(:step, $.config.get(:step) - 1);
 		//remove picker from view stack
 		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 
 	function onAccept(values) {
@@ -53,6 +54,7 @@ class TypePickerDelegate extends Ui.PickerDelegate {
 		$.config.put(:step, $.config.get(:step) + 1);
 		//remove picker from view stack to go back to initial view
 		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 
 }

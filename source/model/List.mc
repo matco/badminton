@@ -1,8 +1,8 @@
 class List {
 	const INITIAL_SIZE = 10;
 
-	hidden var elements;
-	hidden var length;
+	private var elements;
+	private var length;
 
 	function initialize() {
 		elements = new [INITIAL_SIZE];

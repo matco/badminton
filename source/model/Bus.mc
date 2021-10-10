@@ -1,5 +1,5 @@
 class Bus {
-	hidden var listeners;
+	private var listeners;
 
 	function initialize() {
 		listeners = new List();
@@ -24,8 +24,8 @@ class Bus {
 }
 
 class BusEvent {
-	hidden var method_name;
-	hidden var payload;
+	private var method_name;
+	private var payload;
 
 	function initialize(mn, p) {
 		method_name = mn;

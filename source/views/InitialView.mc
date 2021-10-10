@@ -71,5 +71,6 @@ class InitialViewDelegate extends Ui.BehaviorDelegate {
 	function onBack() {
 		//pop the main view to close the application
 		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 }

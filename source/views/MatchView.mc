@@ -20,10 +20,10 @@ class MatchView extends Ui.View {
 
 	const TIME_HEIGHT = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1; //height of timer and clock
 
-	hidden var timer;
-	hidden var clock_24_hour;
-	hidden var time_am_label;
-	hidden var time_pm_label;
+	private var timer;
+	private var clock_24_hour;
+	private var time_am_label;
+	private var time_pm_label;
 
 	function initialize() {
 		View.initialize();
@@ -181,7 +181,7 @@ class MatchView extends Ui.View {
 
 		//draw background
 		dc.setColor(Gfx.COLOR_BLUE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon($.match.getType() == :single ? single_court : double_court);
+		dc.fillPolygon($.match.getType() == SINGLE ? single_court : double_court);
 
 		//draw highlighted corner
 		var highlighted_corner = $.match.getHighlightedCorner();
@@ -206,7 +206,7 @@ class MatchView extends Ui.View {
 		dc.drawLine(x_center - half_width_bottom_corridor, double_court[3][1] - COURT_CORRIDORS_SIZE, x_center + half_width_bottom_corridor, double_court[2][1] - COURT_CORRIDORS_SIZE);
 
 		//in double, draw a dot for the player 1 (watch carrier) position if his team is engaging
-		if($.match.getType() == :double) {
+		if($.match.getType() == DOUBLE) {
 			var player_corner = $.match.getPlayerCorner();
 			if(player_corner != null) {
 				var offset = half_width_bottom - 30;
@@ -224,8 +224,8 @@ class MatchView extends Ui.View {
 		var y_score_2 = $.boundaries.get("y_score_2");
 		var set = $.match.getCurrentSet();
 
-		UIHelpers.drawHighlightedText(dc, x_center, y_score_1, SCORE_PLAYER_1_FONT, set.getScore(:player_1).toString(), 8);
-		UIHelpers.drawHighlightedText(dc, x_center, y_score_2, SCORE_PLAYER_2_FONT, set.getScore(:player_2).toString(), 8);
+		UIHelpers.drawHighlightedText(dc, x_center, y_score_1, SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 8);
+		UIHelpers.drawHighlightedText(dc, x_center, y_score_2, SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 8);
 	}
 
 	function drawSets(dc) {
@@ -245,7 +245,7 @@ class MatchView extends Ui.View {
 					}
 					else {
 						var winner = set.getWinner();
-						color = winner == :player_1 ? Gfx.COLOR_GREEN : Gfx.COLOR_RED;
+						color = winner == YOU ? Gfx.COLOR_GREEN : Gfx.COLOR_RED;
 					}
 				}
 				dc.setColor(color, Gfx.COLOR_TRANSPARENT);
@@ -318,13 +318,13 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 
 	function onNextPage() {
 		//score with player 1 (watch carrier)
-		manageScore(:player_1);
+		manageScore(YOU);
 		return true;
 	}
 
 	function onPreviousPage() {
 		//score with player 2 (opponent)
-		manageScore(:player_2);
+		manageScore(OPPONENT);
 		return true;
 	}
 
@@ -348,11 +348,11 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		var center = $.device.screenHeight / 2;
 		if(event.getCoordinates()[1] < $.boundaries.get("y_middle")) {
 			//score with player 2 (opponent)
-			manageScore(:player_2);
+			manageScore(OPPONENT);
 		}
 		else {
 			//score with player 1 (watch carrier)
-			manageScore(:player_1);
+			manageScore(YOU);
 		}
 		return true;
 	}

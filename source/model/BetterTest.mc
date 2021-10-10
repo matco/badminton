@@ -3,35 +3,35 @@ using Toybox.Test as Test;
 module BetterTest {
 
 	function success(message) {
-		return Test.assertMessage(true, message);
+		Test.assertMessage(true, message);
 	}
 
 	function fail(message) {
-		return Test.assertMessage(false, message);
+		Test.assertMessage(false, message);
 	}
 
 	function assertTrue(condition, message) {
-		return Test.assertMessage(condition, message);
+		Test.assertMessage(condition, message);
 	}
 
 	function assertFalse(condition, message) {
-		return Test.assertMessage(!condition, message);
+		Test.assertMessage(!condition, message);
 	}
 
 	function assertNull(condition, message) {
-		return assertSame(condition, null, message);
+		assertSame(condition, null, message);
 	}
 
 	function assertNotNull(condition, message) {
-		return assertNotSame(condition, null, message);
+		assertNotSame(condition, null, message);
 	}
 
 	function assertEqual(actual, expected, message) {
-		return Test.assertEqualMessage(actual, expected, message);
+		Test.assertEqualMessage(actual, expected, message);
 	}
 
 	function assertNotEqual(actual, expected, message) {
-		return Test.assertNotEqualMessage(actual, expected, message);
+		Test.assertNotEqualMessage(actual, expected, message);
 	}
 
 	function assertSame(actual, expected, message) {

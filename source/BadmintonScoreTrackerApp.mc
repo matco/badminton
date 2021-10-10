@@ -37,7 +37,7 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 	function onMatchEnd(winner) {
 		if(Attention has :playTone) {
 			if(getProperty("enable_sound")) {
-				Attention.playTone(winner == :player_1 ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
+				Attention.playTone(winner == YOU ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
 			}
 		}
 		if(Attention has :vibrate) {

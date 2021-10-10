@@ -4,7 +4,7 @@ using Toybox.System as Sys;
 
 class BeginnerPickerFactory extends Ui.PickerFactory {
 
-	var beginners = [:player_1, :player_2];
+	var beginners = [YOU, OPPONENT];
 	var beginners_label = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent];
 
 	function initialize() {

@@ -7,17 +7,17 @@ using Toybox.WatchUi as Ui;
 
 class MatchSet {
 
-	hidden var beginner; //store the beginner of the set, :player_1 or :player_2
+	private var beginner; //store the beginner of the set, YOU or OPPONENT
 
-	hidden var rallies; //list of all rallies
+	private var rallies; //list of all rallies
 
-	hidden var scores; //dictionnary containing players current scores
-	hidden var winner; //store the winner of the match, :player_1 or :player_2
+	private var scores; //dictionnary containing players current scores
+	private var winner; //store the winner of the match, YOU or OPPONENT
 
 	function initialize(player) {
 		beginner = player;
 		rallies = new List();
-		scores = {:player_1 => 0, :player_2 => 0};
+		scores = {YOU => 0, OPPONENT => 0};
 	}
 
 	function end(player) {
@@ -76,7 +76,7 @@ class MatchSet {
 		var server = getServerTeam();
 		var server_score = getScore(server);
 		//player 1 serves from corner 2 or 3
-		if(server == :player_1) {
+		if(server == YOU) {
 			return 3 - server_score % 2;
 		}
 		//player 2 serves from corner 0 or 1
@@ -85,7 +85,7 @@ class MatchSet {
 
 	//methods used from perspective of player 1 (watch carrier)
 	hidden function getPlayerTeamIsServer() {
-		return getServerTeam() == :player_1;
+		return getServerTeam() == YOU;
 	}
 
 

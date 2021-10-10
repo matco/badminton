@@ -19,6 +19,7 @@ class SaveMatchConfirmationDelegate extends Ui.ConfirmationDelegate {
 		Ui.popView(Ui.SLIDE_IMMEDIATE);
 		var view = new InitialView();
 		Ui.switchToView(view, new InitialViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+		return true;
 	}
 }
 
@@ -35,10 +36,10 @@ class ResultView extends Ui.View {
 	function onShow() {
 		//draw end of match text
 		var winner = $.match.getWinner();
-		var won_text = Ui.loadResource(winner == :player_1 ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
+		var won_text = Ui.loadResource(winner == YOU ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
 		findDrawableById("result_won_text").setText(won_text);
 		//draw match score or last set score
-		var score_text = $.match.getSetsWon(:player_1).toString() + " - " + $.match.getSetsWon(:player_2).toString();
+		var score_text = $.match.getSetsWon(YOU).toString() + " - " + $.match.getSetsWon(OPPONENT).toString();
 		findDrawableById("result_score").setText(score_text);
 		//draw match time
 		findDrawableById("result_time").setText(Helpers.formatDuration($.match.getDuration()));
