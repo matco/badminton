@@ -4,8 +4,8 @@ module MatchTest {
 
 	(:test)
 	function testNewMatch(logger) {
-		var match = new Match(:single, 1, YOU, 21, 30);
-		BetterTest.assertEqual(match.getType(), :single, "Match is created with correct type");
+		var match = new Match(SINGLE, 1, YOU, 21, 30);
+		BetterTest.assertEqual(match.getType(), SINGLE, "Match is created with correct type");
 		BetterTest.assertEqual(match.getSetsNumber(), 1, "Match is created with corret number of set");
 		BetterTest.assertEqual(match.getCurrentSetIndex(), 0, "Match current set index returns the correct index");
 		BetterTest.assertEqual(match.getCurrentSet().getBeginner(), YOU, "Match is created with correct player");
@@ -25,7 +25,7 @@ module MatchTest {
 
 	(:test)
 	function testBeginMatch(logger) {
-		var match = new Match(:single, 1, YOU, 21, 30);
+		var match = new Match(SINGLE, 1, YOU, 21, 30);
 		//BetterTest.assertEqual(match.beginner, YOU, "Beginner of match began with player 1 is player 1");
 
 		BetterTest.assertFalse(match.hasEnded(), "Began match has not ended");
@@ -38,7 +38,7 @@ module MatchTest {
 
 	(:test)
 	function testScore(logger) {
-		var match = new Match(:single, 1, YOU, 21, 30);
+		var match = new Match(SINGLE, 1, YOU, 21, 30);
 		var set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -67,7 +67,7 @@ module MatchTest {
 
 	(:test)
 	function testUndo(logger) {
-		var match = new Match(:single, 1, YOU, 21, 30);
+		var match = new Match(SINGLE, 1, YOU, 21, 30);
 		var set = match.getCurrentSet();
 
 		match.undo();
@@ -107,7 +107,7 @@ module MatchTest {
 
 	(:test)
 	function testEnd(logger) {
-		var match = new Match(:single, 1, YOU, 3, 5);
+		var match = new Match(SINGLE, 1, YOU, 3, 5);
 		var set = match.getCurrentSet();
 
 		match.score(YOU);

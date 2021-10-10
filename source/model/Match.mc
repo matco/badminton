@@ -10,6 +10,11 @@ enum Player {
 	OPPONENT = 2
 }
 
+enum MatchType {
+	SINGLE = 1,
+	DOUBLE = 2
+}
+
 class Match {
 
 	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
@@ -19,7 +24,7 @@ class Match {
 	const SET_SCORE_PLAYER_1_FIELD_ID = 4;
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
-	hidden var type; //type of the match, :single or :double
+	hidden var type; //type of the match, SINGLE or DOUBLE
 	hidden var sets; //array of all sets containing -1 for a set not played
 
 	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
@@ -113,7 +118,7 @@ class Match {
 			set.score(scorer);
 
 			//in double, change server if player 1 (watch carrier) team regains service
-			if(type == :double) {
+			if(type == DOUBLE) {
 				if(previous_rally == OPPONENT && scorer == YOU) {
 					server = !server;
 				}
@@ -176,7 +181,7 @@ class Match {
 		set.undo();
 
 		//in double, change server if player 1 (watch carrier) team looses service
-		if(type == :double) {
+		if(type == DOUBLE) {
 			if(undone_rally == YOU && set.getRallies().last() == OPPONENT) {
 				server = !server;
 			}

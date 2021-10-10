@@ -4,7 +4,7 @@ using Toybox.System as Sys;
 
 class TypePickerFactory extends Ui.PickerFactory {
 
-	var types = [:single, :double];
+	var types = [SINGLE, DOUBLE];
 	var types_labels = [Rez.Strings.type_single, Rez.Strings.type_double];
 
 	function initialize() {

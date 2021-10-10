@@ -181,7 +181,7 @@ class MatchView extends Ui.View {
 
 		//draw background
 		dc.setColor(Gfx.COLOR_BLUE, Gfx.COLOR_TRANSPARENT);
-		dc.fillPolygon($.match.getType() == :single ? single_court : double_court);
+		dc.fillPolygon($.match.getType() == SINGLE ? single_court : double_court);
 
 		//draw highlighted corner
 		var highlighted_corner = $.match.getHighlightedCorner();
@@ -206,7 +206,7 @@ class MatchView extends Ui.View {
 		dc.drawLine(x_center - half_width_bottom_corridor, double_court[3][1] - COURT_CORRIDORS_SIZE, x_center + half_width_bottom_corridor, double_court[2][1] - COURT_CORRIDORS_SIZE);
 
 		//in double, draw a dot for the player 1 (watch carrier) position if his team is engaging
-		if($.match.getType() == :double) {
+		if($.match.getType() == DOUBLE) {
 			var player_corner = $.match.getPlayerCorner();
 			if(player_corner != null) {
 				var offset = half_width_bottom - 30;
