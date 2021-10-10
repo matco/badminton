@@ -224,8 +224,8 @@ class MatchView extends Ui.View {
 		var y_score_2 = $.boundaries.get("y_score_2");
 		var set = $.match.getCurrentSet();
 
-		UIHelpers.drawHighlightedText(dc, x_center, y_score_1, SCORE_PLAYER_1_FONT, set.getScore(:player_1).toString(), 8);
-		UIHelpers.drawHighlightedText(dc, x_center, y_score_2, SCORE_PLAYER_2_FONT, set.getScore(:player_2).toString(), 8);
+		UIHelpers.drawHighlightedText(dc, x_center, y_score_1, SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 8);
+		UIHelpers.drawHighlightedText(dc, x_center, y_score_2, SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 8);
 	}
 
 	function drawSets(dc) {
@@ -245,7 +245,7 @@ class MatchView extends Ui.View {
 					}
 					else {
 						var winner = set.getWinner();
-						color = winner == :player_1 ? Gfx.COLOR_GREEN : Gfx.COLOR_RED;
+						color = winner == YOU ? Gfx.COLOR_GREEN : Gfx.COLOR_RED;
 					}
 				}
 				dc.setColor(color, Gfx.COLOR_TRANSPARENT);
@@ -318,13 +318,13 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 
 	function onNextPage() {
 		//score with player 1 (watch carrier)
-		manageScore(:player_1);
+		manageScore(YOU);
 		return true;
 	}
 
 	function onPreviousPage() {
 		//score with player 2 (opponent)
-		manageScore(:player_2);
+		manageScore(OPPONENT);
 		return true;
 	}
 
@@ -348,11 +348,11 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		var center = $.device.screenHeight / 2;
 		if(event.getCoordinates()[1] < $.boundaries.get("y_middle")) {
 			//score with player 2 (opponent)
-			manageScore(:player_2);
+			manageScore(OPPONENT);
 		}
 		else {
 			//score with player 1 (watch carrier)
-			manageScore(:player_1);
+			manageScore(YOU);
 		}
 		return true;
 	}

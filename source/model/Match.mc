@@ -5,6 +5,11 @@ using Toybox.Activity as Activity;
 using Toybox.FitContributor as Contributor;
 using Toybox.WatchUi as Ui;
 
+enum Player {
+	YOU = 1,
+	OPPONENT = 2
+}
+
 class Match {
 
 	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
@@ -18,7 +23,7 @@ class Match {
 	hidden var sets; //array of all sets containing -1 for a set not played
 
 	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
-	hidden var winner; //store the winner of the match, :player_1 or :player_2
+	hidden var winner; //store the winner of the match, YOU or OPPONENT
 
 	hidden var maximum_points;
 	hidden var absolute_maximum_points;
@@ -109,7 +114,7 @@ class Match {
 
 			//in double, change server if player 1 (watch carrier) team regains service
 			if(type == :double) {
-				if(previous_rally == :player_2 && scorer == :player_1) {
+				if(previous_rally == OPPONENT && scorer == YOU) {
 					server = !server;
 				}
 			}
@@ -120,18 +125,18 @@ class Match {
 				set.end(set_winner);
 
 				//manage activity session
-				session_field_set_score_player_1.setData(set.getScore(:player_1));
-				session_field_set_score_player_2.setData(set.getScore(:player_2));
+				session_field_set_score_player_1.setData(set.getScore(YOU));
+				session_field_set_score_player_2.setData(set.getScore(OPPONENT));
 
 				var match_winner = isWon();
 				if(match_winner != null) {
 					end(match_winner);
 
 					//manage activity session
-					session_field_set_player_1.setData(getSetsWon(:player_1));
-					session_field_set_player_2.setData(getSetsWon(:player_2));
-					session_field_score_player_1.setData(getTotalScore(:player_1));
-					session_field_score_player_2.setData(getTotalScore(:player_2));
+					session_field_set_player_1.setData(getSetsWon(YOU));
+					session_field_set_player_2.setData(getSetsWon(OPPONENT));
+					session_field_score_player_1.setData(getTotalScore(YOU));
+					session_field_score_player_2.setData(getTotalScore(OPPONENT));
 					session.stop();
 				}
 			}
@@ -139,26 +144,26 @@ class Match {
 	}
 
 	hidden function isSetWon(set) {
-		var scorePlayer1 = set.getScore(:player_1);
-		var scorePlayer2 = set.getScore(:player_2);
+		var scorePlayer1 = set.getScore(YOU);
+		var scorePlayer2 = set.getScore(OPPONENT);
 		if(scorePlayer1 >= absolute_maximum_points || scorePlayer1 >= maximum_points && (scorePlayer1 - scorePlayer2) > 1) {
-			return :player_1;
+			return YOU;
 		}
 		if(scorePlayer2 >= absolute_maximum_points || scorePlayer2 >= maximum_points && (scorePlayer2 - scorePlayer1) > 1) {
-			return :player_2;
+			return OPPONENT;
 		}
 		return null;
 	}
 
 	hidden function isWon() {
 		var winning_sets = sets.size() / 2;
-		var player_1_sets = getSetsWon(:player_1);
+		var player_1_sets = getSetsWon(YOU);
 		if(player_1_sets > winning_sets) {
-			return :player_1;
+			return YOU;
 		}
-		var player_2_sets = getSetsWon(:player_2);
+		var player_2_sets = getSetsWon(OPPONENT);
 		if(player_2_sets > winning_sets) {
-			return :player_2;
+			return OPPONENT;
 		}
 		return null;
 	}
@@ -172,7 +177,7 @@ class Match {
 
 		//in double, change server if player 1 (watch carrier) team looses service
 		if(type == :double) {
-			if(undone_rally == :player_1 && set.getRallies().last() == :player_2) {
+			if(undone_rally == YOU && set.getRallies().last() == OPPONENT) {
 				server = !server;
 			}
 		}
@@ -242,7 +247,7 @@ class Match {
 
 	//methods used from perspective of player 1 (watch carrier)
 	hidden function getPlayerTeamIsServer() {
-		return getServerTeam() == :player_1;
+		return getServerTeam() == YOU;
 	}
 
 	function getPlayerCorner() {

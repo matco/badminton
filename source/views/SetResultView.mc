@@ -16,10 +16,10 @@ class SetResultView extends Ui.View {
 		var set = $.match.getCurrentSet();
 		//draw end of match text
 		var set_winner = set.getWinner();
-		var won_text = Ui.loadResource(set_winner == :player_1 ? Rez.Strings.set_end_you_won : Rez.Strings.set_end_opponent_won);
+		var won_text = Ui.loadResource(set_winner == YOU ? Rez.Strings.set_end_you_won : Rez.Strings.set_end_opponent_won);
 		findDrawableById("set_result_won_text").setText(won_text);
 		//draw set score
-		var score_text = set.getScore(:player_1).toString() + " - " + set.getScore(:player_2).toString();
+		var score_text = set.getScore(YOU).toString() + " - " + set.getScore(OPPONENT).toString();
 		findDrawableById("set_result_score").setText(score_text);
 		//draw rallies
 		var rallies_text = Ui.loadResource(Rez.Strings.set_end_rallies);
