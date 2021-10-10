@@ -20,10 +20,10 @@ class MatchView extends Ui.View {
 
 	const TIME_HEIGHT = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1; //height of timer and clock
 
-	hidden var timer;
-	hidden var clock_24_hour;
-	hidden var time_am_label;
-	hidden var time_pm_label;
+	private var timer;
+	private var clock_24_hour;
+	private var time_am_label;
+	private var time_pm_label;
 
 	function initialize() {
 		View.initialize();

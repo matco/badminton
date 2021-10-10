@@ -7,12 +7,12 @@ using Toybox.WatchUi as Ui;
 
 class MatchSet {
 
-	hidden var beginner; //store the beginner of the set, YOU or OPPONENT
+	private var beginner; //store the beginner of the set, YOU or OPPONENT
 
-	hidden var rallies; //list of all rallies
+	private var rallies; //list of all rallies
 
-	hidden var scores; //dictionnary containing players current scores
-	hidden var winner; //store the winner of the match, YOU or OPPONENT
+	private var scores; //dictionnary containing players current scores
+	private var winner; //store the winner of the match, YOU or OPPONENT
 
 	function initialize(player) {
 		beginner = player;

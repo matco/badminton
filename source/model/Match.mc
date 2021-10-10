@@ -24,22 +24,22 @@ class Match {
 	const SET_SCORE_PLAYER_1_FIELD_ID = 4;
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
-	hidden var type; //type of the match, SINGLE or DOUBLE
-	hidden var sets; //array of all sets containing -1 for a set not played
+	private var type; //type of the match, SINGLE or DOUBLE
+	private var sets; //array of all sets containing -1 for a set not played
 
-	hidden var server; //in double, true if the player 1 (watch carrier) is currently the server
-	hidden var winner; //store the winner of the match, YOU or OPPONENT
+	private var server; //in double, true if the player 1 (watch carrier) is currently the server
+	private var winner; //store the winner of the match, YOU or OPPONENT
 
-	hidden var maximum_points;
-	hidden var absolute_maximum_points;
+	private var maximum_points;
+	private var absolute_maximum_points;
 
-	hidden var session;
-	hidden var session_field_set_player_1;
-	hidden var session_field_set_player_2;
-	hidden var session_field_set_score_player_1;
-	hidden var session_field_set_score_player_2;
-	hidden var session_field_score_player_1;
-	hidden var session_field_score_player_2;
+	private var session;
+	private var session_field_set_player_1;
+	private var session_field_set_player_2;
+	private var session_field_set_score_player_1;
+	private var session_field_set_score_player_2;
+	private var session_field_score_player_1;
+	private var session_field_score_player_2;
 
 	function initialize(match_type, sets_number, match_beginner, mp, amp) {
 		type = match_type;
