@@ -25,19 +25,20 @@ module UIHelpers {
 			}
 		}
 		//second loop to find closest drawable
-		var closest = {};
+		var closest_distance = null;
+		var closest_drawable = null;
 		for(var i = 0; i < drawables.size(); i++) {
 			var drawable = drawables[i];
 			var drawable_x = drawable.locX;
 			var drawable_y = drawable.locY + drawable.height / 2;
 			var distance = Math.pow(drawable_x - event_x, 2) + Math.pow(drawable_y - event_y, 2);
-			if(!closest.hasKey("distance") || distance < closest.get("distance")) {
-				closest.put("distance", distance);
-				closest.put("drawable", drawable);
+			if(closest_distance == null || distance < closest_distance) {
+				closest_distance = distance;
+				closest_drawable = drawable;
 			}
 		}
-		//Sys.println("tap close to drawable " + closest.get("drawable").identifier);
-		return closest.get("drawable");
+		//Sys.println("tap close to drawable " + closest_drawable.identifier);
+		return closest_drawable;
 	}
 
 	function drawPolygon(dc, points) {
