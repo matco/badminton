@@ -1,8 +1,7 @@
-using Toybox.Graphics as Gfx;
-using Toybox.WatchUi as Ui;
-using Toybox.System as Sys;
+using Toybox.Graphics;
+using Toybox.WatchUi;
 
-class BeginnerPickerFactory extends Ui.PickerFactory {
+class BeginnerPickerFactory extends WatchUi.PickerFactory {
 
 	var beginners = [YOU, OPPONENT];
 	var beginners_label = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent];
@@ -12,12 +11,12 @@ class BeginnerPickerFactory extends Ui.PickerFactory {
 	}
 
 	function getDrawable(index, selected) {
-		return new Ui.Text({
-			:text => Ui.loadResource(beginners_label[index]),
-			:color => Gfx.COLOR_WHITE,
-			:font=> Gfx.FONT_SMALL,
-			:locX => Ui.LAYOUT_HALIGN_CENTER,
-			:locY=> Ui.LAYOUT_VALIGN_CENTER
+		return new WatchUi.Text({
+			:text => WatchUi.loadResource(beginners_label[index]),
+			:color => Graphics.COLOR_WHITE,
+			:font=> Graphics.FONT_SMALL,
+			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
+			:locY=> WatchUi.LAYOUT_VALIGN_CENTER
 		});
 	}
 

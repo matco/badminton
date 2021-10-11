@@ -1,11 +1,10 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
+using Toybox.WatchUi;
+using Toybox.Graphics;
 using Toybox.Timer;
 
 var config;
 
-class InitialView extends Ui.View {
+class InitialView extends WatchUi.View {
 
 	function initialize() {
 		View.initialize();
@@ -22,7 +21,7 @@ class InitialView extends Ui.View {
 		var step = $.config.get(:step);
 		//when step is negative, close the application
 		if(step == -1) {
-			Ui.popView(Ui.SLIDE_IMMEDIATE);
+			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		}
 		//when step is 3, start the match
 		else if(step == 3) {
@@ -39,7 +38,7 @@ class InitialView extends Ui.View {
 			$.match = new Match(type, sets_number, player, mp, amp);
 
 			//go to match view
-			Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
+			WatchUi.switchToView(new MatchView(), new MatchViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else {
 			//choose appropricate view depending on current step
@@ -57,12 +56,12 @@ class InitialView extends Ui.View {
 				delegate = new BeginnerPickerDelegate();
 			}
 			//this view is shown when application starts or when back is pressed on type picker view
-			Ui.pushView(picker, delegate, Ui.SLIDE_IMMEDIATE);
+			WatchUi.pushView(picker, delegate, WatchUi.SLIDE_IMMEDIATE);
 		}
 	}
 }
 
-class InitialViewDelegate extends Ui.BehaviorDelegate {
+class InitialViewDelegate extends WatchUi.BehaviorDelegate {
 
 	function initialize(view) {
 		BehaviorDelegate.initialize();
@@ -70,7 +69,7 @@ class InitialViewDelegate extends Ui.BehaviorDelegate {
 
 	function onBack() {
 		//pop the main view to close the application
-		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 }

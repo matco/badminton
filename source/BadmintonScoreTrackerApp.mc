@@ -1,14 +1,14 @@
-using Toybox.Application as App;
-using Toybox.WatchUi as Ui;
-using Toybox.System as Sys;
-using Toybox.Attention as Attention;
-using Toybox.Timer as Timer;
+using Toybox.Application;
+using Toybox.WatchUi;
+using Toybox.Attention;
+using Toybox.Timer;
+using Toybox.System;
 
 var bus;
 var match;
-var device = Sys.getDeviceSettings();
+var device = System.getDeviceSettings();
 
-class BadmintonScoreTrackerApp extends App.AppBase {
+class BadmintonScoreTrackerApp extends Application.AppBase {
 
 	function initialize() {
 		AppBase.initialize();

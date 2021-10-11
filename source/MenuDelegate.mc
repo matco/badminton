@@ -1,7 +1,6 @@
-using Toybox.WatchUi as Ui;
-using Toybox.System as Sys;
+using Toybox.WatchUi;
 
-class MenuDelegate extends Ui.MenuInputDelegate {
+class MenuDelegate extends WatchUi.MenuInputDelegate {
 
 	function initialize() {
 		MenuInputDelegate.initialize();
@@ -10,17 +9,17 @@ class MenuDelegate extends Ui.MenuInputDelegate {
 	function onMenuItem(item) {
 		if(item == :menu_end_game) {
 			//pop once to close the menu
-			Ui.popView(Ui.SLIDE_IMMEDIATE);
-			var save_match_confirmation = new Ui.Confirmation(Ui.loadResource(Rez.Strings.end_save_garmin_connect));
-			Ui.pushView(save_match_confirmation, new SaveMatchConfirmationDelegate(), Ui.SLIDE_IMMEDIATE);
+			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+			var save_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.end_save_garmin_connect));
+			WatchUi.pushView(save_match_confirmation, new SaveMatchConfirmationDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else if(item == :menu_reset_game) {
 			$.match.discard();
 			//pop once to close the menu
-			Ui.popView(Ui.SLIDE_IMMEDIATE);
+			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 			//return to type screen
 			var view = new InitialView();
-			Ui.switchToView(view, new InitialViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+			WatchUi.switchToView(view, new InitialViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}
 	}
 }

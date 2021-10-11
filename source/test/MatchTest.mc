@@ -1,5 +1,3 @@
-using Toybox.System as Sys;
-
 module MatchTest {
 
 	(:test)

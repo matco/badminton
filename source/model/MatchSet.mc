@@ -1,10 +1,3 @@
-using Toybox.System as Sys;
-using Toybox.Time as Time;
-using Toybox.ActivityRecording as Recording;
-using Toybox.Activity as Activity;
-using Toybox.FitContributor as Contributor;
-using Toybox.WatchUi as Ui;
-
 class MatchSet {
 
 	private var beginner; //store the beginner of the set, YOU or OPPONENT

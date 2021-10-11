@@ -1,12 +1,11 @@
-using Toybox.Application as App;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
-using Toybox.WatchUi as Ui;
+using Toybox.Application;
+using Toybox.Graphics;
+using Toybox.WatchUi;
 using Toybox.Timer;
 
 var boundaries;
 
-class MatchView extends Ui.View {
+class MatchView extends WatchUi.View {
 
 	const MAX_SETS = 5;
 	const SET_BALL_RADIUS = 7; //width reserved to display sets
@@ -15,10 +14,10 @@ class MatchView extends Ui.View {
 	const COURT_WIDTH_RATIO = 0.8; //width of top opponent part compared to total width of the court
 	const COURT_CORRIDORS_SIZE = 12;
 
-	const SCORE_PLAYER_1_FONT = Gfx.FONT_NUMBER_MEDIUM;
-	const SCORE_PLAYER_2_FONT = Gfx.FONT_NUMBER_MILD;
+	const SCORE_PLAYER_1_FONT = Graphics.FONT_NUMBER_MEDIUM;
+	const SCORE_PLAYER_2_FONT = Graphics.FONT_NUMBER_MILD;
 
-	const TIME_HEIGHT = Gfx.getFontHeight(Gfx.FONT_SMALL) * 1.1; //height of timer and clock
+	const TIME_HEIGHT = Graphics.getFontHeight(Graphics.FONT_SMALL) * 1.1; //height of timer and clock
 
 	private var timer;
 	private var clock_24_hour;
@@ -34,8 +33,8 @@ class MatchView extends Ui.View {
 
 	function onShow() {
 		clock_24_hour = System.getDeviceSettings().is24Hour;
-		time_am_label = Ui.loadResource(Rez.Strings.time_am);
-		time_pm_label = Ui.loadResource(Rez.Strings.time_pm);
+		time_am_label = WatchUi.loadResource(Rez.Strings.time_am);
+		time_pm_label = WatchUi.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
 
 		$.bus.register(self);
@@ -48,7 +47,7 @@ class MatchView extends Ui.View {
 	}
 
 	function onTimer() {
-		Ui.requestUpdate();
+		WatchUi.requestUpdate();
 	}
 
 	function onUpdateSettings() {
@@ -59,13 +58,13 @@ class MatchView extends Ui.View {
 
 	function getCourtBoundaries() {
 		//calculate margins
-		var margin_height = $.device.screenHeight * ($.device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
-		var margin_width = $.device.screenWidth * ($.device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
+		var margin_height = $.device.screenHeight * ($.device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
+		var margin_width = $.device.screenWidth * ($.device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
 
 		//calculate strategic positions
 		var x_center = $.device.screenWidth / 2;
 		var y_top = margin_height;
-		if(App.getApp().getProperty("display_time")) {
+		if(Application.getApp().getProperty("display_time")) {
 			y_top += TIME_HEIGHT;
 		}
 		var y_bottom = $.device.screenHeight - margin_height - TIME_HEIGHT;
@@ -76,7 +75,7 @@ class MatchView extends Ui.View {
 
 		var court_margin = SET_BALL_RADIUS * 2 + margin_width;
 		//rectangular watches
-		if($.device.screenShape == Sys.SCREEN_SHAPE_RECTANGLE) {
+		if($.device.screenShape == System.SCREEN_SHAPE_RECTANGLE) {
 			half_width_bottom = ($.device.screenWidth / 2) - court_margin;
 			half_width_top = half_width_bottom * COURT_WIDTH_RATIO;
 		}
@@ -180,17 +179,17 @@ class MatchView extends Ui.View {
 		var single_court = $.boundaries.get("single_court");
 
 		//draw background
-		dc.setColor(Gfx.COLOR_BLUE, Gfx.COLOR_TRANSPARENT);
+		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon($.match.getType() == SINGLE ? single_court : double_court);
 
 		//draw highlighted corner
 		var highlighted_corner = $.match.getHighlightedCorner();
 		var corners = $.boundaries.get("corners");
-		dc.setColor(Gfx.COLOR_DK_GREEN, Gfx.COLOR_TRANSPARENT);
+		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon(corners[highlighted_corner]);
 
 		//draw bounds
-		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
+		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 		dc.setPenWidth(1);
 		UIHelpers.drawPolygon(dc, single_court);
 		UIHelpers.drawPolygon(dc, double_court);
@@ -212,7 +211,7 @@ class MatchView extends Ui.View {
 				var offset = half_width_bottom - 30;
 				var y_dot = y_bottom - 30;
 				var x_position = player_corner == 2 ? (x_center - offset) : (x_center + offset);
-				dc.setColor(Gfx.COLOR_RED, Gfx.COLOR_TRANSPARENT);
+				dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 				dc.fillCircle(x_position, y_dot, 7);
 			}
 		}
@@ -236,19 +235,19 @@ class MatchView extends Ui.View {
 			for(var i = 0; i < sets.size(); i++) {
 				var color;
 				if(i == current_set) {
-					color = Gfx.COLOR_BLUE;
+					color = Graphics.COLOR_BLUE;
 				}
 				else {
 					var set = sets[i];
 					if(set == -1) {
-						color = Gfx.COLOR_WHITE;
+						color = Graphics.COLOR_WHITE;
 					}
 					else {
 						var winner = set.getWinner();
-						color = winner == YOU ? Gfx.COLOR_GREEN : Gfx.COLOR_RED;
+						color = winner == YOU ? Graphics.COLOR_GREEN : Graphics.COLOR_RED;
 					}
 				}
-				dc.setColor(color, Gfx.COLOR_TRANSPARENT);
+				dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 				dc.fillCircle(board[i][0], board[i][1], SET_BALL_RADIUS);
 			}
 		}
@@ -259,8 +258,8 @@ class MatchView extends Ui.View {
 		var y_bottom = $.boundaries.get("y_bottom");
 
 		//draw timer
-		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.drawText(x_center, y_bottom + TIME_HEIGHT * 0.1, Gfx.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Gfx.TEXT_JUSTIFY_CENTER);
+		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+		dc.drawText(x_center, y_bottom + TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Graphics.TEXT_JUSTIFY_CENTER);
 	}
 
 	function drawTime(dc) {
@@ -270,8 +269,8 @@ class MatchView extends Ui.View {
 
 		var time_label = Helpers.formatCurrentTime(clock_24_hour, time_am_label, time_pm_label);
 		//draw time
-		dc.setColor(Gfx.COLOR_WHITE, Gfx.COLOR_TRANSPARENT);
-		dc.drawText(x_center, margin_height - TIME_HEIGHT * 0.1, Gfx.FONT_SMALL, time_label, Gfx.TEXT_JUSTIFY_CENTER);
+		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+		dc.drawText(x_center, margin_height - TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, time_label, Graphics.TEXT_JUSTIFY_CENTER);
 	}
 
 	function onUpdate(dc) {
@@ -279,7 +278,7 @@ class MatchView extends Ui.View {
 		//in the simulator it's not the case for all watches
 		//do not try to update only a part of the view
 		//clean the entire screen
-		dc.setColor(Gfx.COLOR_BLACK, Gfx.COLOR_BLACK);
+		dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
 		dc.clear();
 		if(dc has :setAntiAlias) {
 			dc.setAntiAlias(true);
@@ -288,20 +287,20 @@ class MatchView extends Ui.View {
 		drawScores(dc);
 		drawSets(dc);
 		drawTimer(dc);
-		if(App.getApp().getProperty("display_time")) {
+		if(Application.getApp().getProperty("display_time")) {
 			drawTime(dc);
 		}
 	}
 }
 
-class MatchViewDelegate extends Ui.BehaviorDelegate {
+class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
 	function initialize() {
 		BehaviorDelegate.initialize();
 	}
 
 	function onMenu() {
-		Ui.pushView(new Rez.Menus.MainMenu(), new MenuDelegate(), Ui.SLIDE_IMMEDIATE);
+		WatchUi.pushView(new Rez.Menus.MainMenu(), new MenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
@@ -309,10 +308,10 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		$.match.score(player);
 		var winner = $.match.getCurrentSet().getWinner();
 		if(winner != null) {
-			Ui.switchToView(new SetResultView(), new SetResultViewDelegate(), Ui.SLIDE_IMMEDIATE);
+			WatchUi.switchToView(new SetResultView(), new SetResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else {
-			Ui.requestUpdate();
+			WatchUi.requestUpdate();
 		}
 	}
 
@@ -333,13 +332,13 @@ class MatchViewDelegate extends Ui.BehaviorDelegate {
 		if($.match.getTotalRalliesNumber() > 0) {
 			//undo last rally
 			$.match.undo();
-			Ui.requestUpdate();
+			WatchUi.requestUpdate();
 		}
 		else if($.match.getCurrentSetIndex() == 0) {
 			$.match.discard();
 			//return to beginner screen if match has not started yet
 			var view = new InitialView();
-			Ui.switchToView(view, new InitialViewDelegate(view), Ui.SLIDE_IMMEDIATE);
+			WatchUi.switchToView(view, new InitialViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}
 		return true;
 	}

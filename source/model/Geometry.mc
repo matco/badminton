@@ -1,5 +1,4 @@
-using Toybox.System as Sys;
-using Toybox.Math as Math;
+using Toybox.Math;
 
 module Geometry {
 

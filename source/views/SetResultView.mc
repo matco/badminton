@@ -1,8 +1,7 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
+using Toybox.WatchUi;
+using Toybox.Graphics;
 
-class SetResultView extends Ui.View {
+class SetResultView extends WatchUi.View {
 
 	function initialize() {
 		View.initialize();
@@ -16,18 +15,18 @@ class SetResultView extends Ui.View {
 		var set = $.match.getCurrentSet();
 		//draw end of match text
 		var set_winner = set.getWinner();
-		var won_text = Ui.loadResource(set_winner == YOU ? Rez.Strings.set_end_you_won : Rez.Strings.set_end_opponent_won);
+		var won_text = WatchUi.loadResource(set_winner == YOU ? Rez.Strings.set_end_you_won : Rez.Strings.set_end_opponent_won);
 		findDrawableById("set_result_won_text").setText(won_text);
 		//draw set score
 		var score_text = set.getScore(YOU).toString() + " - " + set.getScore(OPPONENT).toString();
 		findDrawableById("set_result_score").setText(score_text);
 		//draw rallies
-		var rallies_text = Ui.loadResource(Rez.Strings.set_end_rallies);
+		var rallies_text = WatchUi.loadResource(Rez.Strings.set_end_rallies);
 		findDrawableById("set_result_rallies").setText(Helpers.formatString(rallies_text, {"rallies" => set.getRalliesNumber().toString()}));
 	}
 }
 
-class SetResultViewDelegate extends Ui.BehaviorDelegate {
+class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 
 	function initialize() {
 		BehaviorDelegate.initialize();
@@ -36,17 +35,17 @@ class SetResultViewDelegate extends Ui.BehaviorDelegate {
 	function onBack() {
 		//undo last point
 		$.match.undo();
-		Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
+		WatchUi.switchToView(new MatchView(), new MatchViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onSelect() {
 		if($.match.getWinner() == null) {
 			$.match.nextSet();
-			Ui.switchToView(new MatchView(), new MatchViewDelegate(), Ui.SLIDE_IMMEDIATE);
+			WatchUi.switchToView(new MatchView(), new MatchViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else {
-			Ui.switchToView(new ResultView(), new ResultViewDelegate(), Ui.SLIDE_IMMEDIATE);
+			WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		return true;
 	}

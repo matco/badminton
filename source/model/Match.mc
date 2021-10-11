@@ -1,9 +1,8 @@
-using Toybox.System as Sys;
-using Toybox.Time as Time;
-using Toybox.ActivityRecording as Recording;
-using Toybox.Activity as Activity;
-using Toybox.FitContributor as Contributor;
-using Toybox.WatchUi as Ui;
+using Toybox.Time;
+using Toybox.ActivityRecording;
+using Toybox.Activity;
+using Toybox.FitContributor;
+using Toybox.WatchUi;
 
 enum Player {
 	YOU = 1,
@@ -56,13 +55,13 @@ class Match {
 		absolute_maximum_points = amp;
 
 		//manage activity session
-		session = Recording.createSession({:sport => Recording.SPORT_GENERIC, :subSport => Recording.SUB_SPORT_MATCH, :name => Ui.loadResource(Rez.Strings.fit_activity_name)});
-		session_field_set_player_1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_set_unit_label)});
-		session_field_set_player_2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_set_unit_label)});
-		session_field_score_player_1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_score_player_2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_set_score_player_1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_LAP, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_set_score_player_2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_LAP, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
+		session = ActivityRecording.createSession({:sport => ActivityRecording.SPORT_GENERIC, :subSport => ActivityRecording.SUB_SPORT_MATCH, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name)});
+		session_field_set_player_1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
+		session_field_set_player_2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
+		session_field_score_player_1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_score_player_2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_set_score_player_1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_set_score_player_2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
 		session.start();
 
 		$.bus.dispatch(new BusEvent(:onMatchBegin, null));

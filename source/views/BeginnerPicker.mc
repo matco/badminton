@@ -1,18 +1,16 @@
-using Toybox.WatchUi as Ui;
-using Toybox.Application;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
+using Toybox.WatchUi;
+using Toybox.Graphics;
 
-class BeginnerPicker extends Ui.Picker {
+class BeginnerPicker extends WatchUi.Picker {
 
 	function initialize() {
 		var factory = new BeginnerPickerFactory();
 
-		var title = new Ui.Text({
-			:text => Ui.loadResource(Rez.Strings.beginner_who),
-			:locX => Ui.LAYOUT_HALIGN_CENTER,
-			:locY => Ui.LAYOUT_VALIGN_BOTTOM,
-			:color => Gfx.COLOR_WHITE
+		var title = new WatchUi.Text({
+			:text => WatchUi.loadResource(Rez.Strings.beginner_who),
+			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
+			:locY => WatchUi.LAYOUT_VALIGN_BOTTOM,
+			:color => Graphics.COLOR_WHITE
 		});
 
 		Picker.initialize({
@@ -30,7 +28,7 @@ class BeginnerPicker extends Ui.Picker {
 
 }
 
-class BeginnerPickerDelegate extends Ui.PickerDelegate {
+class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
 
 	function initialize() {
 		PickerDelegate.initialize();
@@ -39,7 +37,7 @@ class BeginnerPickerDelegate extends Ui.PickerDelegate {
 	function onCancel() {
 		$.config.put(:step, $.config.get(:step) - 1);
 		//remove picker from view stack
-		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
@@ -48,7 +46,7 @@ class BeginnerPickerDelegate extends Ui.PickerDelegate {
 		$.config.put(:player, values[0]);
 		$.config.put(:step, $.config.get(:step) + 1);
 		//remove picker from view stack to go back to initial view
-		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 

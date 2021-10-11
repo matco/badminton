@@ -1,8 +1,7 @@
-using Toybox.Graphics as Gfx;
-using Toybox.WatchUi as Ui;
-using Toybox.System as Sys;
+using Toybox.Graphics;
+using Toybox.WatchUi;
 
-class TypePickerFactory extends Ui.PickerFactory {
+class TypePickerFactory extends WatchUi.PickerFactory {
 
 	var types = [SINGLE, DOUBLE];
 	var types_labels = [Rez.Strings.type_single, Rez.Strings.type_double];
@@ -12,12 +11,12 @@ class TypePickerFactory extends Ui.PickerFactory {
 	}
 
 	function getDrawable(index, selected) {
-		return new Ui.Text({
-			:text => Ui.loadResource(types_labels[index]),
-			:color => Gfx.COLOR_WHITE,
-			:font=> Gfx.FONT_SMALL,
-			:locX => Ui.LAYOUT_HALIGN_CENTER,
-			:locY=> Ui.LAYOUT_VALIGN_CENTER
+		return new WatchUi.Text({
+			:text => WatchUi.loadResource(types_labels[index]),
+			:color => Graphics.COLOR_WHITE,
+			:font=> Graphics.FONT_SMALL,
+			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
+			:locY=> WatchUi.LAYOUT_VALIGN_CENTER
 		});
 	}
 

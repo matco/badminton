@@ -1,7 +1,6 @@
-using Toybox.System as Sys;
-using Toybox.Lang as Lang;
+using Toybox.Lang;
 using Toybox.Time;
-using Toybox.Time.Gregorian as Calendar;
+using Toybox.Time.Gregorian;
 
 module Helpers {
 
@@ -35,7 +34,7 @@ module Helpers {
 	}
 
 	function formatCurrentTime(clock_24, am_label, pm_label) {
-		var now = Calendar.info(Time.now(), Time.FORMAT_SHORT);
+		var now = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
 		var hour = now.hour;
 		var am_pm_label = am_label;
 		if(!clock_24) {
