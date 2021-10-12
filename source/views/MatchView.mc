@@ -313,18 +313,17 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		else {
 			WatchUi.requestUpdate();
 		}
+		return true;
 	}
 
 	function onNextPage() {
 		//score with player 1 (watch carrier)
-		manageScore(YOU);
-		return true;
+		return manageScore(YOU);
 	}
 
 	function onPreviousPage() {
 		//score with player 2 (opponent)
-		manageScore(OPPONENT);
-		return true;
+		return manageScore(OPPONENT);
 	}
 
 	//undo last action
