@@ -337,8 +337,8 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		else if($.match.getCurrentSetIndex() == 0) {
 			$.match.discard();
 			//return to beginner screen if match has not started yet
-			var view = new InitialView();
-			WatchUi.switchToView(view, new InitialViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
+
+			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		return true;
 	}

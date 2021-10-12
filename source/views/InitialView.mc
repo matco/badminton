@@ -63,7 +63,7 @@ class InitialView extends WatchUi.View {
 
 class InitialViewDelegate extends WatchUi.BehaviorDelegate {
 
-	function initialize(view) {
+	function initialize() {
 		BehaviorDelegate.initialize();
 	}
 

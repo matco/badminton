@@ -16,8 +16,7 @@ class SaveMatchConfirmationDelegate extends WatchUi.ConfirmationDelegate {
 		}
 		//remove confirmation from view stack before going to back to type screen
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-		var view = new InitialView();
-		WatchUi.switchToView(view, new InitialViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
+		WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 }

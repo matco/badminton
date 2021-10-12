@@ -19,8 +19,7 @@ class BadmintonScoreTrackerApp extends Application.AppBase {
 	}
 
 	function getInitialView() {
-		var view = new InitialView();
-		return [view, new InitialViewDelegate(view)];
+		return [new InitialView(), new InitialViewDelegate()];
 	}
 
 	function onMatchBegin() {

@@ -18,8 +18,7 @@ class MenuDelegate extends WatchUi.MenuInputDelegate {
 			//pop once to close the menu
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 			//return to type screen
-			var view = new InitialView();
-			WatchUi.switchToView(view, new InitialViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
+			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 	}
 }
