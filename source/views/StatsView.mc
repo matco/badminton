@@ -18,12 +18,12 @@ class StatsView extends WatchUi.View {
 		var stats_available = false;
 
 		if(activity.averageHeartRate != null) {
-			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_average_heart_rate), {"average_heart_rate" => activity.averageHeartRate});
+			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_average_heart_rate), {"average_heart_rate" => activity.averageHeartRate.toString()});
 			findDrawableById("stats_average_heart_rate").setText(text);
 			stats_available = true;
 		}
 		if(activity.maxHeartRate != null) {
-			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_max_heart_rate), {"max_heart_rate" => activity.maxHeartRate});
+			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_max_heart_rate), {"max_heart_rate" => activity.maxHeartRate.toString()});
 			findDrawableById("stats_max_heart_rate").setText(text);
 			stats_available = true;
 		}
