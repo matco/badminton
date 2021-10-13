@@ -35,14 +35,16 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 	function onBack() {
 		//undo last point
 		$.match.undo();
-		WatchUi.switchToView(new MatchView(), new MatchViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+		var view = new MatchView();
+		WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onSelect() {
 		if($.match.getWinner() == null) {
 			$.match.nextSet();
-			WatchUi.switchToView(new MatchView(), new MatchViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			var view = new MatchView();
+			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else {
 			WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);

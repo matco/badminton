@@ -38,7 +38,8 @@ class InitialView extends WatchUi.View {
 			$.match = new Match(type, sets_number, player, mp, amp);
 
 			//go to match view
-			WatchUi.switchToView(new MatchView(), new MatchViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			var view = new MatchView();
+			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else {
 			//choose appropricate view depending on current step

@@ -53,7 +53,8 @@ class StatsViewDelegate extends WatchUi.BehaviorDelegate {
 	function onBack() {
 		//undo last point
 		match.undo();
-		WatchUi.switchToView(new MatchView(), new MatchViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+		var view = new MatchView();
+		WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 

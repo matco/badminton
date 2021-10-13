@@ -3,7 +3,29 @@ using Toybox.Graphics;
 using Toybox.WatchUi;
 using Toybox.Timer;
 
-var boundaries;
+class MatchBoundaries {
+	public var xCenter;
+	public var yMiddle;
+	public var yBottom;
+	public var yTop;
+
+	public var halfWidthMiddle;
+	public var halfWidthBottom;
+
+	public var marginHeight;
+
+	public var doubleCourt;
+	public var singleCourt;
+
+	public var halfWidthTopCorridor;
+	public var halfWidthBottomCorridor;
+
+	public var corners;
+	public var board;
+
+	public var yScore1;
+	public var yScore2;
+}
 
 class MatchView extends WatchUi.View {
 
@@ -19,6 +41,8 @@ class MatchView extends WatchUi.View {
 
 	const TIME_HEIGHT = Graphics.getFontHeight(Graphics.FONT_SMALL) * 1.1; //height of timer and clock
 
+	public var boundaries;
+
 	private var timer;
 	private var clock_24_hour;
 	private var time_am_label;
@@ -28,7 +52,7 @@ class MatchView extends WatchUi.View {
 		View.initialize();
 
 		timer = new Timer.Timer();
-		$.boundaries = getCourtBoundaries();
+		calculateCourtBoundaries();
 	}
 
 	function onShow() {
@@ -52,11 +76,13 @@ class MatchView extends WatchUi.View {
 
 	function onUpdateSettings() {
 		//recalculate boundaries as they may change if "diplay time" setting is updated
-		$.boundaries = getCourtBoundaries();
+		calculateCourtBoundaries();
 		WatchUi.requestUpdate();
 	}
 
-	function getCourtBoundaries() {
+	function calculateCourtBoundaries() {
+		boundaries = new MatchBoundaries();
+
 		//calculate margins
 		var margin_height = $.device.screenHeight * ($.device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
 		var margin_width = $.device.screenWidth * ($.device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
@@ -90,93 +116,90 @@ class MatchView extends WatchUi.View {
 		var half_width_top_corridor = BetterMath.weightedMean(half_width_bottom, half_width_top, COURT_CORRIDORS_SIZE / (y_bottom - y_top));
 		var half_width_bottom_corridor = BetterMath.weightedMean(half_width_bottom, half_width_top, 1 - COURT_CORRIDORS_SIZE / (y_bottom - y_top));
 
-		//caclulate court corners coordinates (clockwise, starting from top left point)
-		var double_court = new [4];
-		double_court[0] = [x_center - half_width_top, y_top];
-		double_court[1] = [x_center + half_width_top, y_top];
-		double_court[2] = [x_center + half_width_bottom, y_bottom];
-		double_court[3] = [x_center - half_width_bottom, y_bottom];
+		//caclulate court boundaries coordinates (clockwise, starting from top left point)
+		boundaries.doubleCourt = [
+			[x_center - half_width_top, y_top],
+			[x_center + half_width_top, y_top],
+			[x_center + half_width_bottom, y_bottom],
+			[x_center - half_width_bottom, y_bottom]
+		];
 
-		var single_court = new [4];
-		single_court[0] = [x_center - half_width_top + COURT_CORRIDORS_SIZE, y_top];
-		single_court[1] = [x_center + half_width_top - COURT_CORRIDORS_SIZE, y_top];
-		single_court[2] = [x_center + half_width_bottom - COURT_CORRIDORS_SIZE, y_bottom];
-		single_court[3] = [x_center - half_width_bottom + COURT_CORRIDORS_SIZE, y_bottom];
+		boundaries.singleCourt = [
+			[x_center - half_width_top + COURT_CORRIDORS_SIZE, y_top],
+			[x_center + half_width_top - COURT_CORRIDORS_SIZE, y_top],
+			[x_center + half_width_bottom - COURT_CORRIDORS_SIZE, y_bottom],
+			[x_center - half_width_bottom + COURT_CORRIDORS_SIZE, y_bottom]
+		];
 
-		var corners = new [4];
+		//calculate court corners boundaries coordinates
+		boundaries.corners = new [4];
 		//top left corner
-		corners[0] = [
+		boundaries.corners[0] = [
 			[x_center - half_width_top_corridor + COURT_CORRIDORS_SIZE, y_top + COURT_CORRIDORS_SIZE],
 			[x_center, y_top + COURT_CORRIDORS_SIZE],
 			[x_center, y_middle],
 			[x_center - half_width_middle + COURT_CORRIDORS_SIZE, y_middle]
 		];
 		//top right corner
-		corners[1] = [
+		boundaries.corners[1] = [
 			[x_center, y_top + COURT_CORRIDORS_SIZE],
 			[x_center + half_width_top_corridor - COURT_CORRIDORS_SIZE, y_top + COURT_CORRIDORS_SIZE],
 			[x_center + half_width_middle - COURT_CORRIDORS_SIZE, y_middle],
 			[x_center, y_middle]
 		];
 		//bottom left corner
-		corners[2] = [
+		boundaries.corners[2] = [
 			[x_center - half_width_middle + COURT_CORRIDORS_SIZE, y_middle],
 			[x_center, y_middle],
 			[x_center, y_bottom - COURT_CORRIDORS_SIZE],
 			[x_center - half_width_bottom_corridor + COURT_CORRIDORS_SIZE, y_bottom - COURT_CORRIDORS_SIZE]
 		];
 		//bottom right corner
-		corners[3] = [
+		boundaries.corners[3] = [
 			[x_center, y_middle],
 			[x_center + half_width_middle - COURT_CORRIDORS_SIZE, y_middle],
 			[x_center + half_width_bottom_corridor - COURT_CORRIDORS_SIZE, y_bottom - COURT_CORRIDORS_SIZE],
 			[x_center, y_bottom - COURT_CORRIDORS_SIZE]
 		];
 
-		//calculate score positions
-		var y_score_1 = BetterMath.mean(y_bottom, y_middle);
-		var y_score_2 = BetterMath.mean(y_middle, y_top);
+		//calculate score vertical positions
+		boundaries.yScore1 = BetterMath.mean(y_bottom, y_middle);
+		boundaries.yScore2 = BetterMath.mean(y_middle, y_top);
 
 		//calculate set positions
-		var board = new [MAX_SETS];
+		boundaries.board = new [MAX_SETS];
 		var x_increment = (half_width_bottom - half_width_top) / MAX_SETS;
 		var y_increment = (y_bottom - y_top) / MAX_SETS;
 		for(var i = 0; i < MAX_SETS; i++) {
 			var x = x_center - half_width_bottom - SET_BALL_RADIUS - 6 + x_increment * i;
 			var y = y_bottom - 15 - y_increment * i;
-			board[i] = [x, y];
+			boundaries.board[i] = [x, y];
 		}
 
-		return {
-			"x_center" => x_center,
-			"y_middle" => y_middle,
-			"y_bottom" => y_bottom,
-			"y_top" => y_top,
-			"half_width_middle" => half_width_middle,
-			"half_width_bottom" => half_width_bottom,
-			"margin_height" => margin_height,
-			"double_court" => double_court,
-			"single_court" => single_court,
-			"half_width_top_corridor" => half_width_top_corridor,
-			"half_width_bottom_corridor" => half_width_bottom_corridor,
-			"corners" => corners,
-			"board" => board,
-			"y_score_1" => y_score_1,
-			"y_score_2" => y_score_2
-		};
+		boundaries.marginHeight = margin_height;
+
+		boundaries.xCenter = x_center;
+		boundaries.yTop = y_top;
+		boundaries.yMiddle = y_middle;
+		boundaries.yBottom = y_bottom;
+
+		boundaries.halfWidthMiddle = half_width_middle;
+		boundaries.halfWidthBottom = half_width_bottom;
+		boundaries.halfWidthTopCorridor = half_width_top_corridor;
+		boundaries.halfWidthBottomCorridor = half_width_bottom_corridor;
 	}
 
 	function drawCourt(dc) {
-		var x_center = $.boundaries.get("x_center");
-		var y_top = $.boundaries.get("y_top");
-		var y_middle = $.boundaries.get("y_middle");
-		var y_bottom = $.boundaries.get("y_bottom");
-		var half_width_middle = $.boundaries.get("half_width_middle");
-		var half_width_bottom = $.boundaries.get("half_width_bottom");
+		var x_center = boundaries.xCenter;
+		var y_top = boundaries.yTop;
+		var y_middle = boundaries.yMiddle;
+		var y_bottom = boundaries.yBottom;
+		var half_width_middle = boundaries.halfWidthMiddle;
+		var half_width_bottom = boundaries.halfWidthBottom;
 
 		//draw court
-		var double_court = $.boundaries.get("double_court");
-		var single_court = $.boundaries.get("single_court");
+		var double_court = boundaries.doubleCourt;
+		var single_court = boundaries.singleCourt;
 
 		//draw background
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
@@ -184,9 +207,8 @@ class MatchView extends WatchUi.View {
 
 		//draw highlighted corner
 		var highlighted_corner = $.match.getHighlightedCorner();
-		var corners = $.boundaries.get("corners");
 		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
-		dc.fillPolygon(corners[highlighted_corner]);
+		dc.fillPolygon(boundaries.corners[highlighted_corner]);
 
 		//draw bounds
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -199,8 +221,8 @@ class MatchView extends WatchUi.View {
 		dc.drawLine(x_center - half_width_middle, y_middle, x_center + half_width_middle, y_middle);
 
 		//draw top and bottom corridors
-		var half_width_top_corridor = $.boundaries.get("half_width_top_corridor");
-		var half_width_bottom_corridor = $.boundaries.get("half_width_bottom_corridor");
+		var half_width_top_corridor = boundaries.halfWidthTopCorridor;
+		var half_width_bottom_corridor = boundaries.halfWidthBottomCorridor;
 		dc.drawLine(x_center - half_width_top_corridor, double_court[0][1] + COURT_CORRIDORS_SIZE, x_center + half_width_top_corridor, double_court[1][1] + COURT_CORRIDORS_SIZE);
 		dc.drawLine(x_center - half_width_bottom_corridor, double_court[3][1] - COURT_CORRIDORS_SIZE, x_center + half_width_bottom_corridor, double_court[2][1] - COURT_CORRIDORS_SIZE);
 
@@ -218,19 +240,15 @@ class MatchView extends WatchUi.View {
 	}
 
 	function drawScores(dc) {
-		var x_center = $.boundaries.get("x_center");
-		var y_score_1 = $.boundaries.get("y_score_1");
-		var y_score_2 = $.boundaries.get("y_score_2");
 		var set = $.match.getCurrentSet();
 
-		UIHelpers.drawHighlightedText(dc, x_center, y_score_1, SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 8);
-		UIHelpers.drawHighlightedText(dc, x_center, y_score_2, SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 8);
+		UIHelpers.drawHighlightedText(dc, boundaries.xCenter, boundaries.yScore1, SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 8);
+		UIHelpers.drawHighlightedText(dc, boundaries.xCenter, boundaries.yScore2, SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 8);
 	}
 
 	function drawSets(dc) {
 		var sets = $.match.getSets();
 		if(sets.size() > 1) {
-			var board = $.boundaries.get("board");
 			var current_set = $.match.getCurrentSetIndex();
 			for(var i = 0; i < sets.size(); i++) {
 				var color;
@@ -248,29 +266,20 @@ class MatchView extends WatchUi.View {
 					}
 				}
 				dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-				dc.fillCircle(board[i][0], board[i][1], SET_BALL_RADIUS);
+				dc.fillCircle(boundaries.board[i][0], boundaries.board[i][1], SET_BALL_RADIUS);
 			}
 		}
 	}
 
 	function drawTimer(dc) {
-		var x_center = $.boundaries.get("x_center");
-		var y_bottom = $.boundaries.get("y_bottom");
-
-		//draw timer
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-		dc.drawText(x_center, y_bottom + TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Graphics.TEXT_JUSTIFY_CENTER);
+		dc.drawText(boundaries.xCenter, boundaries.yBottom + TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Graphics.TEXT_JUSTIFY_CENTER);
 	}
 
 	function drawTime(dc) {
-		var margin_height = $.boundaries.get("margin_height");
-		var x_center = $.boundaries.get("x_center");
-		var y_top = $.boundaries.get("y_top");
-
 		var time_label = Helpers.formatCurrentTime(clock_24_hour, time_am_label, time_pm_label);
-		//draw time
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-		dc.drawText(x_center, margin_height - TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, time_label, Graphics.TEXT_JUSTIFY_CENTER);
+		dc.drawText(boundaries.xCenter, boundaries.marginHeight - TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, time_label, Graphics.TEXT_JUSTIFY_CENTER);
 	}
 
 	function onUpdate(dc) {
@@ -295,7 +304,10 @@ class MatchView extends WatchUi.View {
 
 class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
-	function initialize() {
+	private var view;
+
+	function initialize(v) {
+		view = v;
 		BehaviorDelegate.initialize();
 	}
 
@@ -343,8 +355,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onTap(event) {
-		var center = $.device.screenHeight / 2;
-		if(event.getCoordinates()[1] < $.boundaries.get("y_middle")) {
+		if(event.getCoordinates()[1] < view.boundaries.yMiddle) {
 			//score with player 2 (opponent)
 			manageScore(OPPONENT);
 		}
