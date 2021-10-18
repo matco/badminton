@@ -61,13 +61,13 @@ class MatchView extends WatchUi.View {
 		time_pm_label = WatchUi.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
 
-		$.bus.register(self);
+		Application.getApp().bus.register(self);
 	}
 
 	function onHide() {
 		timer.stop();
 
-		$.bus.unregister(self);
+		Application.getApp().bus.unregister(self);
 	}
 
 	function onTimer() {

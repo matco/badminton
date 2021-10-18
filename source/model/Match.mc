@@ -64,7 +64,7 @@ class Match {
 		session_field_set_score_player_2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
 		session.start();
 
-		$.bus.dispatch(new BusEvent(:onMatchBegin, null));
+		Application.getApp().bus.dispatch(new BusEvent(:onMatchBegin, null));
 	}
 
 	function save() {
@@ -79,7 +79,7 @@ class Match {
 	hidden function end(winner_player) {
 		winner = winner_player;
 
-		$.bus.dispatch(new BusEvent(:onMatchEnd, winner));
+		Application.getApp().bus.dispatch(new BusEvent(:onMatchEnd, winner));
 	}
 
 	function nextSet() {

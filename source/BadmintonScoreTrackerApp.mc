@@ -4,18 +4,19 @@ using Toybox.Attention;
 using Toybox.Timer;
 using Toybox.System;
 
-var bus;
 var match;
 var device = System.getDeviceSettings();
 
 class BadmintonScoreTrackerApp extends Application.AppBase {
 
+	//create bus for the whole application
+	static const bus = new Bus();
+
 	function initialize() {
 		AppBase.initialize();
 
-		//create bus for the whole application
-		$.bus = new Bus();
-		$.bus.register(self);
+		//register application itself in the bus
+		bus.register(self);
 	}
 
 	function getInitialView() {
@@ -48,6 +49,6 @@ class BadmintonScoreTrackerApp extends Application.AppBase {
 		//dispatch updated settings event
 		//do not name the event "onSettingsChanged" to avoid recursion
 		//"onSettingsChanged" is the native event and "onUpdateSettings" is the custom event for this app (that views can catch)
-		$.bus.dispatch(new BusEvent(:onUpdateSettings, null));
+		bus.dispatch(new BusEvent(:onUpdateSettings, null));
 	}
 }
