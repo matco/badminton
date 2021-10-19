@@ -35,7 +35,7 @@ class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
 	}
 
 	function onCancel() {
-		$.config.put(:step, $.config.get(:step) - 1);
+		InitialView.config.step--;
 		//remove picker from view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
@@ -43,8 +43,8 @@ class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		$.config.put(:player, values[0]);
-		$.config.put(:step, $.config.get(:step) + 1);
+		InitialView.config.beginner = values[0];
+		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;

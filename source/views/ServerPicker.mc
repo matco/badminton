@@ -1,28 +1,22 @@
 using Toybox.WatchUi;
-using Toybox.Application;
 using Toybox.Graphics;
 
-class TypePicker extends WatchUi.Picker {
+class ServerPicker extends WatchUi.Picker {
 
 	function initialize() {
-		var factory = new TypePickerFactory();
+		var factory = new ServerPickerFactory();
 
 		var title = new WatchUi.Text({
-			:text => WatchUi.loadResource(Rez.Strings.type_what),
+			:text => WatchUi.loadResource(Rez.Strings.server_who),
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
 			:locY => WatchUi.LAYOUT_VALIGN_BOTTOM,
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_type = Application.getApp().getProperty("default_match_type");
-		if(default_type == null) {
-			default_type = 0;
-		}
-
 		Picker.initialize({
 			:title => title,
 			:pattern => [factory],
-			:defaults => [default_type]
+			:defaults => [0]
 		});
 	}
 
@@ -31,10 +25,9 @@ class TypePicker extends WatchUi.Picker {
 		dc.clear();
 		Picker.onUpdate(dc);
 	}
-
 }
 
-class TypePickerDelegate extends WatchUi.PickerDelegate {
+class ServerPickerDelegate extends WatchUi.PickerDelegate {
 
 	function initialize() {
 		PickerDelegate.initialize();
@@ -49,11 +42,10 @@ class TypePickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.type = values[0];
+		InitialView.config.server = values[0];
 		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
-
 }

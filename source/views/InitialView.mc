@@ -2,59 +2,59 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 
-var config;
+
 
 class InitialView extends WatchUi.View {
 
+	public static var config;
+
 	function initialize() {
 		View.initialize();
-		initializeConfig();
+		config = new MatchConfig();
 		//it's not possible to start the application with a picker view
 		//and it's not possible to push a view during the initialization of an other view
 	}
 
-	function initializeConfig() {
-		$.config = {:step => 0};
-	}
-
 	function onShow() {
-		var step = $.config.get(:step);
-		//when step is negative, close the application
-		if(step == -1) {
+		//when step is negative, config has been cancelled, close the application
+		if(config.step == -1) {
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		}
-		//when step is 3, start the match
-		else if(step == 3) {
-			//create match
-			var type = $.config[:type];
-			var sets_number = $.config[:sets_number];
-			var player = $.config[:player];
-			initializeConfig();
-
+		//if config is valid, start the match
+		else if(config.isValid()) {
+			//adjust match configuration with app configuration
 			var app = Application.getApp();
-			var mp = app.getProperty("maximum_points");
-			var amp = app.getProperty("absolute_maximum_points");
+			config.maximumPoints = app.getProperty("maximum_points");
+			config.absoluteMaximumPoints = app.getProperty("absolute_maximum_points");
 
-			$.match = new Match(type, sets_number, player, mp, amp);
+			//create match
+			$.match = new Match(config);
+
+			//prepare a new config
+			config = new MatchConfig();
 
 			//go to match view
 			var view = new MatchView();
 			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else {
-			//choose appropricate view depending on current step
+			//choose appropriate view depending on current step
 			var picker, delegate;
-			if(step == 0) {
+			if(config.step == 0) {
 				picker = new TypePicker();
 				delegate = new TypePickerDelegate();
 			}
-			else if(step == 1) {
+			else if(config.step == 1) {
 				picker = new SetPicker();
 				delegate = new SetPickerDelegate();
 			}
-			else {
+			else if(config.step == 2) {
 				picker = new BeginnerPicker();
 				delegate = new BeginnerPickerDelegate();
+			}
+			else {
+				picker = new ServerPicker();
+				delegate = new ServerPickerDelegate();
 			}
 			//this view is shown when application starts or when back is pressed on type picker view
 			WatchUi.pushView(picker, delegate, WatchUi.SLIDE_IMMEDIATE);

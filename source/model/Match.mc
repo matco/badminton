@@ -14,6 +14,20 @@ enum MatchType {
 	DOUBLE = 2
 }
 
+class MatchConfig {
+	public var step = 0;
+	public var type;
+	public var sets;
+	public var beginner;
+	public var server;
+	public var maximumPoints;
+	public var absoluteMaximumPoints;
+
+	function isValid() {
+		return type == SINGLE && step == 3 || step == 4;
+	}
+}
+
 class Match {
 
 	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
@@ -40,19 +54,22 @@ class Match {
 	private var session_field_score_player_1;
 	private var session_field_score_player_2;
 
-	function initialize(match_type, sets_number, match_beginner, mp, amp) {
-		type = match_type;
-		server = true;
+	function initialize(config) {
+		type = config.type;
+
+		//server is either the watch carrier ot his teammate
+		//if the player 1 (watch carrier) does not start the match, inverse the server because this boolean is toggled each time the serve changes side
+		server = config.beginner == YOU ? config.server : !config.server;
 
 		//prepare array of sets and create first set
-		sets = new [sets_number];
-		sets[0] = new MatchSet(match_beginner);
-		for(var i = 1; i < sets_number; i++) {
+		sets = new [config.sets];
+		sets[0] = new MatchSet(config.beginner);
+		for(var i = 1; i < config.sets; i++) {
 			sets[i] = -1;
 		}
 
-		maximum_points = mp;
-		absolute_maximum_points = amp;
+		maximum_points = config.maximumPoints;
+		absolute_maximum_points = config.absoluteMaximumPoints;
 
 		//manage activity session
 		session = ActivityRecording.createSession({:sport => ActivityRecording.SPORT_GENERIC, :subSport => ActivityRecording.SUB_SPORT_MATCH, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name)});
