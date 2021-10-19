@@ -38,7 +38,7 @@ class Match {
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
 	private var type; //type of the match, SINGLE or DOUBLE
-	private var sets; //array of all sets containing -1 for a set not played
+	private var sets; //array of all sets, containing null for a set not played
 
 	private var server; //in double, true if the player 1 (watch carrier) is currently the server
 	private var winner; //store the winner of the match, YOU or OPPONENT
@@ -65,7 +65,7 @@ class Match {
 		sets = new [config.sets];
 		sets[0] = new MatchSet(config.beginner);
 		for(var i = 1; i < config.sets; i++) {
-			sets[i] = -1;
+			sets[i] = null;
 		}
 
 		maximum_points = config.maximumPoints;
@@ -117,7 +117,7 @@ class Match {
 
 	function getCurrentSetIndex() {
 		var i = 0;
-		while(i < sets.size() && sets[i] != -1) {
+		while(i < sets.size() && sets[i] != null) {
 			i++;
 		}
 		return i - 1;
@@ -229,7 +229,7 @@ class Match {
 	function getTotalRalliesNumber() {
 		var i = 0;
 		var number = 0;
-		while(i < sets.size() && sets[i] != -1) {
+		while(i < sets.size() && sets[i] != null) {
 			number += sets[i].getRalliesNumber();
 			i++;
 		}

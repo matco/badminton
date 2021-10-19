@@ -257,7 +257,7 @@ class MatchView extends WatchUi.View {
 				}
 				else {
 					var set = sets[i];
-					if(set == -1) {
+					if(set == null) {
 						color = Graphics.COLOR_WHITE;
 					}
 					else {
