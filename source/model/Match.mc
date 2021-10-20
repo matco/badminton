@@ -29,6 +29,7 @@ class MatchConfig {
 }
 
 class Match {
+	static const MAX_SETS = 5;
 
 	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
 	const TOTAL_SCORE_PLAYER_2_FIELD_ID = 1;
