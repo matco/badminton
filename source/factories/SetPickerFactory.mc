@@ -24,5 +24,4 @@ class SetPickerFactory extends WatchUi.PickerFactory {
 	function getSize() {
 		return 3;
 	}
-
 }

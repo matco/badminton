@@ -2,10 +2,7 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Timer;
 
-
-
 class InitialView extends WatchUi.View {
-
 	public static var config;
 
 	function initialize() {

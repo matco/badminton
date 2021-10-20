@@ -27,5 +27,4 @@ class BeginnerPickerFactory extends WatchUi.PickerFactory {
 	function getSize() {
 		return beginners.size();
 	}
-
 }

@@ -59,5 +59,4 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 	function onNextPage() {
 		return onSelect();
 	}
-
 }

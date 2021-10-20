@@ -1,5 +1,4 @@
 class MatchSet {
-
 	private var beginner; //store the beginner of the set, YOU or OPPONENT
 
 	private var rallies; //list of all rallies
@@ -80,6 +79,4 @@ class MatchSet {
 	hidden function getPlayerTeamIsServer() {
 		return getServerTeam() == YOU;
 	}
-
-
 }

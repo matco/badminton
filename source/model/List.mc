@@ -61,5 +61,4 @@ class List {
 		}
 		elements = new_elements;
 	}
-
 }

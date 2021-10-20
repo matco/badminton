@@ -7,7 +7,6 @@ using Toybox.System;
 var match;
 
 class BadmintonScoreTrackerApp extends Application.AppBase {
-
 	//create bus for the whole application
 	static const bus = new Bus();
 

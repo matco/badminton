@@ -283,5 +283,4 @@ class Match {
 		}
 		return null;
 	}
-
 }

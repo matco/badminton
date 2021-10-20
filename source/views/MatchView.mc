@@ -169,8 +169,6 @@ class MatchView extends WatchUi.View {
 		WatchUi.requestUpdate();
 	}
 
-
-
 	function drawCourt(dc) {
 		var x_center = boundaries.xCenter;
 		var y_top = boundaries.yTop;

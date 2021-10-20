@@ -27,5 +27,4 @@ class ServerPickerFactory extends WatchUi.PickerFactory {
 	function getSize() {
 		return servers.size();
 	}
-
 }

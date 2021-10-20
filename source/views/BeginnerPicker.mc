@@ -25,7 +25,6 @@ class BeginnerPicker extends WatchUi.Picker {
 		dc.clear();
 		Picker.onUpdate(dc);
 	}
-
 }
 
 class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
@@ -49,5 +48,4 @@ class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
-
 }

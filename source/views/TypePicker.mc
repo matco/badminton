@@ -31,7 +31,6 @@ class TypePicker extends WatchUi.Picker {
 		dc.clear();
 		Picker.onUpdate(dc);
 	}
-
 }
 
 class TypePickerDelegate extends WatchUi.PickerDelegate {
@@ -55,5 +54,4 @@ class TypePickerDelegate extends WatchUi.PickerDelegate {
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
-
 }

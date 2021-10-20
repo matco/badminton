@@ -31,7 +31,6 @@ class SetPicker extends WatchUi.Picker {
 		dc.clear();
 		Picker.onUpdate(dc);
 	}
-
 }
 
 class SetPickerDelegate extends WatchUi.PickerDelegate {
@@ -55,5 +54,4 @@ class SetPickerDelegate extends WatchUi.PickerDelegate {
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
-
 }

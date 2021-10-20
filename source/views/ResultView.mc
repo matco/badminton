@@ -72,5 +72,4 @@ class ResultViewDelegate extends WatchUi.BehaviorDelegate {
 		WatchUi.switchToView(new StatsView(), new StatsViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
-
 }

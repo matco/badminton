@@ -27,5 +27,4 @@ class TypePickerFactory extends WatchUi.PickerFactory {
 	function getSize() {
 		return types.size();
 	}
-
 }
