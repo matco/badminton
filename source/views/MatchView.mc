@@ -40,7 +40,7 @@ class MatchBoundaries {
 		var margin_width = device.screenWidth * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
 
 		//calculate strategic positions
-		xCenter = device.screenWidth / 2;
+		xCenter = device.screenWidth / 2f;
 		yTop = marginHeight;
 		if(Application.getApp().getProperty("display_time")) {
 			yTop += TIME_HEIGHT;
@@ -49,7 +49,7 @@ class MatchBoundaries {
 		yMiddle = BetterMath.weightedMean(yBottom, yTop, COURT_HEIGHT_RATIO);
 
 		//calculate half width of the top, the middle and the base of the court
-		var court_margin = SET_BALL_RADIUS * 2 + margin_width;
+		var court_margin = SET_BALL_RADIUS * 2f + margin_width;
 		//rectangular watches
 		if(device.screenShape == System.SCREEN_SHAPE_RECTANGLE) {
 			halfWidthBottom = (device.screenWidth / 2) - court_margin;
@@ -57,9 +57,9 @@ class MatchBoundaries {
 		}
 		//round watches
 		else {
-			var radius = device.screenWidth / 2;
-			halfWidthTop = Geometry.chordLength(radius, marginHeight) / 2 - court_margin;
-			halfWidthBottom = Geometry.chordLength(radius, TIME_HEIGHT + marginHeight) / 2 - court_margin;
+			var radius = device.screenWidth / 2f;
+			halfWidthTop = Geometry.chordLength(radius, marginHeight) / 2f - court_margin;
+			halfWidthBottom = Geometry.chordLength(radius, TIME_HEIGHT + marginHeight) / 2f - court_margin;
 		}
 		halfWidthMiddle = BetterMath.weightedMean(halfWidthBottom, halfWidthTop, COURT_HEIGHT_RATIO);
 		halfWidthTopCorridor = BetterMath.weightedMean(halfWidthBottom, halfWidthTop, COURT_CORRIDORS_SIZE / (yBottom - yTop));
