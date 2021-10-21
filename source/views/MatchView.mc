@@ -169,7 +169,7 @@ class MatchView extends WatchUi.View {
 		WatchUi.requestUpdate();
 	}
 
-	function drawCourt(dc) {
+	function drawCourt(dc, match) {
 		var x_center = boundaries.xCenter;
 		var y_top = boundaries.yTop;
 		var y_middle = boundaries.yMiddle;
@@ -181,10 +181,10 @@ class MatchView extends WatchUi.View {
 
 		//draw background
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-		dc.fillPolygon($.match.getType() == SINGLE ? single_court : double_court);
+		dc.fillPolygon(match.getType() == SINGLE ? single_court : double_court);
 
 		//draw highlighted corner
-		var highlighted_corner = $.match.getHighlightedCorner();
+		var highlighted_corner = match.getHighlightedCorner();
 		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon(boundaries.corners[highlighted_corner]);
 
@@ -213,8 +213,8 @@ class MatchView extends WatchUi.View {
 		);
 
 		//in double, draw a dot for the player 1 (watch carrier) position if his team is engaging
-		if($.match.getType() == DOUBLE) {
-			var player_corner = $.match.getPlayerCorner();
+		if(match.getType() == DOUBLE) {
+			var player_corner = match.getPlayerCorner();
 			if(player_corner != null) {
 				var offset = boundaries.halfWidthBottom - 30;
 				var y_dot = y_bottom - 30;
@@ -225,17 +225,17 @@ class MatchView extends WatchUi.View {
 		}
 	}
 
-	function drawScores(dc) {
-		var set = $.match.getCurrentSet();
+	function drawScores(dc, match) {
+		var set = match.getCurrentSet();
 
 		UIHelpers.drawHighlightedText(dc, boundaries.xCenter, boundaries.yScore1, SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 8);
 		UIHelpers.drawHighlightedText(dc, boundaries.xCenter, boundaries.yScore2, SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 8);
 	}
 
-	function drawSets(dc) {
-		var sets = $.match.getSets();
+	function drawSets(dc, match) {
+		var sets = match.getSets();
 		if(sets.size() > 1) {
-			var current_set = $.match.getCurrentSetIndex();
+			var current_set = match.getCurrentSetIndex();
 			for(var i = 0; i < sets.size(); i++) {
 				var color;
 				if(i == current_set) {
@@ -257,9 +257,9 @@ class MatchView extends WatchUi.View {
 		}
 	}
 
-	function drawTimer(dc) {
+	function drawTimer(dc, match) {
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-		dc.drawText(boundaries.xCenter, boundaries.yBottom + MatchBoundaries.TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, Helpers.formatDuration($.match.getDuration()), Graphics.TEXT_JUSTIFY_CENTER);
+		dc.drawText(boundaries.xCenter, boundaries.yBottom + MatchBoundaries.TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Graphics.TEXT_JUSTIFY_CENTER);
 	}
 
 	function drawTime(dc) {
@@ -278,11 +278,16 @@ class MatchView extends WatchUi.View {
 		if(dc has :setAntiAlias) {
 			dc.setAntiAlias(true);
 		}
-		drawCourt(dc);
-		drawScores(dc);
-		drawSets(dc);
-		drawTimer(dc);
-		if(Application.getApp().getProperty("display_time")) {
+
+		var app = Application.getApp();
+
+		var match = app.getMatch();
+		drawCourt(dc, match);
+		drawScores(dc, match);
+		drawSets(dc, match);
+		drawTimer(dc, match);
+
+		if(app.getProperty("display_time")) {
 			drawTime(dc);
 		}
 	}
@@ -303,8 +308,9 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function manageScore(player) {
-		$.match.score(player);
-		var winner = $.match.getCurrentSet().getWinner();
+		var match = Application.getApp().getMatch();
+		match.score(player);
+		var winner = match.getCurrentSet().getWinner();
 		if(winner != null) {
 			WatchUi.switchToView(new SetResultView(), new SetResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
@@ -326,13 +332,14 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
 	//undo last action
 	function onBack() {
-		if($.match.getTotalRalliesNumber() > 0) {
+		var match = Application.getApp().getMatch();
+		if(match.getTotalRalliesNumber() > 0) {
 			//undo last rally
-			$.match.undo();
+			match.undo();
 			WatchUi.requestUpdate();
 		}
-		else if($.match.getCurrentSetIndex() == 0) {
-			$.match.discard();
+		else if(match.getCurrentSetIndex() == 0) {
+			match.discard();
 			//return to beginner screen if match has not started yet
 
 			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);

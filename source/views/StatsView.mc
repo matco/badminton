@@ -13,6 +13,7 @@ class StatsView extends WatchUi.View {
 	}
 
 	function onShow() {
+		var match = Application.getApp().getMatch();
 		//retrieve stats from activity
 		var activity = match.getActivity();
 		var stats_available = false;
@@ -51,6 +52,7 @@ class StatsViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
+		var match = Application.getApp().getMatch();
 		//undo last point
 		match.undo();
 		var view = new MatchView();

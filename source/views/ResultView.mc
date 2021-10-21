@@ -8,11 +8,12 @@ class SaveMatchConfirmationDelegate extends WatchUi.ConfirmationDelegate {
 	}
 
 	function onResponse(value) {
+		var match = Application.getApp().getMatch();
 		if(value == CONFIRM_YES) {
-			$.match.save();
+			match.save();
 		}
 		else {
-			$.match.discard();
+			match.discard();
 		}
 		//remove confirmation from view stack before going to back to type screen
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
@@ -32,18 +33,19 @@ class ResultView extends WatchUi.View {
 	}
 
 	function onShow() {
+		var match = Application.getApp().getMatch();
 		//draw end of match text
-		var winner = $.match.getWinner();
+		var winner = match.getWinner();
 		var won_text = WatchUi.loadResource(winner == YOU ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won);
 		findDrawableById("result_won_text").setText(won_text);
 		//draw match score or last set score
-		var score_text = $.match.getSetsWon(YOU).toString() + " - " + $.match.getSetsWon(OPPONENT).toString();
+		var score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();
 		findDrawableById("result_score").setText(score_text);
 		//draw match time
-		findDrawableById("result_time").setText(Helpers.formatDuration($.match.getDuration()));
+		findDrawableById("result_time").setText(Helpers.formatDuration(match.getDuration()));
 		//draw rallies
 		var rallies_text = WatchUi.loadResource(Rez.Strings.end_total_rallies);
-		findDrawableById("result_rallies").setText(Helpers.formatString(rallies_text, {"rallies" => $.match.getTotalRalliesNumber().toString()}));
+		findDrawableById("result_rallies").setText(Helpers.formatString(rallies_text, {"rallies" => match.getTotalRalliesNumber().toString()}));
 	}
 }
 

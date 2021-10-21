@@ -14,7 +14,8 @@ class MenuDelegate extends WatchUi.MenuInputDelegate {
 			WatchUi.pushView(save_match_confirmation, new SaveMatchConfirmationDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else if(item == :menu_reset_game) {
-			$.match.discard();
+			var match = Application.getApp().getMatch();
+			match.discard();
 			//pop once to close the menu
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 			//return to type screen

@@ -12,7 +12,8 @@ class SetResultView extends WatchUi.View {
 	}
 
 	function onShow() {
-		var set = $.match.getCurrentSet();
+		var match = Application.getApp().getMatch();
+		var set = match.getCurrentSet();
 		//draw end of match text
 		var set_winner = set.getWinner();
 		var won_text = WatchUi.loadResource(set_winner == YOU ? Rez.Strings.set_end_you_won : Rez.Strings.set_end_opponent_won);
@@ -33,16 +34,18 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
+		var match = Application.getApp().getMatch();
 		//undo last point
-		$.match.undo();
+		match.undo();
 		var view = new MatchView();
 		WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onSelect() {
-		if($.match.getWinner() == null) {
-			$.match.nextSet();
+		var match = Application.getApp().getMatch();
+		if(match.getWinner() == null) {
+			match.nextSet();
 			var view = new MatchView();
 			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}

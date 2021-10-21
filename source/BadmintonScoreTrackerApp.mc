@@ -4,11 +4,10 @@ using Toybox.Attention;
 using Toybox.Timer;
 using Toybox.System;
 
-var match;
-
 class BadmintonScoreTrackerApp extends Application.AppBase {
 	//create bus for the whole application
 	private const bus = new Bus();
+	private var match;
 
 	function initialize() {
 		AppBase.initialize();
@@ -23,6 +22,14 @@ class BadmintonScoreTrackerApp extends Application.AppBase {
 
 	function getBus() {
 		return bus;
+	}
+
+	function getMatch() {
+		return match;
+	}
+
+	function setMatch(m) {
+		match = m;
 	}
 
 	function onMatchBegin() {

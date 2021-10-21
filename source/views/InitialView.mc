@@ -19,13 +19,15 @@ class InitialView extends WatchUi.View {
 		}
 		//if config is valid, start the match
 		else if(config.isValid()) {
-			//adjust match configuration with app configuration
 			var app = Application.getApp();
+
+			//adjust match configuration with app configuration
 			config.maximumPoints = app.getProperty("maximum_points");
 			config.absoluteMaximumPoints = app.getProperty("absolute_maximum_points");
 
 			//create match
-			$.match = new Match(config);
+			var match = new Match(config);
+			app.setMatch(match);
 
 			//prepare a new config
 			config = new MatchConfig();
