@@ -8,7 +8,7 @@ var match;
 
 class BadmintonScoreTrackerApp extends Application.AppBase {
 	//create bus for the whole application
-	static const bus = new Bus();
+	private const bus = new Bus();
 
 	function initialize() {
 		AppBase.initialize();
@@ -19,6 +19,10 @@ class BadmintonScoreTrackerApp extends Application.AppBase {
 
 	function getInitialView() {
 		return [new InitialView(), new InitialViewDelegate()];
+	}
+
+	function getBus() {
+		return bus;
 	}
 
 	function onMatchBegin() {
