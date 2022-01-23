@@ -1,10 +1,11 @@
 module MatchTest {
 
-	function create_match_config(type, sets, beginner, maximum_points, absolute_maximum_points) {
+	function create_match_config(type, sets, beginner, server, maximum_points, absolute_maximum_points) {
 		var config = new MatchConfig();
 		config.type = type;
 		config.sets = sets;
 		config.beginner = beginner;
+		config.server = server;
 		config.maximumPoints = maximum_points;
 		config.absoluteMaximumPoints = absolute_maximum_points;
 		return config;
@@ -12,7 +13,7 @@ module MatchTest {
 
 	(:test)
 	function testNewMatch(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		BetterTest.assertEqual(match.getType(), SINGLE, "Match is created with correct type");
 		BetterTest.assertEqual(match.getSetsNumber(), 1, "Match is created with corret number of set");
 		BetterTest.assertEqual(match.getCurrentSetIndex(), 0, "Match current set index returns the correct index");
@@ -33,7 +34,7 @@ module MatchTest {
 
 	(:test)
 	function testBeginMatch(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		//BetterTest.assertEqual(match.beginner, YOU, "Beginner of match began with player 1 is player 1");
 
 		BetterTest.assertFalse(match.hasEnded(), "Began match has not ended");
@@ -46,7 +47,7 @@ module MatchTest {
 
 	(:test)
 	function testScore(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		var set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -75,7 +76,7 @@ module MatchTest {
 
 	(:test)
 	function testUndo(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, 21, 30));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		var set = match.getCurrentSet();
 
 		match.undo();
@@ -115,7 +116,7 @@ module MatchTest {
 
 	(:test)
 	function testEnd(logger) {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, 3, 5));
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));
 		var set = match.getCurrentSet();
 
 		match.score(YOU);
@@ -144,6 +145,243 @@ module MatchTest {
 		BetterTest.assertEqual(set.getScore(YOU), 4, "Score after match has ended does nothing");
 		match.score(OPPONENT);
 		BetterTest.assertEqual(set.getScore(OPPONENT), 2, "Score after match has ended does nothing");
+		return true;
+	}
+
+	(:test)
+	function testServer(logger) {
+		//single, player begins the match
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it begins a match");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he begins the match");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves while it's winning rallies");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server while he's winning rallies");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves while it's winning rallies");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server while he's winning rallies");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In singles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In singles, the player is not the server if he lost a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it won a rally back");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he won a rally back");
+
+		match.discard();
+
+		//single, opponent begins the match
+		match = new Match(create_match_config(SINGLE, 1, OPPONENT, true, 21, 30));
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In singles, player team does not serve if the opponent begins a match");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In singles, the player is not the server if the opponent begins the match");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves while it's winning rallies");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server while he's winning rallies");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In singles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In singles, the player is not the server if he lost a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it won a rally back");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he won a rally back");
+
+		match.discard();
+
+		//double, player team begins the match and is the first server
+		match = new Match(create_match_config(DOUBLE, 1, YOU, true, 21, 30));
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if his team begins the match and he is the first server");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.undo();
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.undo();
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if his team begins the match and he is the first server");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won another rally");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.discard();
+
+		//double, player team begins the match and his teammate is the first server
+		match = new Match(create_match_config(DOUBLE, 1, YOU, false, 21, 30));
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, player is not the server if his team begins the match and his teammate is the first server");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.undo();
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.undo();
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if his team begins the match and his teammate is the first server");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won another rally");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.discard();
+
+		//double, opponent team begins the match and the player is the first server
+		match = new Match(create_match_config(DOUBLE, 1, OPPONENT, true, 21, 30));
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won another rally");
+
+		match.undo();
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.undo();
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost another rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost another rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won another rally");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.discard();
+
+		//double, opponent team begins the match and his teammate is the first server
+		match = new Match(create_match_config(DOUBLE, 1, OPPONENT, false, 21, 30));
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won another rally");
+
+		match.undo();
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.undo();
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost another rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost another rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won another rally");
+
+		match.score(OPPONENT);
+		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
+		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+
+		match.score(YOU);
+		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
+		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+
 		return true;
 	}
 }

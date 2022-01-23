@@ -58,11 +58,9 @@ class Match {
 	function initialize(config) {
 		type = config.type;
 
-		//server is either the watch carrier ot his teammate
-		//if the player 1 (watch carrier) does not start the match, inverse the server because this boolean is toggled each time the serve changes side
-		if(config.type == DOUBLE) {
-			server = config.beginner == YOU ? config.server : !config.server;
-		}
+		//in singles, the server is necessary the watch carrier
+		//in doubles, server is either the watch carrier or his teammate
+		server = config.type == DOUBLE ? config.server : true;
 
 		//prepare array of sets and create first set
 		sets = new [config.sets];
@@ -133,15 +131,7 @@ class Match {
 	function score(scorer) {
 		if(!hasEnded()) {
 			var set = getCurrentSet();
-			var previous_rally = set.getRallies().size() > 0 ? set.getRallies().last() : null;
 			set.score(scorer);
-
-			//in double, change server if player 1 (watch carrier) team regains service
-			if(type == DOUBLE) {
-				if(previous_rally == OPPONENT && scorer == YOU) {
-					server = !server;
-				}
-			}
 
 			//detect if match has a set winner
 			var set_winner = isSetWon(set);
@@ -196,15 +186,7 @@ class Match {
 		var set = getCurrentSet();
 		if(set.getRallies().size() > 0) {
 			winner = null;
-			var undone_rally = set.getRallies().last();
 			set.undo();
-
-			//in double, change server if player 1 (watch carrier) team looses service
-			if(type == DOUBLE) {
-				if(undone_rally == YOU && set.getRallies().size() > 0 && set.getRallies().last() == OPPONENT) {
-					server = !server;
-				}
-			}
 		}
 	}
 
@@ -270,20 +252,25 @@ class Match {
 		return getCurrentSet().getHighlightedCorner();
 	}
 
+	function getPlayerIsServer() {
+		return getCurrentSet().getPlayerIsServer(type, server);
+	}
+
 	//methods used from perspective of player 1 (watch carrier)
-	hidden function getPlayerTeamIsServer() {
+	function getPlayerTeamIsServer() {
 		return getServerTeam() == YOU;
 	}
 
 	function getPlayerCorner() {
-		if(getPlayerTeamIsServer()) {
-			var highlighted_corner = getHighlightedCorner();
-			if(server) {
-				return highlighted_corner;
-			}
-			//return other corner
-			return highlighted_corner == 2 ? 3 : 2;
+		if(!getPlayerTeamIsServer()) {
+			return null;
 		}
-		return null;
+		var highlighted_corner = getHighlightedCorner();
+		var player_server = getPlayerIsServer();
+		if(player_server) {
+			return highlighted_corner;
+		}
+		//return other corner
+		return highlighted_corner == 2 ? 3 : 2;
 	}
 }
