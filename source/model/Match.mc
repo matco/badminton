@@ -193,16 +193,17 @@ class Match {
 	}
 
 	function undo() {
-		winner = null;
-
 		var set = getCurrentSet();
-		var undone_rally = set.getRallies().last();
-		set.undo();
+		if(set.getRallies().size() > 0) {
+			winner = null;
+			var undone_rally = set.getRallies().last();
+			set.undo();
 
-		//in double, change server if player 1 (watch carrier) team looses service
-		if(type == DOUBLE) {
-			if(undone_rally == YOU && set.getRallies().last() == OPPONENT) {
-				server = !server;
+			//in double, change server if player 1 (watch carrier) team looses service
+			if(type == DOUBLE) {
+				if(undone_rally == YOU && set.getRallies().last() == OPPONENT) {
+					server = !server;
+				}
 			}
 		}
 	}
