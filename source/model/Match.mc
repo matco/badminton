@@ -60,7 +60,9 @@ class Match {
 
 		//server is either the watch carrier ot his teammate
 		//if the player 1 (watch carrier) does not start the match, inverse the server because this boolean is toggled each time the serve changes side
-		server = config.beginner == YOU ? config.server : !config.server;
+		if(config.type == DOUBLE) {
+			server = config.beginner == YOU ? config.server : !config.server;
+		}
 
 		//prepare array of sets and create first set
 		sets = new [config.sets];
