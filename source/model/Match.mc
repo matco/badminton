@@ -133,7 +133,7 @@ class Match {
 	function score(scorer) {
 		if(!hasEnded()) {
 			var set = getCurrentSet();
-			var previous_rally = set.getRallies().last();
+			var previous_rally = set.getRallies().size() > 0 ? set.getRallies().last() : null;
 			set.score(scorer);
 
 			//in double, change server if player 1 (watch carrier) team regains service
@@ -201,7 +201,7 @@ class Match {
 
 			//in double, change server if player 1 (watch carrier) team looses service
 			if(type == DOUBLE) {
-				if(undone_rally == YOU && set.getRallies().last() == OPPONENT) {
+				if(undone_rally == YOU && set.getRallies().size() > 0 && set.getRallies().last() == OPPONENT) {
 					server = !server;
 				}
 			}
