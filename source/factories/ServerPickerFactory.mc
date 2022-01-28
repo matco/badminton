@@ -1,10 +1,10 @@
 using Toybox.Graphics;
 using Toybox.WatchUi;
 
-class TypePickerFactory extends WatchUi.PickerFactory {
+class ServerPickerFactory extends WatchUi.PickerFactory {
 
-	var types = [SINGLE, DOUBLE];
-	var types_labels = [Rez.Strings.type_single, Rez.Strings.type_double];
+	var servers = [true, false];
+	var servers_label = [Rez.Strings.server_you, Rez.Strings.server_teammate];
 
 	function initialize() {
 		PickerFactory.initialize();
@@ -12,7 +12,7 @@ class TypePickerFactory extends WatchUi.PickerFactory {
 
 	function getDrawable(index, selected) {
 		return new WatchUi.Text({
-			:text => WatchUi.loadResource(types_labels[index]),
+			:text => WatchUi.loadResource(servers_label[index]),
 			:color => Graphics.COLOR_WHITE,
 			:font=> Graphics.FONT_SMALL,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
@@ -21,10 +21,10 @@ class TypePickerFactory extends WatchUi.PickerFactory {
 	}
 
 	function getValue(index) {
-		return types[index];
+		return servers[index];
 	}
 
 	function getSize() {
-		return types.size();
+		return servers.size();
 	}
 }

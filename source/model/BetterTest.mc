@@ -36,7 +36,7 @@ module BetterTest {
 
 	function assertSame(actual, expected, message) {
 		if(actual != expected) {
-			throw new Test.AssertException("ASSERTION FAILED: " + message + " (expected [" + expected + "], actual [" + actual, "]");
+			throw new Test.AssertException("ASSERTION FAILED: " + message + " (expected [" + expected + "], actual [" + actual + "]");
 		}
 	}
 

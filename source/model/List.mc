@@ -47,11 +47,17 @@ class List {
 	}
 
 	function first() {
-		return length > 0 ? elements[0] : null;
+		if(length == 0) {
+			throw new Toybox.Lang.ValueOutOfBoundsException("No first element for an empty list");
+		}
+		return elements[0];
 	}
 
 	function last() {
-		return length > 0 ? elements[length - 1] : null;
+		if(length == 0) {
+			throw new Toybox.Lang.ValueOutOfBoundsException("No last element for an empty list");
+		}
+		return elements[length - 1];
 	}
 
 	hidden function grow() {
@@ -61,5 +67,4 @@ class List {
 		}
 		elements = new_elements;
 	}
-
 }

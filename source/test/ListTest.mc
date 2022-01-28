@@ -1,5 +1,3 @@
-using Toybox.System as Sys;
-
 module ListTest {
 
 	(:test)
@@ -7,8 +5,22 @@ module ListTest {
 		var list = new List();
 		BetterTest.assertTrue(list.isEmpty(), "Newly created list is empty");
 		BetterTest.assertEqual(list.size(), 0, "Newly created list size is 0");
-		BetterTest.assertNull(list.first(), "Getting first element of newly created list returns null");
-		BetterTest.assertNull(list.last(), "Getting last element of newly created list returns null");
+		try {
+			list.first();
+			BetterTest.fail("Getting the first element of an empty list should throw an out of bound exception");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "No first element for an empty list", "Retrieving the first element of an empty list throws an exception");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.ValueOutOfBoundsException, "Retrieving the first element of an empty list throws an exception");
+		}
+		try {
+			list.last();
+			BetterTest.fail("Getting the last element of an empty list should throw an out of bound exception");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "No last element for an empty list", "Retrieving the last element of an empty list throws an exception");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.ValueOutOfBoundsException, "Retrieving the last element of an empty list throws an exception");
+		}
 		return true;
 	}
 

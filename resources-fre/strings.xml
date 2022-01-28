@@ -18,6 +18,10 @@
 	<string id="beginner_you">Vous</string>
 	<string id="beginner_random">Aléatoire</string>
 
+	<string id="server_who">Qui sert ?</string>
+	<string id="server_you">Vous</string>
+	<string id="server_teammate">Coéquipier</string>
+
 	<string id="set_end_you_won">Set gagné !</string>
 	<string id="set_end_opponent_won">Set perdu !</string>
 	<string id="set_end_rallies">${rallies} échanges</string>

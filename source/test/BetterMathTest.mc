@@ -38,5 +38,4 @@ module BetterMathTest {
 		BetterTest.assertEqual(BetterMath.weightedMean(0, 4, 1), 4, "1 of path between 0 and 4 is 4");
 		return true;
 	}
-
 }

@@ -1,18 +1,17 @@
-using Toybox.WatchUi as Ui;
+using Toybox.WatchUi;
 using Toybox.Application;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
+using Toybox.Graphics;
 
-class TypePicker extends Ui.Picker {
+class TypePicker extends WatchUi.Picker {
 
 	function initialize() {
 		var factory = new TypePickerFactory();
 
-		var title = new Ui.Text({
-			:text => Ui.loadResource(Rez.Strings.type_what),
-			:locX => Ui.LAYOUT_HALIGN_CENTER,
-			:locY => Ui.LAYOUT_VALIGN_BOTTOM,
-			:color => Gfx.COLOR_WHITE
+		var title = new WatchUi.Text({
+			:text => WatchUi.loadResource(Rez.Strings.type_what),
+			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
+			:locY => WatchUi.LAYOUT_VALIGN_BOTTOM,
+			:color => Graphics.COLOR_WHITE
 		});
 
 		var default_type = Application.getApp().getProperty("default_match_type");
@@ -32,29 +31,27 @@ class TypePicker extends Ui.Picker {
 		dc.clear();
 		Picker.onUpdate(dc);
 	}
-
 }
 
-class TypePickerDelegate extends Ui.PickerDelegate {
+class TypePickerDelegate extends WatchUi.PickerDelegate {
 
 	function initialize() {
 		PickerDelegate.initialize();
 	}
 
 	function onCancel() {
-		$.config.put(:step, $.config.get(:step) - 1);
+		InitialView.config.step--;
 		//remove picker from view stack
-		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onAccept(values) {
 		//update match configuration
-		$.config.put(:type, values[0]);
-		$.config.put(:step, $.config.get(:step) + 1);
+		InitialView.config.type = values[0];
+		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
-		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
-
 }

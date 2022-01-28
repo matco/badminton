@@ -1,26 +1,35 @@
-using Toybox.Application as App;
-using Toybox.WatchUi as Ui;
-using Toybox.System as Sys;
-using Toybox.Attention as Attention;
-using Toybox.Timer as Timer;
+using Toybox.Application;
+using Toybox.WatchUi;
+using Toybox.Attention;
+using Toybox.Timer;
+using Toybox.System;
 
-var bus;
-var match;
-var device = Sys.getDeviceSettings();
-
-class BadmintonScoreTrackerApp extends App.AppBase {
+class BadmintonScoreTrackerApp extends Application.AppBase {
+	//create bus for the whole application
+	private const bus = new Bus();
+	private var match;
 
 	function initialize() {
 		AppBase.initialize();
 
-		//create bus for the whole application
-		$.bus = new Bus();
-		$.bus.register(self);
+		//register application itself in the bus
+		bus.register(self);
 	}
 
 	function getInitialView() {
-		var view = new InitialView();
-		return [view, new InitialViewDelegate(view)];
+		return [new InitialView(), new InitialViewDelegate()];
+	}
+
+	function getBus() {
+		return bus;
+	}
+
+	function getMatch() {
+		return match;
+	}
+
+	function setMatch(m) {
+		match = m;
 	}
 
 	function onMatchBegin() {
@@ -49,6 +58,6 @@ class BadmintonScoreTrackerApp extends App.AppBase {
 		//dispatch updated settings event
 		//do not name the event "onSettingsChanged" to avoid recursion
 		//"onSettingsChanged" is the native event and "onUpdateSettings" is the custom event for this app (that views can catch)
-		$.bus.dispatch(new BusEvent(:onUpdateSettings, null));
+		bus.dispatch(new BusEvent(:onUpdateSettings, null));
 	}
 }

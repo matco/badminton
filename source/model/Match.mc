@@ -1,9 +1,8 @@
-using Toybox.System as Sys;
-using Toybox.Time as Time;
-using Toybox.ActivityRecording as Recording;
-using Toybox.Activity as Activity;
-using Toybox.FitContributor as Contributor;
-using Toybox.WatchUi as Ui;
+using Toybox.Time;
+using Toybox.ActivityRecording;
+using Toybox.Activity;
+using Toybox.FitContributor;
+using Toybox.WatchUi;
 
 enum Player {
 	YOU = 1,
@@ -15,7 +14,22 @@ enum MatchType {
 	DOUBLE = 2
 }
 
+class MatchConfig {
+	public var step = 0;
+	public var type;
+	public var sets;
+	public var beginner;
+	public var server;
+	public var maximumPoints;
+	public var absoluteMaximumPoints;
+
+	function isValid() {
+		return type == SINGLE && step == 3 || step == 4;
+	}
+}
+
 class Match {
+	static const MAX_SETS = 5;
 
 	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
 	const TOTAL_SCORE_PLAYER_2_FIELD_ID = 1;
@@ -25,7 +39,7 @@ class Match {
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
 	private var type; //type of the match, SINGLE or DOUBLE
-	private var sets; //array of all sets containing -1 for a set not played
+	private var sets; //array of all sets, containing null for a set not played
 
 	private var server; //in double, true if the player 1 (watch carrier) is currently the server
 	private var winner; //store the winner of the match, YOU or OPPONENT
@@ -41,31 +55,34 @@ class Match {
 	private var session_field_score_player_1;
 	private var session_field_score_player_2;
 
-	function initialize(match_type, sets_number, match_beginner, mp, amp) {
-		type = match_type;
-		server = true;
+	function initialize(config) {
+		type = config.type;
+
+		//in singles, the server is necessary the watch carrier
+		//in doubles, server is either the watch carrier or his teammate
+		server = config.type == DOUBLE ? config.server : true;
 
 		//prepare array of sets and create first set
-		sets = new [sets_number];
-		sets[0] = new MatchSet(match_beginner);
-		for(var i = 1; i < sets_number; i++) {
-			sets[i] = -1;
+		sets = new [config.sets];
+		sets[0] = new MatchSet(config.beginner);
+		for(var i = 1; i < config.sets; i++) {
+			sets[i] = null;
 		}
 
-		maximum_points = mp;
-		absolute_maximum_points = amp;
+		maximum_points = config.maximumPoints;
+		absolute_maximum_points = config.absoluteMaximumPoints;
 
 		//manage activity session
-		session = Recording.createSession({:sport => Recording.SPORT_GENERIC, :subSport => Recording.SUB_SPORT_MATCH, :name => Ui.loadResource(Rez.Strings.fit_activity_name)});
-		session_field_set_player_1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_set_unit_label)});
-		session_field_set_player_2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_set_unit_label)});
-		session_field_score_player_1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_score_player_2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_SESSION, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_set_score_player_1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_LAP, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_set_score_player_2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, Contributor.DATA_TYPE_SINT8, {:mesgType => Contributor.MESG_TYPE_LAP, :units => Ui.loadResource(Rez.Strings.fit_score_unit_label)});
+		session = ActivityRecording.createSession({:sport => ActivityRecording.SPORT_GENERIC, :subSport => ActivityRecording.SUB_SPORT_MATCH, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name)});
+		session_field_set_player_1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
+		session_field_set_player_2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
+		session_field_score_player_1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_score_player_2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_set_score_player_1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		session_field_set_score_player_2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
 		session.start();
 
-		$.bus.dispatch(new BusEvent(:onMatchBegin, null));
+		Application.getApp().getBus().dispatch(new BusEvent(:onMatchBegin, null));
 	}
 
 	function save() {
@@ -80,7 +97,7 @@ class Match {
 	hidden function end(winner_player) {
 		winner = winner_player;
 
-		$.bus.dispatch(new BusEvent(:onMatchEnd, winner));
+		Application.getApp().getBus().dispatch(new BusEvent(:onMatchEnd, winner));
 	}
 
 	function nextSet() {
@@ -101,7 +118,7 @@ class Match {
 
 	function getCurrentSetIndex() {
 		var i = 0;
-		while(i < sets.size() && sets[i] != -1) {
+		while(i < sets.size() && sets[i] != null) {
 			i++;
 		}
 		return i - 1;
@@ -114,15 +131,7 @@ class Match {
 	function score(scorer) {
 		if(!hasEnded()) {
 			var set = getCurrentSet();
-			var previous_rally = set.getRallies().last();
 			set.score(scorer);
-
-			//in double, change server if player 1 (watch carrier) team regains service
-			if(type == DOUBLE) {
-				if(previous_rally == OPPONENT && scorer == YOU) {
-					server = !server;
-				}
-			}
 
 			//detect if match has a set winner
 			var set_winner = isSetWon(set);
@@ -174,17 +183,10 @@ class Match {
 	}
 
 	function undo() {
-		winner = null;
-
 		var set = getCurrentSet();
-		var undone_rally = set.getRallies().last();
-		set.undo();
-
-		//in double, change server if player 1 (watch carrier) team looses service
-		if(type == DOUBLE) {
-			if(undone_rally == YOU && set.getRallies().last() == OPPONENT) {
-				server = !server;
-			}
+		if(set.getRallies().size() > 0) {
+			winner = null;
+			set.undo();
 		}
 	}
 
@@ -213,7 +215,7 @@ class Match {
 	function getTotalRalliesNumber() {
 		var i = 0;
 		var number = 0;
-		while(i < sets.size() && sets[i] != -1) {
+		while(i < sets.size() && sets[i] != null) {
 			number += sets[i].getRalliesNumber();
 			i++;
 		}
@@ -250,21 +252,25 @@ class Match {
 		return getCurrentSet().getHighlightedCorner();
 	}
 
+	function getPlayerIsServer() {
+		return getCurrentSet().getPlayerIsServer(type, server);
+	}
+
 	//methods used from perspective of player 1 (watch carrier)
-	hidden function getPlayerTeamIsServer() {
+	function getPlayerTeamIsServer() {
 		return getServerTeam() == YOU;
 	}
 
 	function getPlayerCorner() {
-		if(getPlayerTeamIsServer()) {
-			var highlighted_corner = getHighlightedCorner();
-			if(server) {
-				return highlighted_corner;
-			}
-			//return other corner
-			return highlighted_corner == 2 ? 3 : 2;
+		if(!getPlayerTeamIsServer()) {
+			return null;
 		}
-		return null;
+		var highlighted_corner = getHighlightedCorner();
+		var player_server = getPlayerIsServer();
+		if(player_server) {
+			return highlighted_corner;
+		}
+		//return other corner
+		return highlighted_corner == 2 ? 3 : 2;
 	}
-
 }

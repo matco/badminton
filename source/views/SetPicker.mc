@@ -1,18 +1,17 @@
-using Toybox.WatchUi as Ui;
+using Toybox.WatchUi;
 using Toybox.Application;
-using Toybox.Graphics as Gfx;
-using Toybox.System as Sys;
+using Toybox.Graphics;
 
-class SetPicker extends Ui.Picker {
+class SetPicker extends WatchUi.Picker {
 
 	function initialize() {
 		var factory = new SetPickerFactory();
 
-		var title = new Ui.Text({
-			:text => Ui.loadResource(Rez.Strings.sets_number),
-			:locX => Ui.LAYOUT_HALIGN_CENTER,
-			:locY => Ui.LAYOUT_VALIGN_BOTTOM,
-			:color => Gfx.COLOR_WHITE
+		var title = new WatchUi.Text({
+			:text => WatchUi.loadResource(Rez.Strings.sets_number),
+			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
+			:locY => WatchUi.LAYOUT_VALIGN_BOTTOM,
+			:color => Graphics.COLOR_WHITE
 		});
 
 		var default_number_of_sets = Application.getApp().getProperty("default_match_number_of_sets");
@@ -32,29 +31,27 @@ class SetPicker extends Ui.Picker {
 		dc.clear();
 		Picker.onUpdate(dc);
 	}
-
 }
 
-class SetPickerDelegate extends Ui.PickerDelegate {
+class SetPickerDelegate extends WatchUi.PickerDelegate {
 
 	function initialize() {
 		PickerDelegate.initialize();
 	}
 
 	function onCancel() {
-		$.config.put(:step, $.config.get(:step) - 1);
+		InitialView.config.step--;
 		//remove picker from view stack
-		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onAccept(values) {
 		//update match configuration
-		$.config.put(:sets_number, values[0]);
-		$.config.put(:step, $.config.get(:step) + 1);
+		InitialView.config.sets = values[0];
+		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
-		Ui.popView(Ui.SLIDE_IMMEDIATE);
+		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
-
 }
