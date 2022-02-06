@@ -784,6 +784,100 @@ module MatchTest {
 		BetterTest.assertEqual(match.getTotalScore(YOU), 148, "Total score of player 1 is 148");
 		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 147, "Total score of player 2 is 147");
 
+		var stats = match.getStats();
+		//with this configuration, the player won while serving only 3 times
+		//at the very beginning of the match and when starting set number 3 and 5
+		BetterTest.assertEqual(stats.percentageWinningServing, 2, "Percentage of rallies won while serving is correct");
+		BetterTest.assertEqual(stats.percentageWinningReceiving, 98, "Percentage of rallies won while not serving is correct");
+
+		return true;
+	}
+
+	(:test)
+	function testStats(logger) {
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 10, 10));
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+		//serving rallies won: 3/3 - non serving rallies won: 0/0
+		match.score(OPPONENT);
+		//serving rallies won: 3/4 - non serving rallies won: 0/0
+
+		match.calculateStats();
+		var stats = match.getStats();
+		BetterTest.assertEqual(stats.percentageWinningServing, 75, "During the match, percentage of rallies won while serving is correct");
+		BetterTest.assertNull(stats.percentageWinningReceiving, "During the match, percentage of rallies won while not serving cannot be calculated if there was no non serving rallies");
+
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+		//serving rallies won 3/4: - non serving rallies won: 0/3
+		match.score(YOU);
+		//serving rallies won: 3/4 - non serving rallies won: 1/4
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+		//serving rallies won: 9/10 - non serving rallies won: 1/4
+
+		match.calculateStats();
+		stats = match.getStats();
+		BetterTest.assertEqual(stats.percentageWinningServing, 90, "Percentage of rallies won while serving is correct");
+		BetterTest.assertEqual(stats.percentageWinningReceiving, 25, "Percentage of rallies won while receiving is correct");
+
+		match.discard();
+
+		match = new Match(create_match_config(SINGLE, 1, YOU, true, 2, 2));
+		match.score(YOU);
+		match.score(YOU);
+		//serving rallies won: 2/2
+
+		match.calculateStats();
+		stats = match.getStats();
+		BetterTest.assertEqual(stats.percentageWinningServing, 100, "Percentage of rallies won while serving is correct");
+		BetterTest.assertNull(stats.percentageWinningReceiving, "Percentage of rallies won while receiving cannot be calculated if there was no non serving rallies");
+
+		match.discard();
+
+		match = new Match(create_match_config(SINGLE, 1, OPPONENT, true, 2, 2));
+		match.score(YOU);
+		//serving rallies won 0/0: - non serving rallies won: 1/1
+		match.score(YOU);
+		//serving rallies won 1/1: - non serving rallies won: 1/1
+
+		match.calculateStats();
+		stats = match.getStats();
+		BetterTest.assertEqual(stats.percentageWinningServing, 100, "Percentage of rallies won while serving is correct");
+		BetterTest.assertEqual(stats.percentageWinningReceiving, 100, "Percentage of rallies won while receiving is correct");
+
+		match.discard();
+
+		match = new Match(create_match_config(SINGLE, 1, OPPONENT, true, 2, 2));
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+		//non serving rallies won: 0/2
+
+		match.calculateStats();
+		stats = match.getStats();
+		BetterTest.assertNull(stats.percentageWinningServing, "Percentage of rallies won while serving cannot be calculated if there was no serving rallies");
+		BetterTest.assertEqual(stats.percentageWinningReceiving, 0, "Percentage of rallies won while receiving is correct");
+
+		match.discard();
+
+		match = new Match(create_match_config(SINGLE, 1, OPPONENT, true, 5, 5));
+		scorePoints(match, 4);
+		match.score(YOU);
+		//serving rallies won: 0/9 - non serving rallies won: 9/9
+
+		match.calculateStats();
+		stats = match.getStats();
+		BetterTest.assertEqual(stats.percentageWinningServing, 0, "Percentage of rallies won while serving is correct");
+		BetterTest.assertEqual(stats.percentageWinningReceiving, 100, "Percentage of rallies won while receiving is correct");
+
+		match.discard();
+
 		return true;
 	}
 }
