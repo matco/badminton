@@ -60,15 +60,16 @@ class ActivityStatsViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
-		return true;
+		return onPreviousPage();
 	}
 
-	function onPreviousPage() {
-		WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+	function onPreviousPage() as Boolean {
+		WatchUi.switchToView(new MatchStatsView(), new MatchStatsViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onNextPage() {
-		return onPreviousPage();
+		WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+		return true;
 	}
 }
