@@ -47,6 +47,12 @@
 	<string id="time_am">am</string>
 	<string id="time_pm">pm</string>
 
+	<string id="stats_percentage_winning">Winning rallies</string>
+	<string id="stats_percentage_winning_serving_rally">Serving: ${percentage_winning_serving_rally}% </string>
+	<string id="stats_percentage_winning_receiving_rally">Receiving: ${percentage_winning_receiving_rally}%</string>
+	<string id="stats_average_rally_duration_title">Rally duration</string>
+	<string id="stats_average_rally_duration">${average_rally_duration}s</string>
+
 	<string id="stats_title">Statistics</string>
 	<string id="stats_average_heart_rate">Average HR ${average_heart_rate}bpm</string>
 	<string id="stats_max_heart_rate">Max HR ${max_heart_rate}bpm</string>
@@ -76,10 +82,15 @@
 	<string id="fit_activity_name">Badminton</string>
 	<string id="fit_set_unit_label">sets</string>
 	<string id="fit_score_unit_label">points</string>
+	<string id="fit_duration_label">seconds</string>
+	<string id="fit_percentage_label">%</string>
 	<string id="fit_set_player_1_label">Sets won</string>
 	<string id="fit_set_player_2_label">Sets lost</string>
 	<string id="fit_set_score_player_1_label">Your score for the set</string>
 	<string id="fit_set_score_player_2_label">Opponent score for the set</string>
 	<string id="fit_score_player_1_label">Your total score</string>
 	<string id="fit_score_player_2_label">Opponent total score</string>
+	<string id="fit_rally_average_duration_label">Rally duration</string>
+	<string id="fit_rally_average_duration_serving_label">Rally duration when serving</string>
+	<string id="fit_rally_average_duration_receiving_label">Rally duration when receiving</string>
 </resources>

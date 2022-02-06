@@ -52,6 +52,9 @@ class Match {
 	const SET_WON_PLAYER_2_FIELD_ID = 3;
 	const SET_SCORE_PLAYER_1_FIELD_ID = 4;
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
+	const RALLY_DURATION_FIELD_ID = 6;
+	const RALLY_DURATION_SERVING_FIELD_ID = 7;
+	const RALLY_DURATION_RECEIVING_FIELD_ID = 8;
 
 	private var type as MatchType; //type of the match, SINGLE or DOUBLE
 	private var warmup as Boolean = false;
@@ -72,6 +75,9 @@ class Match {
 	private var fieldSetScorePlayer2 as Field;
 	private var fieldScorePlayer1 as Field;
 	private var fieldScorePlayer2 as Field;
+	private var fieldRallyDuration as Field;
+	private var fieldRallyDurationServing as Field;
+	private var fieldRallyDurationReceiving as Field;
 
 	function initialize(config as MatchConfig) {
 		type = config.type as MatchType;
@@ -86,7 +92,7 @@ class Match {
 
 		//prepare array of sets and create first set
 		sets = new List();
-		sets.push(new MatchSet(config.beginner as Team));
+		sets.push(new MatchSet(type, config.beginner as Team, server));
 
 		maximumPoints = config.maximumPoints as Number;
 		absoluteMaximumPoints = config.absoluteMaximumPoints as Number;
@@ -100,12 +106,15 @@ class Match {
 
 		//manage activity session
 		session = ActivityRecording.createSession({:sport => sport, :subSport => sub_sport, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name) as String});
-		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
-		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
-		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT16, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT16, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
+		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
+		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldRallyDuration = session.createField("rally_duration", RALLY_DURATION_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_duration_label) as String});
+		fieldRallyDurationServing = session.createField("rally_duration_serving", RALLY_DURATION_SERVING_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_duration_label) as String});
+		fieldRallyDurationReceiving = session.createField("rally_duration_receiving", RALLY_DURATION_RECEIVING_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_duration_label) as String});
 		session.start();
 
 		(Application.getApp() as BadmintonApp).getBus().dispatch(new BusEvent(:onMatchBegin, null));
@@ -158,6 +167,20 @@ class Match {
 		fieldSetPlayer2.setData(opponent_sets_won);
 		fieldScorePlayer1.setData(you_total_score);
 		fieldScorePlayer2.setData(opponent_total_score);
+
+		var stats = calculateStats();
+
+		fieldRallyDuration.setData(stats.averageRallyDuration.value());
+		//duration may be null if the player did not serve any rally
+		if(stats.averageRallyDurationServing != null) {
+			var duration = (stats.averageRallyDurationServing as Duration).value();
+			fieldRallyDurationServing.setData(Math.round(duration));
+		}
+		//duration may be null if the player did not receive any rally
+		if(stats.averageRallyDurationReceiving != null) {
+			var duration = (stats.averageRallyDurationReceiving as Duration).value();
+			fieldRallyDurationReceiving.setData(Math.round(duration));
+		}
 		session.stop();
 
 		//encapsulate event payload in an object so this object can never be null
@@ -188,7 +211,7 @@ class Match {
 		var beginner = set.getWinner();
 
 		//create next set
-		sets.push(new MatchSet(beginner as Team));
+		sets.push(new MatchSet(type, beginner as Team, server));
 	}
 
 	function getMaximumSets() as Number? {
@@ -336,31 +359,61 @@ class Match {
 	}
 
 	function getUserCorner() as Corner {
-		var current_set = getCurrentSet();
-		//in singles, the user position only depends on the current score
-		if(type == SINGLE) {
-			var server_team = current_set.getServerTeam();
-			var server_score = current_set.getScore(server_team);
-			return server_score % 2 == 0 ? USER_RIGHT : USER_LEFT;
-		}
-		//in doubles, it's not possible to give the position using only the current score
-		//remember that the one who serves changes each time the team gains the service (winning a rally while not serving)
-		var beginner = current_set.getBeginner();
-		var rallies = current_set.getRallies();
-		//initialize the corner differently depending on which team begins the set and which player starts to serve
-		//while the user team did not get a service, the position of the user depends on who has been configured to serve first (among the user and his teammate)
-		var corner = beginner == USER ? server ? USER_RIGHT : USER_LEFT : server ? USER_LEFT : USER_RIGHT;
-		for(var i = 0; i < rallies.size(); i++) {
-			var previous_rally = i > 0 ? rallies.get(i - 1) : beginner;
-			var current_rally = rallies.get(i);
-			if(previous_rally == current_rally && current_rally == USER) {
-				corner = corner == USER_RIGHT ? USER_LEFT : USER_RIGHT;
-			}
-		}
-		return corner;
+		return getCurrentSet().getUserCorner();
 	}
 
-	function getUserIsServer() as Boolean {
-		return getUserCorner() == getServingCorner();
+	function calculateStats() as MatchStats {
+		var count = 0;
+		var count_serving = 0;
+		var count_receiving = 0;
+
+		var duration_rallies = new Duration(0);
+		var duration_rallies_serving = new Duration(0);
+		var duration_rallies_receiving = new Duration(0);
+
+		var winning_serving = 0;
+		var winning_receiving = 0;
+
+		var sets = getSets();
+		for(var i = 0; i < sets.size(); i++) {
+			var set = sets.get(i) as MatchSet;
+			var rallies = set.getRallies();
+			count += rallies.size();
+			for(var j = 0; j < rallies.size(); j++) {
+				var rally = rallies.get(j) as MatchRally;
+				if(rally.hasEnded()) {
+					var duration = rally.getDuration() as Duration;
+					duration_rallies.add(duration);
+					if(rally.getBeginner() == USER) {
+						count_serving++;
+						duration_rallies_serving.add(duration);
+						if(rally.getWinner() == USER) {
+							winning_serving++;
+						}
+					}
+					else {
+						count_receiving++;
+						duration_rallies_receiving.add(duration);
+						if(rally.getWinner() == USER) {
+							winning_receiving++;
+						}
+					}
+				}
+			}
+		}
+
+		var average_rally_duration = duration_rallies.divide(count);
+		var average_rally_duration_serving = count_serving > 0 ? duration_rallies_serving.divide(count_serving) as Duration : null;
+		var average_rally_duration_receiving = count_receiving > 0 ? duration_rallies_receiving.divide(count_receiving) as Duration : null;
+		var percentage_winning_serving = count_serving > 0 ? Math.round(100 * winning_serving / count_serving) as Number : null;
+		var percentage_winning_receiving = count_receiving > 0 ? Math.round(100 * winning_receiving / count_receiving) as Number : null;
+
+		return new MatchStats(
+			average_rally_duration,
+			average_rally_duration_serving,
+			average_rally_duration_receiving,
+			percentage_winning_serving,
+			percentage_winning_receiving
+		);
 	}
 }

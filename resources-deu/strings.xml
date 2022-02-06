@@ -47,6 +47,12 @@
 	<string id="time_am">am</string>
 	<string id="time_pm">pm</string>
 
+	<string id="stats_percentage_winning">Gewonnen Wechsel</string>
+	<string id="stats_percentage_winning_serving_rally">Servieren: ${percentage_winning_serving_rally}%</string>
+	<string id="stats_percentage_winning_receiving_rally">Erhalten: ${percentage_winning_receiving_rally}%</string>
+	<string id="stats_average_rally_duration_title">Dauer der Wechsel</string>
+	<string id="stats_average_rally_duration">${average_rally_duration}s</string>
+
 	<string id="stats_title">Statistik</string>
 	<string id="stats_average_heart_rate">Durchschn. HF ${average_heart_rate}bpm</string>
 	<string id="stats_max_heart_rate">Max HF ${max_heart_rate}bpm</string>
@@ -76,10 +82,15 @@
 	<string id="fit_activity_name">Badminton</string>
 	<string id="fit_set_unit_label">Sätze</string>
 	<string id="fit_score_unit_label">Punkte</string>
+	<string id="fit_duration_label">Sekunden</string>
+	<string id="fit_percentage_label">%</string>
 	<string id="fit_set_player_1_label">Sätze gewonnen</string>
 	<string id="fit_set_player_2_label">Sätze verloren</string>
 	<string id="fit_set_score_player_1_label">Deine Punktzahl für den Satz</string>
 	<string id="fit_set_score_player_2_label">Gegner Punktzahl für den Satz</string>
 	<string id="fit_score_player_1_label">Deine volle Punktzahl</string>
 	<string id="fit_score_player_2_label">Gegner volle Punktzahl</string>
+	<string id="fit_rally_average_duration_label">Dauer der Wechsel</string>
+	<string id="fit_rally_average_duration_serving_label">Dauer der Wechsel (Servieren)</string>
+	<string id="fit_rally_average_duration_receiving_label">Dauer der Wechsel (Erhalten)</string>
 </resources>

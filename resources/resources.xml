@@ -56,5 +56,32 @@
 			precision="0"
 			dataLabel="@Strings.fit_set_score_player_2_label"
 			unitLabel="@Strings.fit_score_unit_label" />
+		<fitField
+			id="6"
+			displayInChart="false"
+			displayInActivityLaps="false"
+			displayInActivitySummary="true"
+			sortOrder="6"
+			precision="0"
+			dataLabel="@Strings.fit_rally_average_duration_label"
+			unitLabel="@Strings.fit_duration_label" />
+		<fitField
+			id="7"
+			displayInChart="false"
+			displayInActivityLaps="false"
+			displayInActivitySummary="true"
+			sortOrder="7"
+			precision="0"
+			dataLabel="@Strings.fit_rally_average_duration_serving_label"
+			unitLabel="@Strings.fit_duration_label" />
+		<fitField
+			id="8"
+			displayInChart="false"
+			displayInActivityLaps="false"
+			displayInActivitySummary="true"
+			sortOrder="8"
+			precision="0"
+			dataLabel="@Strings.fit_rally_average_duration_receiving_label"
+			unitLabel="@Strings.fit_duration_label" />
 	</fitContributions>
 </resources>
