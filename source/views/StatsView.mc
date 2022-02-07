@@ -18,25 +18,33 @@ class StatsView extends WatchUi.View {
 		var activity = match.getActivity();
 		var stats_available = false;
 
-		if(activity.averageHeartRate != null) {
-			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_average_heart_rate), {"average_heart_rate" => activity.averageHeartRate.toString()});
+		var average_heart_rate = activity.averageHeartRate;
+		if(average_heart_rate != null) {
+			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_average_heart_rate), {"average_heart_rate" => average_heart_rate.toString()});
 			findDrawableById("stats_average_heart_rate").setText(text);
 			stats_available = true;
 		}
-		if(activity.maxHeartRate != null) {
-			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_max_heart_rate), {"max_heart_rate" => activity.maxHeartRate.toString()});
+		var max_heart_rate = activity.maxHeartRate;
+		if(max_heart_rate != null) {
+			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_max_heart_rate), {"max_heart_rate" => max_heart_rate.toString()});
 			findDrawableById("stats_max_heart_rate").setText(text);
 			stats_available = true;
 		}
-		if(activity.elapsedDistance != null && activity.elapsedDistance > 0) {
-			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_meters), {"meters" => activity.elapsedDistance.format("%.0d")});
-			findDrawableById("stats_meters").setText(text);
-			stats_available = true;
+		var elapsed_distance = activity.elapsedDistance;
+		if(elapsed_distance != null) {
+			if(elapsed_distance > 0) {
+				var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_meters), {"meters" => elapsed_distance.format("%.0d")});
+				findDrawableById("stats_meters").setText(text);
+				stats_available = true;
+			}
 		}
-		if(activity.calories != null && activity.calories > 0) {
-			var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_calories), {"calories" => activity.calories});
-			findDrawableById("stats_calories").setText(text);
-			stats_available = true;
+		var calories = activity.calories;
+		if(calories != null) {
+			if(calories > 0) {
+				var text = Helpers.formatString(WatchUi.loadResource(Rez.Strings.stats_calories), {"calories" => calories.format("%.0d")});
+				findDrawableById("stats_calories").setText(text);
+				stats_available = true;
+			}
 		}
 		//display a message of there is no stat to display
 		if(!stats_available) {
