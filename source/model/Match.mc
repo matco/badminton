@@ -14,6 +14,13 @@ enum MatchType {
 	DOUBLE = 2
 }
 
+enum Corner {
+	OPPONENT_RIGHT = 0, //top left corner on the screen
+	OPPONENT_LEFT = 1, //top right corner on the screen
+	YOU_LEFT = 2, //bottom left corner on the screen
+	YOU_RIGHT = 3 //bottom right corner on the screen
+}
+
 class MatchConfig {
 	public var step = 0;
 	public var type;
@@ -271,6 +278,6 @@ class Match {
 			return serving_corner;
 		}
 		//return other corner
-		return serving_corner == 2 ? 3 : 2;
+		return serving_corner == YOU_LEFT ? YOU_RIGHT : YOU_LEFT;
 	}
 }

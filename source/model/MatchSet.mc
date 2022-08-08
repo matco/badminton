@@ -67,12 +67,10 @@ class MatchSet {
 	function getServingCorner() {
 		var server = getServerTeam();
 		var server_score = getScore(server);
-		//player 1 serves from corner 2 or 3
 		if(server == YOU) {
-			return 3 - server_score % 2;
+			return server_score % 2 == 0 ? YOU_RIGHT : YOU_LEFT;
 		}
-		//player 2 serves from corner 0 or 1
-		return server_score % 2;
+		return server_score % 2 == 0 ? OPPONENT_RIGHT : OPPONENT_LEFT;
 	}
 
 	//methods used from perspective of player 1 (watch carrier)

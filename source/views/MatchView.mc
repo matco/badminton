@@ -80,30 +80,30 @@ class MatchBoundaries {
 		];
 
 		//calculate court corners boundaries coordinates
-		corners = new [4];
-		//top left corner
-		corners[0] = [
+		corners = {};
+		//OPPONENT_RIGHT is the top left corner
+		corners[OPPONENT_RIGHT] = [
 			[xCenter - halfWidthTopCorridor + COURT_CORRIDORS_SIZE, yTop + COURT_CORRIDORS_SIZE],
 			[xCenter, yTop + COURT_CORRIDORS_SIZE],
 			[xCenter, yMiddle],
 			[xCenter - halfWidthMiddle + COURT_CORRIDORS_SIZE, yMiddle]
 		];
-		//top right corner
-		corners[1] = [
+		//OPPONENT_LEFT is the top right corner
+		corners[OPPONENT_LEFT] = [
 			[xCenter, yTop + COURT_CORRIDORS_SIZE],
 			[xCenter + halfWidthTopCorridor - COURT_CORRIDORS_SIZE, yTop + COURT_CORRIDORS_SIZE],
 			[xCenter + halfWidthMiddle - COURT_CORRIDORS_SIZE, yMiddle],
 			[xCenter, yMiddle]
 		];
-		//bottom left corner
-		corners[2] = [
+		//YOU_LEFT is the bottom left corner
+		corners[YOU_LEFT] = [
 			[xCenter - halfWidthMiddle + COURT_CORRIDORS_SIZE, yMiddle],
 			[xCenter, yMiddle],
 			[xCenter, yBottom - COURT_CORRIDORS_SIZE],
 			[xCenter - halfWidthBottomCorridor + COURT_CORRIDORS_SIZE, yBottom - COURT_CORRIDORS_SIZE]
 		];
-		//bottom right corner
-		corners[3] = [
+		//YOU_RIGHT is the bottom right corner
+		corners[YOU_RIGHT] = [
 			[xCenter, yMiddle],
 			[xCenter + halfWidthMiddle - COURT_CORRIDORS_SIZE, yMiddle],
 			[xCenter + halfWidthBottomCorridor - COURT_CORRIDORS_SIZE, yBottom - COURT_CORRIDORS_SIZE],
