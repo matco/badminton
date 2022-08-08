@@ -133,9 +133,9 @@ class MatchView extends WatchUi.View {
 	public var boundaries;
 
 	private var timer;
-	private var clock_24_hour;
-	private var time_am_label;
-	private var time_pm_label;
+	private var clock24Hour;
+	private var timeAMLabel;
+	private var timePMLabel;
 
 	function initialize() {
 		View.initialize();
@@ -145,9 +145,9 @@ class MatchView extends WatchUi.View {
 	}
 
 	function onShow() {
-		clock_24_hour = System.getDeviceSettings().is24Hour;
-		time_am_label = WatchUi.loadResource(Rez.Strings.time_am);
-		time_pm_label = WatchUi.loadResource(Rez.Strings.time_pm);
+		clock24Hour = System.getDeviceSettings().is24Hour;
+		timeAMLabel = WatchUi.loadResource(Rez.Strings.time_am);
+		timePMLabel = WatchUi.loadResource(Rez.Strings.time_pm);
 		timer.start(method(:onTimer), 1000, true);
 
 		Application.getApp().getBus().register(self);
@@ -261,7 +261,7 @@ class MatchView extends WatchUi.View {
 	}
 
 	function drawTime(dc) {
-		var time_label = Helpers.formatCurrentTime(clock_24_hour, time_am_label, time_pm_label);
+		var time_label = Helpers.formatCurrentTime(clock24Hour, timeAMLabel, timePMLabel);
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 		dc.drawText(boundaries.xCenter, boundaries.marginHeight - MatchBoundaries.TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, time_label, Graphics.TEXT_JUSTIFY_CENTER);
 	}

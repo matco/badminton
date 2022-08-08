@@ -51,16 +51,16 @@ class Match {
 	private var server; //in double, true if the player 1 (watch carrier) is currently the server
 	private var winner; //store the winner of the match, YOU or OPPONENT
 
-	private var maximum_points;
-	private var absolute_maximum_points;
+	private var maximumPoints;
+	private var absoluteMaximumPoints;
 
 	private var session;
-	private var session_field_set_player_1;
-	private var session_field_set_player_2;
-	private var session_field_set_score_player_1;
-	private var session_field_set_score_player_2;
-	private var session_field_score_player_1;
-	private var session_field_score_player_2;
+	private var fieldSetPlayer1;
+	private var fieldSetPlayer2;
+	private var fieldSetScorePlayer1;
+	private var fieldSetScorePlayer2;
+	private var fieldScorePlayer1;
+	private var fieldScorePlayer2;
 
 	function initialize(config) {
 		type = config.type;
@@ -76,17 +76,17 @@ class Match {
 			sets[i] = null;
 		}
 
-		maximum_points = config.maximumPoints;
-		absolute_maximum_points = config.absoluteMaximumPoints;
+		maximumPoints = config.maximumPoints;
+		absoluteMaximumPoints = config.absoluteMaximumPoints;
 
 		//manage activity session
 		session = ActivityRecording.createSession({:sport => ActivityRecording.SPORT_GENERIC, :subSport => ActivityRecording.SUB_SPORT_MATCH, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name)});
-		session_field_set_player_1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
-		session_field_set_player_2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
-		session_field_score_player_1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_score_player_2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_set_score_player_1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
-		session_field_set_score_player_2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
+		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
+		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
 		session.start();
 
 		Application.getApp().getBus().dispatch(new BusEvent(:onMatchBegin, null));
@@ -146,18 +146,18 @@ class Match {
 				set.end(set_winner);
 
 				//manage activity session
-				session_field_set_score_player_1.setData(set.getScore(YOU));
-				session_field_set_score_player_2.setData(set.getScore(OPPONENT));
+				fieldSetScorePlayer1.setData(set.getScore(YOU));
+				fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 
 				var match_winner = isWon();
 				if(match_winner != null) {
 					end(match_winner);
 
 					//manage activity session
-					session_field_set_player_1.setData(getSetsWon(YOU));
-					session_field_set_player_2.setData(getSetsWon(OPPONENT));
-					session_field_score_player_1.setData(getTotalScore(YOU));
-					session_field_score_player_2.setData(getTotalScore(OPPONENT));
+					fieldSetPlayer1.setData(getSetsWon(YOU));
+					fieldSetPlayer2.setData(getSetsWon(OPPONENT));
+					fieldScorePlayer1.setData(getTotalScore(YOU));
+					fieldScorePlayer2.setData(getTotalScore(OPPONENT));
 					session.stop();
 				}
 			}
@@ -167,10 +167,10 @@ class Match {
 	hidden function isSetWon(set) {
 		var scorePlayer1 = set.getScore(YOU);
 		var scorePlayer2 = set.getScore(OPPONENT);
-		if(scorePlayer1 >= absolute_maximum_points || scorePlayer1 >= maximum_points && (scorePlayer1 - scorePlayer2) > 1) {
+		if(scorePlayer1 >= absoluteMaximumPoints || scorePlayer1 >= maximumPoints && (scorePlayer1 - scorePlayer2) > 1) {
 			return YOU;
 		}
-		if(scorePlayer2 >= absolute_maximum_points || scorePlayer2 >= maximum_points && (scorePlayer2 - scorePlayer1) > 1) {
+		if(scorePlayer2 >= absoluteMaximumPoints || scorePlayer2 >= maximumPoints && (scorePlayer2 - scorePlayer1) > 1) {
 			return OPPONENT;
 		}
 		return null;
