@@ -2,14 +2,14 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Activity;
 
-class StatsView extends WatchUi.View {
+class ActivityStatsView extends WatchUi.View {
 
 	function initialize() {
 		View.initialize();
 	}
 
 	function onLayout(dc) {
-		setLayout(Rez.Layouts.stats(dc));
+		setLayout(Rez.Layouts.activity_stats(dc));
 	}
 
 	function onShow() {
@@ -53,7 +53,7 @@ class StatsView extends WatchUi.View {
 	}
 }
 
-class StatsViewDelegate extends WatchUi.BehaviorDelegate {
+class ActivityStatsViewDelegate extends WatchUi.BehaviorDelegate {
 
 	function initialize() {
 		BehaviorDelegate.initialize();
