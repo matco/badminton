@@ -64,7 +64,7 @@ class MatchSet {
 		return rallies.last();
 	}
 
-	function getHighlightedCorner() {
+	function getServingCorner() {
 		var server = getServerTeam();
 		var server_score = getScore(server);
 		//player 1 serves from corner 2 or 3

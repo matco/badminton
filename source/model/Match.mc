@@ -248,8 +248,8 @@ class Match {
 		return getCurrentSet().getServerTeam();
 	}
 
-	function getHighlightedCorner() {
-		return getCurrentSet().getHighlightedCorner();
+	function getServingCorner() {
+		return getCurrentSet().getServingCorner();
 	}
 
 	function getPlayerIsServer() {
@@ -265,12 +265,12 @@ class Match {
 		if(!getPlayerTeamIsServer()) {
 			return null;
 		}
-		var highlighted_corner = getHighlightedCorner();
+		var serving_corner = getServingCorner();
 		var player_server = getPlayerIsServer();
 		if(player_server) {
-			return highlighted_corner;
+			return serving_corner;
 		}
 		//return other corner
-		return highlighted_corner == 2 ? 3 : 2;
+		return serving_corner == 2 ? 3 : 2;
 	}
 }
