@@ -265,7 +265,7 @@ class MatchView extends WatchUi.View {
 	}
 
 	function onUpdate(dc) {
-		//when onUpdate is called, the entire view is cleared (hence the badminton field) on some watches (reported by users with vivoactive 4 and venu)
+		//when onUpdate is called, the entire view is cleared (hence the badminton court) on some watches (reported by users with vivoactive 4 and venu)
 		//in the simulator it's not the case for all watches
 		//do not try to update only a part of the view
 		//clean the entire screen
@@ -337,7 +337,6 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		else if(match.getCurrentSetIndex() == 0) {
 			match.discard();
 			//return to beginner screen if match has not started yet
-
 			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		return true;

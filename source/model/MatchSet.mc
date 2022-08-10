@@ -60,7 +60,7 @@ class MatchSet {
 		if(rallies.isEmpty()) {
 			return beginner;
 		}
-		//last team who score
+		//last team who scores
 		return rallies.last();
 	}
 
