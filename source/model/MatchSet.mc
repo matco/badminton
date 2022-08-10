@@ -77,33 +77,4 @@ class MatchSet {
 	function getPlayerTeamIsServer() {
 		return getServerTeam() == YOU;
 	}
-
-	function getPlayerIsServer(type, player_server) {
-		//if the opponent team is serving, the player 1 (watch carrier) is necessary not the server
-		if(!getPlayerTeamIsServer()) {
-			return false;
-		}
-		//starting from here, we are sure it is the player 1 (watch carrier) team who serves
-		//in singles, the player 1 (watch carrier) is necessary the server
-		if(type == SINGLE) {
-			return true;
-		}
-		//if this is the beginning of the set, the server is the one who has been configured to serve first (among the player and his teammate)
-		if(rallies.isEmpty()) {
-			return player_server;
-		}
-		//remember that the one who serves changes each time the team gains the service (winning a rally while not serving)
-		//initialize the server differently depending on which team begins the set
-		//that's because if the opponent team begins the set, the first time the watch carrier team gains the service, it must not induce a switch of the server
-		//the idea is to inverse the server to counteract this switch in the following loop (this will happen only once)
-		var server = beginner == YOU ? player_server : !player_server;
-		for(var i = 0; i < rallies.size(); i++) {
-			var previous_rally = i > 0 ? rallies.get(i - 1) : beginner;
-			var current_rally = rallies.get(i);
-			if(previous_rally == OPPONENT && current_rally == YOU) {
-				server = !server;
-			}
-		}
-		return server;
-	}
 }

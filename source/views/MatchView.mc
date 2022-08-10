@@ -212,15 +212,13 @@ class MatchView extends WatchUi.View {
 			double_court[2][1] - MatchBoundaries.COURT_CORRIDORS_SIZE
 		);
 
-		//in double, draw a dot for the player 1 (watch carrier) position if his team is serving
-		if(match.getType() == DOUBLE && match.getPlayerTeamIsServer()) {
-			var player_corner = match.getPlayerCorner();
-			var offset = boundaries.halfWidthBottom - 30;
-			var y_dot = y_bottom - 30;
-			var x_position = player_corner == 2 ? (x_center - offset) : (x_center + offset);
-			dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-			dc.fillCircle(x_position, y_dot, 7);
-		}
+		//draw a dot for the player 1 (watch carrier) position
+		var player_corner = match.getPlayerCorner();
+		var offset = boundaries.halfWidthBottom - 30;
+		var y_dot = y_bottom - 30;
+		var x_position = player_corner == 2 ? (x_center - offset) : (x_center + offset);
+		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
+		dc.fillCircle(x_position, y_dot, 7);
 	}
 
 	function drawScores(dc, match) {

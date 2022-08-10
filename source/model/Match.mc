@@ -260,7 +260,8 @@ class Match {
 	}
 
 	function getPlayerIsServer() {
-		return getCurrentSet().getPlayerIsServer(type, server);
+		var player_corner = getPlayerCorner();
+		return player_corner == getServingCorner();
 	}
 
 	//methods used from perspective of player 1 (watch carrier)
@@ -269,15 +270,27 @@ class Match {
 	}
 
 	function getPlayerCorner() {
-		if(!getPlayerTeamIsServer()) {
-			return null;
+		var current_set = getCurrentSet();
+		//in singles, the player 1 (watch carrier) position only depends on the current score
+		if(type == SINGLE) {
+			var server = current_set.getServerTeam();
+			var server_score = current_set.getScore(server);
+			return server_score % 2 == 0 ? YOU_RIGHT : YOU_LEFT;
 		}
-		var serving_corner = getServingCorner();
-		var player_server = getPlayerIsServer();
-		if(player_server) {
-			return serving_corner;
+		//in doubles, it's not possible to give the position using only the current score
+		//remember that the one who serves changes each time the team gains the service (winning a rally while not serving)
+		var beginner = current_set.getBeginner();
+		var rallies = current_set.getRallies();
+		//initialize the corner differently depending on which team begins the set and which player starts to serve
+		//while the player 1 team (watch carrier) did not get a service, the position of the player depends on who has been configured to serve first (among the player and his teammate)
+		var corner = beginner == YOU ? server ? 3 : 2 : server ? 2 : 3;
+		for(var i = 0; i < rallies.size(); i++) {
+			var previous_rally = i > 0 ? rallies.get(i - 1) : beginner;
+			var current_rally = rallies.get(i);
+			if(previous_rally == current_rally && current_rally == YOU) {
+				corner = corner == YOU_RIGHT ? YOU_LEFT : YOU_RIGHT;
+			}
 		}
-		//return other corner
-		return serving_corner == YOU_LEFT ? YOU_RIGHT : YOU_LEFT;
+		return corner;
 	}
 }

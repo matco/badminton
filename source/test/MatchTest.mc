@@ -154,22 +154,27 @@ module MatchTest {
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it begins a match");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he begins the match");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In singles, the player serves from the right if his score is even");
 
-		match.score(YOU);
+		match.score(YOU); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves while it's winning rallies");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server while he's winning rallies");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In singles, the player serves from the left if his score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //2-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves while it's winning rallies");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server while he's winning rallies");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In singles, the player serves from the right if his score is even");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //2-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In singles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In singles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In singles, the player receives the service on the left if the opponent serves and his score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //3-1
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it won a rally back");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he won a rally back");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In singles, the player serves from the left if his score is odd");
 
 		match.discard();
 
@@ -177,22 +182,27 @@ module MatchTest {
 		match = new Match(create_match_config(SINGLE, 1, OPPONENT, true, 21, 30));
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In singles, player team does not serve if the opponent begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In singles, the player is not the server if the opponent begins the match");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In singles, the player receives the service on the right if the opponent serves and his score is even");
 
-		match.score(YOU);
+		match.score(YOU); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In singles, the player serves from the left if his score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //2-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves while it's winning rallies");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server while he's winning rallies");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In singles, the player serves from the right if his score is even");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //2-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In singles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In singles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In singles, the player receives the service on the left if the opponent serves and his score is even");
 
-		match.score(YOU);
+		match.score(YOU); //3-1
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it won a rally back");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In singles, the player is the server if he won a rally back");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In singles, the player serves from the left if his score is odd");
 
 		match.discard();
 
@@ -200,46 +210,57 @@ module MatchTest {
 		match = new Match(create_match_config(DOUBLE, 1, YOU, true, 21, 30));
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if his team begins the match and he is the first server");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player serves from the right if his team's score is even");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //0-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player stays in place after his team lost the service");
 
-		match.score(YOU);
+		match.score(YOU); //1-1
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is odd");
 
-		match.undo();
+		match.undo(); //0-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player stays in place after his team lost the service");
 
-		match.undo();
+		match.undo(); //0-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if his team begins the match and he is the first server");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player serves from the right if his team's score is even");
 
-		match.score(YOU);
+		match.score(YOU); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player serves from the left if his team's score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //2-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won another rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player serves from the right if his team's score is even");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //2-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player stays in place after his team lost the service");
 
-		match.score(YOU);
+		match.score(YOU); //3-1
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is odd");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //3-2
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player stays in place after his team lost the service");
 
-		match.score(YOU);
+		match.score(YOU); //4-2
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player serves from the right if his team's score is even");
 
 		match.discard();
 
@@ -247,46 +268,57 @@ module MatchTest {
 		match = new Match(create_match_config(DOUBLE, 1, YOU, false, 21, 30));
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, player is not the server if his team begins the match and his teammate is the first server");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is even");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //0-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player stays in place after his team lost the service");
 
-		match.score(YOU);
+		match.score(YOU); //1-1
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player serves from the left if his team's score is odd");
 
-		match.undo();
+		match.undo(); //0-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player stays in place after his team lost the service");
 
-		match.undo();
+		match.undo(); //0-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if his team begins the match and his teammate is the first server");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is even");
 
-		match.score(YOU);
+		match.score(YOU); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //2-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won another rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is even");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //2-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player stays in place after his team lost the service");
 
-		match.score(YOU);
+		match.score(YOU); //3-1
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player serves from the left if his team's score is odd");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //3-2
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player stays in place after his team lost the service");
 
-		match.score(YOU);
+		match.score(YOU); //4-2
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is even");
 
 		match.discard();
 
@@ -294,46 +326,57 @@ module MatchTest {
 		match = new Match(create_match_config(DOUBLE, 1, OPPONENT, true, 21, 30));
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player is ready to be serving when he will regain the service if the opponent team serves first");
 
-		match.score(YOU);
+		match.score(YOU); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player serves from the left if his team's score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //2-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won another rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player serves from the right if his team's score is even");
 
-		match.undo();
+		match.undo(); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player serves from the left if his team's score is odd");
 
-		match.undo();
+		match.undo(); //0-0
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player is ready to be serving when he will regain the service if the opponent team serves first");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //0-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player is ready to be serving when he will regain the service if the opponent team serves first");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //0-2
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost another rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost another rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player is ready to be serving when he will regain the service if the opponent team serves first");
 
-		match.score(YOU);
+		match.score(YOU); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player serves from the left if his team's score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //2-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won another rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player serves from the right if his team's score is even");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //2-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player stays in place after his team lost the service");
 
-		match.score(YOU);
+		match.score(YOU); //3-1
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is even");
 
 		match.discard();
 
@@ -341,46 +384,57 @@ module MatchTest {
 		match = new Match(create_match_config(DOUBLE, 1, OPPONENT, false, 21, 30));
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player is ready to be non serving when his team will regain the service if the opponent team serves first");
 
-		match.score(YOU);
+		match.score(YOU); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //2-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won another rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is even");
 
-		match.undo();
+		match.undo(); //1-0
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is odd");
 
-		match.undo();
+		match.undo(); //0-0
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if the opponent team begins a match");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if the opponent team begins the match");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player is ready to be non serving when his team will regain the service if the opponent team serves first");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //0-1
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player is ready to be non serving when his team will regain the service if the opponent team serves first");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //0-2
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost another rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost another rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player is ready to be non serving when his team will regain the service if the opponent team serves first");
 
-		match.score(YOU);
+		match.score(YOU); //1-2
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player teammate is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_RIGHT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is odd");
 
-		match.score(YOU);
+		match.score(YOU); //2-2
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won another rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is the server if he won another rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player takes the non serving corner if his teammate is serving and his team's score is even");
 
-		match.score(OPPONENT);
+		match.score(OPPONENT); //2-3
 		BetterTest.assertFalse(match.getPlayerTeamIsServer(), "In doubles, player team does not serve if it lost a rally");
 		BetterTest.assertFalse(match.getPlayerIsServer(), "In doubles, the player is not the server if he lost a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player stays in place after his team lost the service");
 
-		match.score(YOU);
+		match.score(YOU); //3-3
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In doubles, player team serves if it won a rally");
 		BetterTest.assertTrue(match.getPlayerIsServer(), "In doubles, the player is the server if he won a rally");
+		BetterTest.assertEqual(match.getPlayerCorner(), YOU_LEFT, "In doubles, the player serves from the left if his team's score is odd");
 
 		return true;
 	}
