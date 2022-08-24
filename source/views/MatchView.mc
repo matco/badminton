@@ -180,12 +180,12 @@ class MatchView extends WatchUi.View {
 		var single_court = boundaries.singleCourt;
 
 		//draw background
-		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon(match.getType() == SINGLE ? single_court : double_court);
 
 		//draw serving corner
 		var serving_corner = match.getServingCorner();
-		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
+		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon(boundaries.corners[serving_corner]);
 
 		//draw bounds
