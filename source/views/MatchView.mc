@@ -127,8 +127,8 @@ class MatchBoundaries {
 }
 
 class MatchView extends WatchUi.View {
-	const SCORE_PLAYER_1_FONT = Graphics.FONT_NUMBER_MEDIUM;
-	const SCORE_PLAYER_2_FONT = Graphics.FONT_NUMBER_MILD;
+	const SCORE_PLAYER_1_FONT = Graphics.FONT_LARGE;
+	const SCORE_PLAYER_2_FONT = Graphics.FONT_MEDIUM;
 
 	public var boundaries;
 
@@ -224,8 +224,8 @@ class MatchView extends WatchUi.View {
 	function drawScores(dc, match) {
 		var set = match.getCurrentSet();
 
-		UIHelpers.drawHighlightedText(dc, boundaries.xCenter, boundaries.yScore1, SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 8);
-		UIHelpers.drawHighlightedText(dc, boundaries.xCenter, boundaries.yScore2, SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 8);
+		UIHelpers.drawHighlightedNumber(dc, boundaries.xCenter, boundaries.yScore1, SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 2, 4);
+		UIHelpers.drawHighlightedNumber(dc, boundaries.xCenter, boundaries.yScore2, SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 2, 4);
 	}
 
 	function drawSets(dc, match) {
