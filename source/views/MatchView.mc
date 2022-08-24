@@ -216,7 +216,7 @@ class MatchView extends WatchUi.View {
 		var player_corner = match.getPlayerCorner();
 		var offset = boundaries.halfWidthBottom - 30;
 		var y_dot = y_bottom - 30;
-		var x_position = player_corner == 2 ? (x_center - offset) : (x_center + offset);
+		var x_position = player_corner == YOU_LEFT ? (x_center - offset) : (x_center + offset);
 		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 		dc.fillCircle(x_position, y_dot, 7);
 	}
