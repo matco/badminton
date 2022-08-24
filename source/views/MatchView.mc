@@ -4,35 +4,27 @@ using Toybox.WatchUi;
 using Toybox.Timer;
 
 class MatchBoundaries {
-	static const COURT_HEIGHT_RATIO = 0.4; //height of opponent part compared to total height of the court
-	static const COURT_WIDTH_RATIO = 0.8; //width of top opponent part compared to total width of the court
-	static const COURT_CORRIDORS_SIZE = 12;
-
+	static const COURT_WIDTH_RATIO = 0.7; //width of the back compared to the front of the court
+	static const COURT_SIDELINE_SIZE = 0.1;
+	static const COURT_LONG_SERVICE_SIZE = 0.05;
+	static const COURT_SHORT_SERVICE_SIZE = 0.1;
 	static const TIME_HEIGHT = Graphics.getFontHeight(Graphics.FONT_SMALL) * 1.1; //height of timer and clock
 	static const SET_BALL_RADIUS = 7; //width reserved to display sets
 
 	public var xCenter;
 	public var yMiddle;
-	public var yBottom;
-	public var yTop;
-
-	public var halfWidthTop;
-	public var halfWidthMiddle;
-	public var halfWidthBottom;
+	public var yFront;
+	public var yBack;
 
 	public var marginHeight;
+
+	public var perspective;
 
 	public var doubleCourt;
 	public var singleCourt;
 
-	public var halfWidthTopCorridor;
-	public var halfWidthBottomCorridor;
-
 	public var corners;
 	public var board;
-
-	public var yScore1;
-	public var yScore2;
 
 	function initialize(device) {
 		//calculate margins
@@ -41,87 +33,88 @@ class MatchBoundaries {
 
 		//calculate strategic positions
 		xCenter = device.screenWidth / 2f;
-		yTop = marginHeight;
+		yBack = marginHeight;
 		if(Application.getApp().getProperty("display_time")) {
-			yTop += TIME_HEIGHT;
+			yBack += TIME_HEIGHT;
 		}
-		yBottom = device.screenHeight - marginHeight - TIME_HEIGHT;
-		yMiddle = BetterMath.weightedMean(yBottom, yTop, COURT_HEIGHT_RATIO);
+		yFront = device.screenHeight - marginHeight - TIME_HEIGHT;
+		yMiddle = BetterMath.mean(yFront, yBack);
+
+		var back_width, front_width;
 
 		//calculate half width of the top, the middle and the base of the court
-		var court_margin = SET_BALL_RADIUS * 2f + margin_width;
+		var court_margin = SET_BALL_RADIUS * 2 + margin_width;
 		//rectangular watches
 		if(device.screenShape == System.SCREEN_SHAPE_RECTANGLE) {
-			halfWidthBottom = (device.screenWidth / 2) - court_margin;
-			halfWidthTop = halfWidthBottom * COURT_WIDTH_RATIO;
+			front_width = (device.screenWidth / 2) - court_margin;
+			back_width = front_width * COURT_WIDTH_RATIO;
 		}
 		//round watches
 		else {
 			var radius = device.screenWidth / 2f;
-			halfWidthTop = Geometry.chordLength(radius, marginHeight) / 2f - court_margin;
-			halfWidthBottom = Geometry.chordLength(radius, TIME_HEIGHT + marginHeight) / 2f - court_margin;
+			front_width = Geometry.chordLength(radius, TIME_HEIGHT + marginHeight) / 2f - court_margin;
+			back_width = Geometry.chordLength(radius, marginHeight) / 2f - court_margin;
 		}
-		halfWidthMiddle = BetterMath.weightedMean(halfWidthBottom, halfWidthTop, COURT_HEIGHT_RATIO);
-		halfWidthTopCorridor = BetterMath.weightedMean(halfWidthBottom, halfWidthTop, COURT_CORRIDORS_SIZE / (yBottom - yTop));
-		halfWidthBottomCorridor = BetterMath.weightedMean(halfWidthBottom, halfWidthTop, 1 - COURT_CORRIDORS_SIZE / (yBottom - yTop));
+
+		//perspective is defined by its two side vanishing lines
+		perspective = new Perspective(
+			[xCenter - front_width, yFront], [xCenter - back_width, yBack],
+			[xCenter + front_width, yFront], [xCenter + back_width, yBack]
+		);
 
 		//caclulate court boundaries coordinates (clockwise, starting from top left point)
-		doubleCourt = [
-			[xCenter - halfWidthTop, yTop],
-			[xCenter + halfWidthTop, yTop],
-			[xCenter + halfWidthBottom, yBottom],
-			[xCenter - halfWidthBottom, yBottom]
-		];
-		singleCourt = [
-			[xCenter - halfWidthTop + COURT_CORRIDORS_SIZE, yTop],
-			[xCenter + halfWidthTop - COURT_CORRIDORS_SIZE, yTop],
-			[xCenter + halfWidthBottom - COURT_CORRIDORS_SIZE, yBottom],
-			[xCenter - halfWidthBottom + COURT_CORRIDORS_SIZE, yBottom]
-		];
+		doubleCourt = perspective.transformArray([
+			[-0.5, 1],
+			[0.5, 1],
+			[0.5, 0],
+			[-0.5, 0]
+		]);
+		singleCourt = perspective.transformArray([
+			[-0.5 + COURT_SIDELINE_SIZE, 1],
+			[0.5 - COURT_SIDELINE_SIZE, 1],
+			[0.5 - COURT_SIDELINE_SIZE, 0],
+			[-0.5 + COURT_SIDELINE_SIZE, 0]
+		]);
 
 		//calculate court corners boundaries coordinates
 		corners = {};
 		//OPPONENT_RIGHT is the top left corner
-		corners[OPPONENT_RIGHT] = [
-			[xCenter - halfWidthTopCorridor + COURT_CORRIDORS_SIZE, yTop + COURT_CORRIDORS_SIZE],
-			[xCenter, yTop + COURT_CORRIDORS_SIZE],
-			[xCenter, yMiddle],
-			[xCenter - halfWidthMiddle + COURT_CORRIDORS_SIZE, yMiddle]
-		];
+		corners[OPPONENT_RIGHT] = perspective.transformArray([
+			[-0.5 + COURT_SIDELINE_SIZE, 1 - COURT_LONG_SERVICE_SIZE],
+			[0, 1 - COURT_LONG_SERVICE_SIZE],
+			[0, 0.5 + COURT_SHORT_SERVICE_SIZE],
+			[-0.5 + COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE]
+		]);
 		//OPPONENT_LEFT is the top right corner
-		corners[OPPONENT_LEFT] = [
-			[xCenter, yTop + COURT_CORRIDORS_SIZE],
-			[xCenter + halfWidthTopCorridor - COURT_CORRIDORS_SIZE, yTop + COURT_CORRIDORS_SIZE],
-			[xCenter + halfWidthMiddle - COURT_CORRIDORS_SIZE, yMiddle],
-			[xCenter, yMiddle]
-		];
+		corners[OPPONENT_LEFT] = perspective.transformArray([
+			[0, 1 - COURT_LONG_SERVICE_SIZE],
+			[0.5 - COURT_SIDELINE_SIZE, 1 - COURT_LONG_SERVICE_SIZE],
+			[0.5 - COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE],
+			[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
+		]);
 		//YOU_LEFT is the bottom left corner
-		corners[YOU_LEFT] = [
-			[xCenter - halfWidthMiddle + COURT_CORRIDORS_SIZE, yMiddle],
-			[xCenter, yMiddle],
-			[xCenter, yBottom - COURT_CORRIDORS_SIZE],
-			[xCenter - halfWidthBottomCorridor + COURT_CORRIDORS_SIZE, yBottom - COURT_CORRIDORS_SIZE]
-		];
+		corners[YOU_LEFT] = perspective.transformArray([
+			[-0.5 + COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0, COURT_LONG_SERVICE_SIZE],
+			[-0.5 + COURT_SIDELINE_SIZE, COURT_LONG_SERVICE_SIZE]
+		]);
 		//YOU_RIGHT is the bottom right corner
-		corners[YOU_RIGHT] = [
-			[xCenter, yMiddle],
-			[xCenter + halfWidthMiddle - COURT_CORRIDORS_SIZE, yMiddle],
-			[xCenter + halfWidthBottomCorridor - COURT_CORRIDORS_SIZE, yBottom - COURT_CORRIDORS_SIZE],
-			[xCenter, yBottom - COURT_CORRIDORS_SIZE]
-		];
-
-		//calculate score vertical positions
-		yScore1 = BetterMath.mean(yBottom, yMiddle);
-		yScore2 = BetterMath.mean(yMiddle, yTop);
+		corners[YOU_RIGHT] = perspective.transformArray([
+			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0.5 - COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0.5 - COURT_SIDELINE_SIZE, COURT_LONG_SERVICE_SIZE],
+			[0, COURT_LONG_SERVICE_SIZE]
+		]);
 
 		//calculate set positions
 		board = new [Match.MAX_SETS];
-		var x_increment = (halfWidthBottom - halfWidthTop) / Match.MAX_SETS;
-		var y_increment = (yBottom - yTop) / Match.MAX_SETS;
 		for(var i = 0; i < Match.MAX_SETS; i++) {
-			var x = xCenter - halfWidthBottom - SET_BALL_RADIUS - 6 + x_increment * i;
-			var y = yBottom - 15 - y_increment * i;
-			board[i] = [x, y];
+			var y = 0.1 + 0.7 * i / Match.MAX_SETS;
+			//dot not align the balls using the real perspective
+			//display them parallel to the left side of the court instead
+			var transformed_coordinates = perspective.transform([-0.5, y]);
+			board[i] = [transformed_coordinates[0] - SET_BALL_RADIUS * 2, transformed_coordinates[1]];
 		}
 	}
 }
@@ -170,18 +163,9 @@ class MatchView extends WatchUi.View {
 	}
 
 	function drawCourt(dc, match) {
-		var x_center = boundaries.xCenter;
-		var y_top = boundaries.yTop;
-		var y_middle = boundaries.yMiddle;
-		var y_bottom = boundaries.yBottom;
-
-		//draw court
-		var double_court = boundaries.doubleCourt;
-		var single_court = boundaries.singleCourt;
-
 		//draw background
 		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
-		dc.fillPolygon(match.getType() == SINGLE ? single_court : double_court);
+		dc.fillPolygon(match.getType() == SINGLE ? boundaries.singleCourt : boundaries.doubleCourt);
 
 		//draw serving corner
 		var serving_corner = match.getServingCorner();
@@ -191,41 +175,47 @@ class MatchView extends WatchUi.View {
 		//draw bounds
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 		dc.setPenWidth(1);
-		UIHelpers.drawPolygon(dc, single_court);
-		UIHelpers.drawPolygon(dc, double_court);
+		//draw left sideline for doubles
+		boundaries.perspective.drawVanishingLine(dc, -0.5);
+		//draw left sideline for singles
+		boundaries.perspective.drawVanishingLine(dc, -0.5 + MatchBoundaries.COURT_SIDELINE_SIZE);
+		//draw middle line in two parts
+		boundaries.perspective.drawPartialVanishingLine(dc, 0, 0, 0.4);
+		boundaries.perspective.drawPartialVanishingLine(dc, 0, 0.6, 1);
+		//draw right sideline for singles
+		boundaries.perspective.drawVanishingLine(dc, 0.5 - MatchBoundaries.COURT_SIDELINE_SIZE);
+		//draw right sideline for doubles
+		boundaries.perspective.drawVanishingLine(dc, 0.5);
 
-		//draw middle lines
-		dc.drawLine(x_center, y_top, x_center, y_bottom);
-		dc.drawLine(x_center - boundaries.halfWidthMiddle, y_middle, x_center + boundaries.halfWidthMiddle, y_middle);
-
-		//draw top and bottom corridors
-		dc.drawLine(
-			x_center - boundaries.halfWidthTopCorridor,
-			double_court[0][1] + MatchBoundaries.COURT_CORRIDORS_SIZE,
-			x_center + boundaries.halfWidthTopCorridor,
-			double_court[1][1] + MatchBoundaries.COURT_CORRIDORS_SIZE
-		);
-		dc.drawLine(
-			x_center - boundaries.halfWidthBottomCorridor,
-			double_court[3][1] - MatchBoundaries.COURT_CORRIDORS_SIZE,
-			x_center + boundaries.halfWidthBottomCorridor,
-			double_court[2][1] - MatchBoundaries.COURT_CORRIDORS_SIZE
-		);
+		//draw front long service line for singles
+		boundaries.perspective.drawTransversalLine(dc, 0);
+		//draw front long service line for doubles
+		boundaries.perspective.drawTransversalLine(dc, MatchBoundaries.COURT_LONG_SERVICE_SIZE);
+		//draw front short service line
+		boundaries.perspective.drawTransversalLine(dc, 0.5 - MatchBoundaries.COURT_SHORT_SERVICE_SIZE);
+		//draw net line
+		boundaries.perspective.drawTransversalLine(dc, 0.5);
+		//draw back short service line
+		boundaries.perspective.drawTransversalLine(dc, 0.5 + MatchBoundaries.COURT_SHORT_SERVICE_SIZE);
+		//draw back long service line for doubles
+		boundaries.perspective.drawTransversalLine(dc, 1 - MatchBoundaries.COURT_LONG_SERVICE_SIZE);
+		//draw back long service line for singles
+		boundaries.perspective.drawTransversalLine(dc, 1);
 
 		//draw a dot for the player 1 (watch carrier) position
-		var player_corner = match.getPlayerCorner();
-		var offset = boundaries.halfWidthBottom - 30;
-		var y_dot = y_bottom - 30;
-		var x_position = player_corner == YOU_LEFT ? (x_center - offset) : (x_center + offset);
+		var player_x = match.getPlayerCorner() == YOU_LEFT ? -0.28 : 0.28;
+		var player_coordinates = boundaries.perspective.transform([player_x, 0.12]);
 		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-		dc.fillCircle(x_position, y_dot, 7);
+		dc.fillCircle(player_coordinates[0], player_coordinates[1], 7);
 	}
 
 	function drawScores(dc, match) {
 		var set = match.getCurrentSet();
 
-		UIHelpers.drawHighlightedNumber(dc, boundaries.xCenter, boundaries.yScore1, SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 2, 4);
-		UIHelpers.drawHighlightedNumber(dc, boundaries.xCenter, boundaries.yScore2, SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 2, 4);
+		var player_1_coordinates = boundaries.perspective.transform([0, 0.25]);
+		var player_2_coordinates = boundaries.perspective.transform([0, 0.75]);
+		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 2, 4);
+		UIHelpers.drawHighlightedNumber(dc, player_2_coordinates[0], player_2_coordinates[1], SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 2, 4);
 	}
 
 	function drawSets(dc, match) {
@@ -255,7 +245,7 @@ class MatchView extends WatchUi.View {
 
 	function drawTimer(dc, match) {
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-		dc.drawText(boundaries.xCenter, boundaries.yBottom + MatchBoundaries.TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Graphics.TEXT_JUSTIFY_CENTER);
+		dc.drawText(boundaries.xCenter, boundaries.yFront + MatchBoundaries.TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, Helpers.formatDuration(match.getDuration()), Graphics.TEXT_JUSTIFY_CENTER);
 	}
 
 	function drawTime(dc) {
