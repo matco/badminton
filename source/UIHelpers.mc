@@ -49,7 +49,7 @@ module UIHelpers {
 		}
 	}
 
-	function drawHighlightedNumber(dc, x, y, font, text, vertical_padding, horizontal_padding) {
+	function drawHighlightedNumber(dc, x, y, font, text, color, vertical_padding, horizontal_padding) {
 		var dimensions = dc.getTextDimensions(text, font);
 		//the font height includes a default top margin that is useless
 		var offset = dimensions[1] * 0.12;
@@ -63,7 +63,7 @@ module UIHelpers {
 		dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
 		dc.fillRoundedRectangle(x - width / 2, y - height / 2, width, height, 5);
 		//draw the score
-		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 		//manually center the text vertically by discarding the top margin and removing half of the real height of the text
 		dc.drawText(x, y - offset - font_height / 2, font, text, Graphics.TEXT_JUSTIFY_CENTER);
 	}

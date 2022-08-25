@@ -211,11 +211,14 @@ class MatchView extends WatchUi.View {
 
 	function drawScores(dc, match) {
 		var set = match.getCurrentSet();
+		var server_team = set.getServerTeam();
 
 		var player_1_coordinates = boundaries.perspective.transform([0, 0.25]);
 		var player_2_coordinates = boundaries.perspective.transform([0, 0.75]);
-		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), 2, 4);
-		UIHelpers.drawHighlightedNumber(dc, player_2_coordinates[0], player_2_coordinates[1], SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), 2, 4);
+		var player_1_color = server_team == YOU ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
+		var player_2_color = server_team == OPPONENT ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
+		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), player_1_color, 2, 4);
+		UIHelpers.drawHighlightedNumber(dc, player_2_coordinates[0], player_2_coordinates[1], SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), player_2_color, 2, 4);
 	}
 
 	function drawSets(dc, match) {
