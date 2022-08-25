@@ -20,13 +20,11 @@ class MatchBoundaries {
 
 	public var perspective;
 
-	public var doubleCourt;
-	public var singleCourt;
-
+	public var court;
 	public var corners;
 	public var board;
 
-	function initialize(device) {
+	function initialize(match, device) {
 		//calculate margins
 		marginHeight = device.screenHeight * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
 		var margin_width = device.screenWidth * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
@@ -63,18 +61,24 @@ class MatchBoundaries {
 		);
 
 		//caclulate court boundaries coordinates (clockwise, starting from top left point)
-		doubleCourt = perspective.transformArray([
-			[-0.5, 1],
-			[0.5, 1],
-			[0.5, 0],
-			[-0.5, 0]
-		]);
-		singleCourt = perspective.transformArray([
-			[-0.5 + COURT_SIDELINE_SIZE, 1],
-			[0.5 - COURT_SIDELINE_SIZE, 1],
-			[0.5 - COURT_SIDELINE_SIZE, 0],
-			[-0.5 + COURT_SIDELINE_SIZE, 0]
-		]);
+		var court_coordinates;
+		if(match.getType() == SINGLE) {
+			court_coordinates = [
+				[-0.5 + COURT_SIDELINE_SIZE, 1],
+				[0.5 - COURT_SIDELINE_SIZE, 1],
+				[0.5 - COURT_SIDELINE_SIZE, 0],
+				[-0.5 + COURT_SIDELINE_SIZE, 0]
+			];
+		}
+		else {
+			court_coordinates = [
+				[-0.5, 1],
+				[0.5, 1],
+				[0.5, 0],
+				[-0.5, 0]
+			];
+		}
+		court = perspective.transformArray(court_coordinates);
 
 		//calculate court corners boundaries coordinates
 		corners = {};
@@ -134,7 +138,8 @@ class MatchView extends WatchUi.View {
 		View.initialize();
 
 		timer = new Timer.Timer();
-		boundaries = new MatchBoundaries(System.getDeviceSettings());
+		var match = Application.getApp().getMatch();
+		boundaries = new MatchBoundaries(match, System.getDeviceSettings());
 	}
 
 	function onShow() {
@@ -158,14 +163,14 @@ class MatchView extends WatchUi.View {
 
 	function onUpdateSettings() {
 		//recalculate boundaries as they may change if "diplay time" setting is updated
-		boundaries = new MatchBoundaries(System.getDeviceSettings());
+		boundaries = new MatchBoundaries(Application.getApp().getMatch(), System.getDeviceSettings());
 		WatchUi.requestUpdate();
 	}
 
 	function drawCourt(dc, match) {
 		//draw background
 		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
-		dc.fillPolygon(match.getType() == SINGLE ? boundaries.singleCourt : boundaries.doubleCourt);
+		dc.fillPolygon(boundaries.court);
 
 		//draw serving corner
 		var serving_corner = match.getServingCorner();
