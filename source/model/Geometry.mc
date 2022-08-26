@@ -18,29 +18,42 @@ The axis system for Perspective is like the perpendicular symbol (⊥):
 class Perspective {
 
 	private var origin;
+	private var height;
 	private var frontWidth;
 	private var backWidth;
-	private var depth; //visible depth
-	private var maxDepth; //maximum depth from the baseline to the perspective point
+	private var depth; //depth from the baseline to the perspective point
+	private var perspective;
 
 	function initialize(front_left_corner, back_left_corner, front_right_corner, back_right_corner) {
 		origin = [
 			BetterMath.mean(front_right_corner[0], front_left_corner[0]),
 			front_left_corner[1]
 		];
+		height = front_left_corner[1] - back_left_corner[1];
 		frontWidth = front_right_corner[0] - front_left_corner[0];
 		backWidth = back_right_corner[0] - back_left_corner[0];
-		depth = front_left_corner[1] - back_left_corner[1];
-		maxDepth = frontWidth * depth / (frontWidth - backWidth);
+		//if back width and front width are equals, it means there is no perpective
+		if(backWidth == frontWidth) {
+			//System.println("No perspective if back width and front width are equal");
+			perspective = false;
+		}
+		else {
+			perspective = true;
+			depth = frontWidth * height / (frontWidth - backWidth);
+		}
 	}
 
 	function transform(coordinate) {
-		return [
-			//x is in [-0.5,0.5] and must be adjusted to the right perspective
-			origin[0] + (maxDepth - coordinate[1] * depth) * coordinate[0] * frontWidth / maxDepth,
-			//y is in [0,1] and must be adjusted to [0,depth]
-			origin[1] - coordinate[1] * depth
-		];
+		//y is in [0,1] and must be scaled to [0,height]
+		var adjusted_y = coordinate[1] * height;
+		//x is in [-0.5,0.5] and must be scaled [-frontWidth / 2,frontWidth / 2]
+		var adjusted_x = coordinate[0] * frontWidth;
+		//x must be adjusted to the perspective if any
+		if(perspective) {
+			adjusted_x = adjusted_x - adjusted_y * adjusted_x / depth;
+		}
+		//finally, translate scaled coordinates in the watch coordinates
+		return [origin[0] + adjusted_x, origin[1] - adjusted_y];
 	}
 
 	function transformArray(coordinates) {
