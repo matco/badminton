@@ -11,7 +11,10 @@ class MatchBoundaries {
 	static const TIME_HEIGHT = Graphics.getFontHeight(Graphics.FONT_SMALL) * 1.1; //height of timer and clock
 	static const SET_BALL_RADIUS = 7; //width reserved to display sets
 
+	//center of the watch
 	public var xCenter;
+	public var yCenter;
+
 	public var yMiddle;
 	public var yFront;
 	public var yBack;
@@ -31,6 +34,8 @@ class MatchBoundaries {
 
 		//calculate strategic positions
 		xCenter = device.screenWidth / 2f;
+		yCenter = device.screenHeight / 2f;
+
 		yBack = marginHeight;
 		if(Application.getApp().getProperty("display_time")) {
 			yBack += TIME_HEIGHT;
@@ -40,7 +45,7 @@ class MatchBoundaries {
 
 		var back_width, front_width;
 
-		//calculate half width of the top, the middle and the base of the court
+		//calculate half widths of the front and the back of the court
 		var court_margin = SET_BALL_RADIUS * 2 + margin_width;
 		//rectangular watches
 		if(device.screenShape == System.SCREEN_SHAPE_RECTANGLE) {
@@ -50,8 +55,8 @@ class MatchBoundaries {
 		//round watches
 		else {
 			var radius = device.screenWidth / 2f;
-			front_width = Geometry.chordLength(radius, TIME_HEIGHT + marginHeight) / 2f - court_margin;
-			back_width = Geometry.chordLength(radius, marginHeight) / 2f - court_margin;
+			front_width = Geometry.chordLength(radius, yFront - yCenter) / 2f - court_margin;
+			back_width = Geometry.chordLength(radius, yCenter - yBack) / 2f - court_margin;
 		}
 
 		//perspective is defined by its two side vanishing lines

@@ -2,8 +2,8 @@ using Toybox.Math;
 
 module Geometry {
 
-	function chordLength(radius, distance) {
-		return 2 * Math.sqrt(distance * (2 * radius - distance));
+	function chordLength(radius, inner_radius) {
+		return 2 * Math.sqrt(Math.pow(radius, 2) - Math.pow(inner_radius, 2));
 	}
 }
 
