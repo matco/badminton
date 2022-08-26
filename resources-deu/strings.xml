@@ -55,6 +55,8 @@
 	<string id="settings_default_match_number_of_sets">Standardanzahl der Sätze</string>
 
 	<string id="settings_enable_sound">Töne einschalten</string>
+	<string id="settings_enable_animation">Animation aktivieren</string>
+
 	<string id="settings_display_time">Anzeige der Uhrzeit</string>
 	<string id="settings_display_heart_rate">Heartbeat-Anzeige aktivieren</string>
 

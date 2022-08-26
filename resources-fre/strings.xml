@@ -55,6 +55,8 @@
 	<string id="settings_default_match_number_of_sets">Nombre de sets par défaut</string>
 
 	<string id="settings_enable_sound">Activer les sons</string>
+	<string id="settings_enable_animation">Activer les animations</string>
+
 	<string id="settings_display_time">Afficher l'heure</string>
 	<string id="settings_display_heart_rate">Afficher la fréquence cardiaque</string>
 
