@@ -141,8 +141,11 @@ class MatchView extends WatchUi.View {
 
 	function initialize() {
 		View.initialize();
-
+		calculateBoundaries();
 		timer = new Timer.Timer();
+	}
+
+	function calculateBoundaries() {
 		var match = Application.getApp().getMatch();
 		boundaries = new MatchBoundaries(match, System.getDeviceSettings());
 	}
@@ -167,8 +170,8 @@ class MatchView extends WatchUi.View {
 	}
 
 	function onUpdateSettings() {
-		//recalculate boundaries as they may change if "diplay time" setting is updated
-		boundaries = new MatchBoundaries(Application.getApp().getMatch(), System.getDeviceSettings());
+		//recalculate boundaries as they may change if "display time" setting is updated
+		calculateBoundaries();
 		WatchUi.requestUpdate();
 	}
 
