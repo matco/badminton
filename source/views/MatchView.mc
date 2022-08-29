@@ -87,34 +87,66 @@ class MatchBoundaries {
 
 		//calculate court corners boundaries coordinates
 		corners = {};
-		//OPPONENT_RIGHT is the top left corner
-		corners[OPPONENT_RIGHT] = perspective.transformArray([
-			[-0.5 + COURT_SIDELINE_SIZE, 1 - COURT_LONG_SERVICE_SIZE],
-			[0, 1 - COURT_LONG_SERVICE_SIZE],
-			[0, 0.5 + COURT_SHORT_SERVICE_SIZE],
-			[-0.5 + COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE]
-		]);
-		//OPPONENT_LEFT is the top right corner
-		corners[OPPONENT_LEFT] = perspective.transformArray([
-			[0, 1 - COURT_LONG_SERVICE_SIZE],
-			[0.5 - COURT_SIDELINE_SIZE, 1 - COURT_LONG_SERVICE_SIZE],
-			[0.5 - COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE],
-			[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
-		]);
-		//YOU_LEFT is the bottom left corner
-		corners[YOU_LEFT] = perspective.transformArray([
-			[-0.5 + COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
-			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
-			[0, COURT_LONG_SERVICE_SIZE],
-			[-0.5 + COURT_SIDELINE_SIZE, COURT_LONG_SERVICE_SIZE]
-		]);
-		//YOU_RIGHT is the bottom right corner
-		corners[YOU_RIGHT] = perspective.transformArray([
-			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
-			[0.5 - COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
-			[0.5 - COURT_SIDELINE_SIZE, COURT_LONG_SERVICE_SIZE],
-			[0, COURT_LONG_SERVICE_SIZE]
-		]);
+		if(match.getType() == SINGLE) {
+			//OPPONENT_RIGHT is the top left corner
+			corners[OPPONENT_RIGHT] = perspective.transformArray([
+				[-0.5 + COURT_SIDELINE_SIZE, 1],
+				[0, 1],
+				[0, 0.5 + COURT_SHORT_SERVICE_SIZE],
+				[-0.5 + COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE]
+			]);
+			//OPPONENT_LEFT is the top right corner
+			corners[OPPONENT_LEFT] = perspective.transformArray([
+				[0, 1],
+				[0.5 - COURT_SIDELINE_SIZE, 1],
+				[0.5 - COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE],
+				[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
+			]);
+			//YOU_LEFT is the bottom left corner
+			corners[YOU_LEFT] = perspective.transformArray([
+				[-0.5 + COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
+				[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+				[0, 0],
+				[-0.5 + COURT_SIDELINE_SIZE, 0]
+			]);
+			//YOU_RIGHT is the bottom right corner
+			corners[YOU_RIGHT] = perspective.transformArray([
+				[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+				[0.5 - COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
+				[0.5 - COURT_SIDELINE_SIZE, 0],
+				[0, 0]
+			]);
+		}
+		else {
+			//OPPONENT_RIGHT is the top left corner
+			corners[OPPONENT_RIGHT] = perspective.transformArray([
+				[-0.5, 1 - COURT_LONG_SERVICE_SIZE],
+				[0, 1 - COURT_LONG_SERVICE_SIZE],
+				[0, 0.5 + COURT_SHORT_SERVICE_SIZE],
+				[-0.5, 0.5 + COURT_SHORT_SERVICE_SIZE]
+			]);
+			//OPPONENT_LEFT is the top right corner
+			corners[OPPONENT_LEFT] = perspective.transformArray([
+				[0, 1 - COURT_LONG_SERVICE_SIZE],
+				[0.5, 1 - COURT_LONG_SERVICE_SIZE],
+				[0.5, 0.5 + COURT_SHORT_SERVICE_SIZE],
+				[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
+			]);
+			//YOU_LEFT is the bottom left corner
+			corners[YOU_LEFT] = perspective.transformArray([
+				[-0.5, 0.5 - COURT_SHORT_SERVICE_SIZE],
+				[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+				[0, COURT_LONG_SERVICE_SIZE],
+				[-0.5, COURT_LONG_SERVICE_SIZE]
+			]);
+			//YOU_RIGHT is the bottom right corner
+			corners[YOU_RIGHT] = perspective.transformArray([
+				[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+				[0.5, 0.5 - COURT_SHORT_SERVICE_SIZE],
+				[0.5, COURT_LONG_SERVICE_SIZE],
+				[0, COURT_LONG_SERVICE_SIZE]
+			]);
+		}
 
 		//calculate set positions
 		board = new [Match.MAX_SETS];
@@ -180,10 +212,12 @@ class MatchView extends WatchUi.View {
 		dc.setColor(Graphics.COLOR_DK_GREEN, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon(boundaries.court);
 
-		//draw serving corner
+		//draw serving and receiving corners
 		var serving_corner = match.getServingCorner();
+		var receiving_corner = match.getReceivingCorner();
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
 		dc.fillPolygon(boundaries.corners[serving_corner]);
+		dc.fillPolygon(boundaries.corners[receiving_corner]);
 
 		//draw bounds
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);

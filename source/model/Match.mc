@@ -38,6 +38,13 @@ class MatchConfig {
 class Match {
 	static const MAX_SETS = 5;
 
+	const OPPOSITE_CORNER = {
+		OPPONENT_RIGHT => YOU_RIGHT,
+		OPPONENT_LEFT => YOU_LEFT,
+		YOU_LEFT => OPPONENT_LEFT,
+		YOU_RIGHT => OPPONENT_RIGHT
+	};
+
 	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
 	const TOTAL_SCORE_PLAYER_2_FIELD_ID = 1;
 	const SET_WON_PLAYER_1_FIELD_ID = 2;
@@ -257,6 +264,11 @@ class Match {
 
 	function getServingCorner() {
 		return getCurrentSet().getServingCorner();
+	}
+
+	function getReceivingCorner() {
+		var serving_corner = getServingCorner();
+		return OPPOSITE_CORNER[serving_corner];
 	}
 
 	function getPlayerIsServer() {
