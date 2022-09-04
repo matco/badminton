@@ -8,6 +8,81 @@ class MatchBoundaries {
 	static const COURT_SIDELINE_SIZE = 0.1;
 	static const COURT_LONG_SERVICE_SIZE = 0.05;
 	static const COURT_SHORT_SERVICE_SIZE = 0.1;
+	//court boundaries coordinates (clockwise, starting from top left point)
+	static const COURT_SINGLE = [
+		[-0.5 + COURT_SIDELINE_SIZE, 1],
+		[0.5 - COURT_SIDELINE_SIZE, 1],
+		[0.5 - COURT_SIDELINE_SIZE, 0],
+		[-0.5 + COURT_SIDELINE_SIZE, 0]
+	];
+	static const COURT_DOUBLE = [
+		[-0.5, 1],
+		[0.5, 1],
+		[0.5, 0],
+		[-0.5, 0]
+	];
+	//corners boundaries coordinate
+	static const COURT_SINGLE_CORNERS = {
+		//OPPONENT_RIGHT is the top left corner
+		OPPONENT_RIGHT => [
+			[-0.5 + COURT_SIDELINE_SIZE, 1],
+			[0, 1],
+			[0, 0.5 + COURT_SHORT_SERVICE_SIZE],
+			[-0.5 + COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE]
+		],
+		//OPPONENT_LEFT is the top right corner
+		OPPONENT_LEFT => [
+			[0, 1],
+			[0.5 - COURT_SIDELINE_SIZE, 1],
+			[0.5 - COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE],
+			[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
+		],
+		//YOU_LEFT is the bottom left corner
+		YOU_LEFT => [
+			[-0.5 + COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0, 0],
+			[-0.5 + COURT_SIDELINE_SIZE, 0]
+		],
+		//YOU_RIGHT is the bottom right corner
+		YOU_RIGHT => [
+			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0.5 - COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0.5 - COURT_SIDELINE_SIZE, 0],
+			[0, 0]
+		]
+	};
+	static const COURT_DOUBLE_CORNERS = {
+		//OPPONENT_RIGHT is the top left corner
+		OPPONENT_RIGHT => [
+			[-0.5, 1 - COURT_LONG_SERVICE_SIZE],
+			[0, 1 - COURT_LONG_SERVICE_SIZE],
+			[0, 0.5 + COURT_SHORT_SERVICE_SIZE],
+			[-0.5, 0.5 + COURT_SHORT_SERVICE_SIZE]
+		],
+		//OPPONENT_LEFT is the top right corner
+		OPPONENT_LEFT => [
+			[0, 1 - COURT_LONG_SERVICE_SIZE],
+			[0.5, 1 - COURT_LONG_SERVICE_SIZE],
+			[0.5, 0.5 + COURT_SHORT_SERVICE_SIZE],
+			[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
+		],
+		//YOU_LEFT is the bottom left corner
+		YOU_LEFT => [
+			[-0.5, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0, COURT_LONG_SERVICE_SIZE],
+			[-0.5, COURT_LONG_SERVICE_SIZE]
+		],
+		//YOU_RIGHT is the bottom right corner
+		YOU_RIGHT => [
+			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0.5, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0.5, COURT_LONG_SERVICE_SIZE],
+			[0, COURT_LONG_SERVICE_SIZE]
+		]
+	};
+
 	static const TIME_HEIGHT = Graphics.getFontHeight(Graphics.FONT_SMALL) * 1.1; //height of timer and clock
 	static const SET_BALL_RADIUS = 7; //width reserved to display sets
 
@@ -65,88 +140,17 @@ class MatchBoundaries {
 			[xCenter + front_width, yFront], [xCenter + back_width, yBack]
 		);
 
-		//caclulate court boundaries coordinates (clockwise, starting from top left point)
-		var court_coordinates;
-		if(match.getType() == SINGLE) {
-			court_coordinates = [
-				[-0.5 + COURT_SIDELINE_SIZE, 1],
-				[0.5 - COURT_SIDELINE_SIZE, 1],
-				[0.5 - COURT_SIDELINE_SIZE, 0],
-				[-0.5 + COURT_SIDELINE_SIZE, 0]
-			];
-		}
-		else {
-			court_coordinates = [
-				[-0.5, 1],
-				[0.5, 1],
-				[0.5, 0],
-				[-0.5, 0]
-			];
-		}
-		court = perspective.transformArray(court_coordinates);
+		//select court boundaries coordinates (clockwise, starting from top left point)
+		court = perspective.transformArray(match.getType() == SINGLE ? COURT_SINGLE : COURT_DOUBLE);
 
 		//calculate court corners boundaries coordinates
-		corners = {};
-		if(match.getType() == SINGLE) {
-			//OPPONENT_RIGHT is the top left corner
-			corners[OPPONENT_RIGHT] = perspective.transformArray([
-				[-0.5 + COURT_SIDELINE_SIZE, 1],
-				[0, 1],
-				[0, 0.5 + COURT_SHORT_SERVICE_SIZE],
-				[-0.5 + COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE]
-			]);
-			//OPPONENT_LEFT is the top right corner
-			corners[OPPONENT_LEFT] = perspective.transformArray([
-				[0, 1],
-				[0.5 - COURT_SIDELINE_SIZE, 1],
-				[0.5 - COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE],
-				[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
-			]);
-			//YOU_LEFT is the bottom left corner
-			corners[YOU_LEFT] = perspective.transformArray([
-				[-0.5 + COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
-				[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
-				[0, 0],
-				[-0.5 + COURT_SIDELINE_SIZE, 0]
-			]);
-			//YOU_RIGHT is the bottom right corner
-			corners[YOU_RIGHT] = perspective.transformArray([
-				[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
-				[0.5 - COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
-				[0.5 - COURT_SIDELINE_SIZE, 0],
-				[0, 0]
-			]);
-		}
-		else {
-			//OPPONENT_RIGHT is the top left corner
-			corners[OPPONENT_RIGHT] = perspective.transformArray([
-				[-0.5, 1 - COURT_LONG_SERVICE_SIZE],
-				[0, 1 - COURT_LONG_SERVICE_SIZE],
-				[0, 0.5 + COURT_SHORT_SERVICE_SIZE],
-				[-0.5, 0.5 + COURT_SHORT_SERVICE_SIZE]
-			]);
-			//OPPONENT_LEFT is the top right corner
-			corners[OPPONENT_LEFT] = perspective.transformArray([
-				[0, 1 - COURT_LONG_SERVICE_SIZE],
-				[0.5, 1 - COURT_LONG_SERVICE_SIZE],
-				[0.5, 0.5 + COURT_SHORT_SERVICE_SIZE],
-				[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
-			]);
-			//YOU_LEFT is the bottom left corner
-			corners[YOU_LEFT] = perspective.transformArray([
-				[-0.5, 0.5 - COURT_SHORT_SERVICE_SIZE],
-				[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
-				[0, COURT_LONG_SERVICE_SIZE],
-				[-0.5, COURT_LONG_SERVICE_SIZE]
-			]);
-			//YOU_RIGHT is the bottom right corner
-			corners[YOU_RIGHT] = perspective.transformArray([
-				[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
-				[0.5, 0.5 - COURT_SHORT_SERVICE_SIZE],
-				[0.5, COURT_LONG_SERVICE_SIZE],
-				[0, COURT_LONG_SERVICE_SIZE]
-			]);
-		}
+		var corner_coordinates = match.getType() == SINGLE ? COURT_SINGLE_CORNERS : COURT_DOUBLE_CORNERS;
+		corners = {
+			OPPONENT_RIGHT => perspective.transformArray(corner_coordinates[OPPONENT_RIGHT]),
+			OPPONENT_LEFT => perspective.transformArray(corner_coordinates[OPPONENT_LEFT]),
+			YOU_LEFT => perspective.transformArray(corner_coordinates[YOU_LEFT]),
+			YOU_RIGHT => perspective.transformArray(corner_coordinates[YOU_RIGHT])
+		};
 
 		//calculate set positions
 		board = new [Match.MAX_SETS];
