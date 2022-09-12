@@ -295,7 +295,7 @@ class Match {
 		var rallies = current_set.getRallies();
 		//initialize the corner differently depending on which team begins the set and which player starts to serve
 		//while the player 1 team (watch carrier) did not get a service, the position of the player depends on who has been configured to serve first (among the player and his teammate)
-		var corner = beginner == YOU ? server ? 3 : 2 : server ? 2 : 3;
+		var corner = beginner == YOU ? server ? YOU_RIGHT : YOU_LEFT : server ? YOU_LEFT : YOU_RIGHT;
 		for(var i = 0; i < rallies.size(); i++) {
 			var previous_rally = i > 0 ? rallies.get(i - 1) : beginner;
 			var current_rally = rallies.get(i);
