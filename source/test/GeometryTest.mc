@@ -1,5 +1,3 @@
-using Toybox.Time as Time;
-
 module GeometryTest {
 
 	(:test)

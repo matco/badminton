@@ -1,4 +1,4 @@
-using Toybox.Time as Time;
+using Toybox.Time;
 
 module HelpersTest {
 

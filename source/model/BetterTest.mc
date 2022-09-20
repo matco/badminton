@@ -1,4 +1,4 @@
-using Toybox.Test as Test;
+using Toybox.Test;
 
 module BetterTest {
 
