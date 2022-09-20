@@ -22,7 +22,6 @@ class Perspective {
 	private var frontWidth;
 	private var backWidth;
 	private var depth; //depth from the baseline to the perspective point
-	private var perspective;
 
 	function initialize(front_left_corner, back_left_corner, front_right_corner, back_right_corner) {
 		origin = [
@@ -35,10 +34,9 @@ class Perspective {
 		//if back width and front width are equals, it means there is no perpective
 		if(backWidth == frontWidth) {
 			//System.println("No perspective if back width and front width are equal");
-			perspective = false;
+			depth = null;
 		}
 		else {
-			perspective = true;
 			depth = frontWidth * height / (frontWidth - backWidth);
 		}
 	}
@@ -49,7 +47,7 @@ class Perspective {
 		//x is in [-0.5,0.5] and must be scaled [-frontWidth / 2,frontWidth / 2]
 		var adjusted_x = coordinate[0] * frontWidth;
 		//x must be adjusted to the perspective if any
-		if(perspective) {
+		if(depth != null) {
 			adjusted_x = adjusted_x - adjusted_y * adjusted_x / depth;
 		}
 		//finally, translate scaled coordinates in the watch coordinates
