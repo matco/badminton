@@ -1,4 +1,4 @@
-<layout id="stats">
+<layout id="activity_stats">
 	<label x="center" y="25" text="@Strings.stats_title" color="Graphics.COLOR_WHITE" justification="Graphics.TEXT_JUSTIFY_CENTER" />
 	<label id="stats_average_heart_rate" x="center" y="70" font="Graphics.FONT_SMALL" color="Graphics.COLOR_WHITE" justification="Graphics.TEXT_JUSTIFY_CENTER" />
 	<label id="stats_max_heart_rate" x="center" y="100" font="Graphics.FONT_SMALL" color="Graphics.COLOR_WHITE" justification="Graphics.TEXT_JUSTIFY_CENTER" />

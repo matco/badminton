@@ -1,0 +1,22 @@
+name: Test
+
+permissions:
+  contents: read
+
+# this will be executed on every push on a branch (hence on every commit), but not when pushing a tag
+on:
+  push:
+    branches:
+      - master
+      - dev
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Test application
+        id: run_tests
+        uses: matco/action-connectiq-tester@v1
+        with:
+          device: fenix7

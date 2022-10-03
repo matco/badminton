@@ -71,7 +71,7 @@ class ResultViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onNextPage() {
-		WatchUi.switchToView(new StatsView(), new StatsViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+		WatchUi.switchToView(new ActivityStatsView(), new ActivityStatsViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 }

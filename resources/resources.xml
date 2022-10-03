@@ -1,21 +1,6 @@
 <resources>
 	<bitmap id="application_launcher_icon" filename="images/application_launcher_icon.png" />
 
-	<!--
-	<drawable-list id="court_player_2_left" foreground="Graphics.COLOR_WHITE">
-		<shape type="polygon" points="[[70,20], [108,20], [108,80], [50,80]]" />
-	</drawable-list>
-	<drawable-list id="court_player_2_right" foreground="Graphics.COLOR_WHITE">
-		<shape type="polygon" points="[[110,20], [150,20], [170,80], [110,80]]" />
-	</drawable-list>
-	<drawable-list id="court_player_1_left" foreground="Graphics.COLOR_WHITE">
-		<shape type="polygon" points="[[50,85], [108,85], [108,160], [30,160]]" />
-	</drawable-list>
-	<drawable-list id="court_player_1_right" foreground="Graphics.COLOR_WHITE">
-		<shape type="polygon" points="[[110,85], [170,85], [190,160], [110,160]]" />
-	</drawable-list>
-	-->
-
 	<fitContributions>
 		<fitField
 			id="0"
