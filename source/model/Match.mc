@@ -36,7 +36,7 @@ class MatchConfig {
 }
 
 class Match {
-	static const MAX_SETS = 5;
+	static const MAX_SETS = 11;
 
 	const OPPOSITE_CORNER = {
 		OPPONENT_RIGHT => YOU_RIGHT,
@@ -51,6 +51,7 @@ class Match {
 	const SET_WON_PLAYER_2_FIELD_ID = 3;
 	const SET_SCORE_PLAYER_1_FIELD_ID = 4;
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
+	const SET_SCORE = 6;
 
 	private var type; //type of the match, SINGLE or DOUBLE
 	private var sets; //array of all sets, containing null for a set not played
@@ -159,7 +160,6 @@ class Match {
 				var match_winner = isWon();
 				if(match_winner != null) {
 					end(match_winner);
-
 					//manage activity session
 					fieldSetPlayer1.setData(getSetsWon(YOU));
 					fieldSetPlayer2.setData(getSetsWon(OPPONENT));

@@ -84,7 +84,7 @@ class MatchBoundaries {
 	};
 
 	static const TIME_HEIGHT = Graphics.getFontHeight(Graphics.FONT_SMALL) * 1.1; //height of timer and clock
-	static const SET_BALL_RADIUS = 7; //width reserved to display sets
+	public var SET_BALL_RADIUS; //width reserved to display sets
 
 	//center of the watch
 	public var xCenter;
@@ -119,7 +119,15 @@ class MatchBoundaries {
 		yMiddle = BetterMath.mean(yFront, yBack);
 
 		var back_width, front_width;
-
+		if(match.getSetsNumber() <= 5){
+			 SET_BALL_RADIUS = 7;
+		}else if(match.getSetsNumber() == 7){
+			SET_BALL_RADIUS = 5;
+		}else if(match.getSetsNumber() == 9){
+			SET_BALL_RADIUS = 4;
+		}else if(match.getSetsNumber() == 11){
+			SET_BALL_RADIUS = 3;
+		}
 		//calculate half widths of the front and the back of the court
 		var court_margin = SET_BALL_RADIUS * 2 + margin_width;
 		//rectangular watches
@@ -153,9 +161,9 @@ class MatchBoundaries {
 		};
 
 		//calculate set positions
-		board = new [Match.MAX_SETS];
-		for(var i = 0; i < Match.MAX_SETS; i++) {
-			var y = 0.1 + 0.7 * i / Match.MAX_SETS;
+		board = new [match.getSetsNumber()];
+		for(var i = 0; i < match.getSetsNumber(); i++) {
+			var y = 0.1 + 0.7 * i / match.getSetsNumber();
 			//dot not align the balls using the real perspective
 			//display them parallel to the left side of the court instead
 			var transformed_coordinates = perspective.transform([-0.5, y]);
@@ -292,7 +300,7 @@ class MatchView extends WatchUi.View {
 					}
 				}
 				dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-				dc.fillCircle(boundaries.board[i][0], boundaries.board[i][1], MatchBoundaries.SET_BALL_RADIUS);
+				dc.fillCircle(boundaries.board[i][0], boundaries.board[i][1], boundaries.SET_BALL_RADIUS);
 			}
 		}
 	}
