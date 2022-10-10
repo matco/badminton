@@ -335,10 +335,10 @@ class MatchView extends WatchUi.View {
 			if((hbpm > 90)&&(hbpm < 130)){
 				color= Graphics.COLOR_YELLOW;
 				dc.drawBitmap( boundaries.hbpm_img_coordinate[0], boundaries.hbpm_img_coordinate[1], hbpm_image_y);
-			} else if((hbpm > 130)&&(hbpm < 160)){
+			} else if((hbpm >= 130)&&(hbpm < 160)){
 				color= Graphics.COLOR_ORANGE;
 				dc.drawBitmap( boundaries.hbpm_img_coordinate[0], boundaries.hbpm_img_coordinate[1], hbpm_image_o);
-			}else if(hbpm > 160){
+			}else if(hbpm >= 160){
 				color= Graphics.COLOR_RED;
 				dc.drawBitmap( boundaries.hbpm_img_coordinate[0], boundaries.hbpm_img_coordinate[1], hbpm_image_r);
 			}else {
