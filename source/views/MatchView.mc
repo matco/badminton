@@ -2,6 +2,7 @@ using Toybox.Application;
 using Toybox.Graphics;
 using Toybox.WatchUi;
 using Toybox.Timer;
+using Toybox.Activity as act;
 
 class MatchBoundaries {
 	static const COURT_WIDTH_RATIO = 0.7; //width of the back compared to the front of the court
@@ -93,7 +94,8 @@ class MatchBoundaries {
 	public var yMiddle;
 	public var yFront;
 	public var yBack;
-
+	public var hbpm_coordinate;
+	public var hbpm_img_coordinate;
 	public var marginHeight;
 
 	public var perspective;
@@ -147,7 +149,9 @@ class MatchBoundaries {
 			[xCenter - front_width, yFront], [xCenter - back_width, yBack],
 			[xCenter + front_width, yFront], [xCenter + back_width, yBack]
 		);
-
+		hbpm_coordinate	= perspective.transform([0.60,0.60]);
+		hbpm_img_coordinate	= perspective.transform([0.60,0.80]);
+		
 		//select court boundaries coordinates (clockwise, starting from top left point)
 		court = perspective.transformArray(match.getType() == SINGLE ? COURT_SINGLE : COURT_DOUBLE);
 
@@ -182,11 +186,19 @@ class MatchView extends WatchUi.View {
 	private var clock24Hour;
 	private var timeAMLabel;
 	private var timePMLabel;
+	private var hbpm_image_r;
+	private var hbpm_image_o;
+	private var hbpm_image_y;
+	private var hbpm_image_g;
 
 	function initialize() {
 		View.initialize();
 		calculateBoundaries();
 		timer = new Timer.Timer();
+		hbpm_image_r = Application.getApp().loadResource(Rez.Drawables.hbpm_icon_r);
+		hbpm_image_o = Application.getApp().loadResource(Rez.Drawables.hbpm_icon_o);
+		hbpm_image_y = Application.getApp().loadResource(Rez.Drawables.hbpm_icon_y);
+		hbpm_image_g = Application.getApp().loadResource(Rez.Drawables.hbpm_icon_g);
 	}
 
 	function calculateBoundaries() {
@@ -315,6 +327,28 @@ class MatchView extends WatchUi.View {
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 		dc.drawText(boundaries.xCenter, boundaries.marginHeight - MatchBoundaries.TIME_HEIGHT * 0.1, Graphics.FONT_SMALL, time_label, Graphics.TEXT_JUSTIFY_CENTER);
 	}
+	function drawHbpm(dc) {		
+		var hbpm = act.getActivityInfo().currentHeartRate;
+		var color = Graphics.COLOR_GREEN;
+
+		if(hbpm != null) {
+			if((hbpm > 90)&&(hbpm < 130)){
+				color= Graphics.COLOR_YELLOW;
+				dc.drawBitmap( boundaries.hbpm_img_coordinate[0], boundaries.hbpm_img_coordinate[1], hbpm_image_y);
+			} else if((hbpm > 130)&&(hbpm < 160)){
+				color= Graphics.COLOR_ORANGE;
+				dc.drawBitmap( boundaries.hbpm_img_coordinate[0], boundaries.hbpm_img_coordinate[1], hbpm_image_o);
+			}else if(hbpm > 160){
+				color= Graphics.COLOR_RED;
+				dc.drawBitmap( boundaries.hbpm_img_coordinate[0], boundaries.hbpm_img_coordinate[1], hbpm_image_r);
+			}else {
+				dc.drawBitmap( boundaries.hbpm_img_coordinate[0], boundaries.hbpm_img_coordinate[1], hbpm_image_g);
+			}			
+			dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+			dc.drawText(boundaries.hbpm_coordinate[0], boundaries.hbpm_coordinate[1], Graphics.FONT_SYSTEM_XTINY, act.getActivityInfo().currentHeartRate, Graphics.TEXT_JUSTIFY_LEFT);					
+		}
+	}
+	
 
 	function onUpdate(dc) {
 		//when onUpdate is called, the entire view is cleared (hence the badminton court) on some watches (reported by users with vivoactive 4 and venu)
@@ -334,6 +368,9 @@ class MatchView extends WatchUi.View {
 		drawScores(dc, match);
 		drawSets(dc, match);
 		drawTimer(dc, match);
+		if(app.getProperty("enable_hbpm")) {
+			drawHbpm(dc);
+		}
 
 		if(app.getProperty("display_time")) {
 			drawTime(dc);

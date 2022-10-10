@@ -55,6 +55,7 @@
 	<string id="settings_default_match_number_of_sets">Nombre de sets par défaut</string>
 
 	<string id="settings_enable_sound">Activer les sons</string>
+	<string id="settings_enable_hbpm">Activer l'affichage des battements cardiaques</string>
 	<string id="settings_display_time">Afficher l'heure</string>
 
 	<string id="fit_activity_name">Badminton</string>

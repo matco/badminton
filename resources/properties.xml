@@ -2,6 +2,7 @@
 	<property id="maximum_points" type="number">21</property>
 	<property id="absolute_maximum_points" type="number">30</property>
 	<property id="enable_sound" type="boolean">true</property>
+	<property id="enable_hbpm" type="boolean">true</property>
 	<property id="display_time" type="boolean">false</property>
 	<property id="default_match_type" type="number">0</property>
 	<property id="default_match_number_of_sets" type="number">0</property>

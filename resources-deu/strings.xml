@@ -55,6 +55,7 @@
 	<string id="settings_default_match_number_of_sets">Standardanzahl der Sätze</string>
 
 	<string id="settings_enable_sound">Töne einschalten</string>
+		<string id="settings_enable_hbpm">Heartbeat-Anzeige aktivieren</string>
 	<string id="settings_display_time">Anzeige der Uhrzeit</string>
 
 	<string id="fit_activity_name">Badminton</string>

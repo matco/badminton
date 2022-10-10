@@ -1,6 +1,9 @@
 <resources>
 	<bitmap id="application_launcher_icon" filename="images/application_launcher_icon.png" />
-
+	<bitmap id="hbpm_icon_r" filename="images/hbpm_icon_r.png" dithering="none" />
+	<bitmap id="hbpm_icon_o" filename="images/hbpm_icon_o.png" dithering="none" />
+	<bitmap id="hbpm_icon_y" filename="images/hbpm_icon_y.png" dithering="none" />
+	<bitmap id="hbpm_icon_g" filename="images/hbpm_icon_g.png" dithering="none" />
 	<fitContributions>
 		<fitField
 			id="0"
