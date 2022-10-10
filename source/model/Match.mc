@@ -102,6 +102,9 @@ class Match {
 
 	function save() {
 		//session can only be save once
+		fieldSetPlayer1.setData(getSetsWon(YOU));
+		fieldSetPlayer2.setData(getSetsWon(OPPONENT));
+		session.stop();
 		session.save();
 	}
 
@@ -118,6 +121,8 @@ class Match {
 	function nextSet() {
 		//manage activity session
 		session.addLap();
+		fieldSetScorePlayer1.setData(0);
+		fieldSetScorePlayer2.setData(0);
 
 		//the player who won the previous game will serve first in the next set
 		var i = getCurrentSetIndex();
@@ -147,25 +152,16 @@ class Match {
 		if(!hasEnded()) {
 			var set = getCurrentSet();
 			set.score(scorer);
-
+			// update lap score 
+			fieldSetScorePlayer1.setData(set.getScore(YOU));
+			fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 			//detect if match has a set winner
 			var set_winner = isSetWon(set);
 			if(set_winner != null) {
 				set.end(set_winner);
-
-				//manage activity session
-				fieldSetScorePlayer1.setData(set.getScore(YOU));
-				fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
-
 				var match_winner = isWon();
 				if(match_winner != null) {
 					end(match_winner);
-					//manage activity session
-					fieldSetPlayer1.setData(getSetsWon(YOU));
-					fieldSetPlayer2.setData(getSetsWon(OPPONENT));
-					fieldScorePlayer1.setData(getTotalScore(YOU));
-					fieldScorePlayer2.setData(getTotalScore(OPPONENT));
-					session.stop();
 				}
 			}
 		}
