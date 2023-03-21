@@ -88,8 +88,15 @@ class Match {
 		maximumPoints = config.maximumPoints as Number;
 		absoluteMaximumPoints = config.absoluteMaximumPoints as Number;
 
+		//determine sport and subsport
+		//it would be better to use feature detection instead of checking the version, but this does not work, see IQTest.mc
+		var version = System.getDeviceSettings().monkeyVersion;
+		var v410 = version[0] > 4 || version[0] == 4 && version[1] >= 1;
+		var sport = v410 ? Activity.SPORT_RACKET : ActivityRecording.SPORT_GENERIC;
+		var sub_sport = v410 ? Activity.SUB_SPORT_BADMINTON : ActivityRecording.SUB_SPORT_MATCH;
+
 		//manage activity session
-		session = ActivityRecording.createSession({:sport => ActivityRecording.SPORT_GENERIC, :subSport => ActivityRecording.SUB_SPORT_MATCH, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name) as String});
+		session = ActivityRecording.createSession({:sport => sport, :subSport => sub_sport, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name) as String});
 		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
 		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
 		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
