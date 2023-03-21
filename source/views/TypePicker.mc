@@ -1,7 +1,7 @@
 import Toybox.Lang;
 using Toybox.WatchUi;
-using Toybox.Application;
 using Toybox.Graphics;
+using Toybox.Application.Properties;
 
 class TypePicker extends WatchUi.Picker {
 
@@ -15,7 +15,7 @@ class TypePicker extends WatchUi.Picker {
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_type = Application.getApp().getProperty("default_match_type");
+		var default_type = Properties.getValue("default_match_type");
 		if(default_type == null) {
 			default_type = 0;
 		}

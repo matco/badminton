@@ -1,6 +1,7 @@
 import Toybox.Lang;
 using Toybox.WatchUi;
 using Toybox.Application;
+using Toybox.Application.Properties;
 using Toybox.Graphics;
 
 class SetPicker extends WatchUi.Picker {
@@ -15,7 +16,7 @@ class SetPicker extends WatchUi.Picker {
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_number_of_sets = Application.getApp().getProperty("default_match_number_of_sets");
+		var default_number_of_sets = Properties.getValue("default_match_number_of_sets");
 		if(default_number_of_sets == null) {
 			default_number_of_sets = 0;
 		}

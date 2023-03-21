@@ -4,6 +4,7 @@ import Toybox.Graphics;
 import Toybox.WatchUi;
 import Toybox.System;
 using Toybox.Application;
+using Toybox.Application.Properties;
 
 class MatchBoundaries {
 	static const COURT_WIDTH_RATIO = 0.7; //width of the back compared to the front of the court
@@ -114,7 +115,7 @@ class MatchBoundaries {
 		yCenter = device.screenHeight / 2f;
 
 		yBack = marginHeight;
-		if(Application.getApp().getProperty("display_time")) {
+		if(Properties.getValue("display_time")) {
 			yBack += TIME_HEIGHT;
 		}
 		yFront = device.screenHeight - marginHeight - TIME_HEIGHT;
@@ -332,14 +333,14 @@ class MatchView extends WatchUi.View {
 		}
 
 		var app = (Application.getApp() as BadmintonScoreTrackerApp);
-
 		var match = app.getMatch();
+
 		drawCourt(dc, match);
 		drawScores(dc, match);
 		drawSets(dc, match);
 		drawTimer(dc, match);
 
-		if(app.getProperty("display_time")) {
+		if(Properties.getValue("display_time")) {
 			drawTime(dc);
 		}
 	}
