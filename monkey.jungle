@@ -7,12 +7,7 @@ venusqm.resourcePath = resources;icons/36x36
 venu2.resourcePath = resources;icons/70x70
 venu2s.resourcePath = resources;icons/61x61
 
-vivoactive.resourcePath = resources;icons/61x43
-
-vivoactive_hr.resourcePath = resources;icons/40x33
-
 vivoactive3.resourcePath = resources;icons/40x33
-vivoactive3d.resourcePath = resources;icons/40x33
 vivoactive3m.resourcePath = resources;icons/40x33
 vivoactive3mlte.resourcePath = resources;icons/40x33
 
