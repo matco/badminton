@@ -18,6 +18,14 @@ Here are the best features of the app:
 - Use menu (long press on "Up") to reset scores and start a new match
 - Save matches as Garmin Connect activities
 
+## Installation
+
+To test the application locally on your watch, you can do the following:
+- Uninstall the app from your watch (if you have it installed from the store)
+- Connect your watch to your computer
+- Build the application for your watch using the ConnectIQ SDK
+- Drop the resulting `.prg` file in the folder `GARMIN/APPS` on your watch
+
 ## Support
 
 If you enjoy the app and would like to support its development, you can make a donation on my Ko-fi page: https://ko-fi.com/matcora.
