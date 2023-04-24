@@ -12,7 +12,9 @@ class BadmintonScoreTrackerApp extends Application.AppBase {
 
 	function initialize() {
 		AppBase.initialize();
+	}
 
+	function onStart(state as Dictionary?) as Void {
 		//register application itself in the bus
 		bus.register(self);
 	}
