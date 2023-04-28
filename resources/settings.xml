@@ -22,6 +22,7 @@
 				<listEntry value="0">@Strings.set_1</listEntry>
 				<listEntry value="1">@Strings.set_3</listEntry>
 				<listEntry value="2">@Strings.set_5</listEntry>
+				<listEntry value="3">@Strings.set_endless</listEntry>
 			</settingConfig>
 		</setting>
 	</group>

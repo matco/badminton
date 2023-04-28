@@ -53,10 +53,12 @@ class Match {
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
 	private var type as MatchType; //type of the match, SINGLE or DOUBLE
-	private var sets as Array<MatchSet?>; //array of all sets, containing null for a set not played
+	private var maximumSets as Number?; //maximum number of sets for this match, null for match in endless mode
+	private var sets as List; //list of played sets
 
 	private var server as Boolean; //in double, true if the watch carrier is the first to serve (among himself and his teammate)
 	private var winner as Player?; //store the winner of the match, YOU or OPPONENT
+	private var ended as Boolean; //store if the match has ended
 
 	private var maximumPoints as Number;
 	private var absoluteMaximumPoints as Number;
@@ -71,17 +73,17 @@ class Match {
 
 	function initialize(config as MatchConfig) {
 		type = config.type as MatchType;
+		maximumSets = config.sets;
 
 		//in singles, the server is necessary the watch carrier
 		//in doubles, server is either the watch carrier or his teammate
 		server = config.type == DOUBLE ? config.server as Boolean : true;
 
+		ended = false;
+
 		//prepare array of sets and create first set
-		sets = new [config.sets] as Array<MatchSet?>;
-		sets[0] = new MatchSet(config.beginner as Player);
-		for(var i = 1; i < config.sets as Number; i++) {
-			sets[i] = null;
-		}
+		sets = new List();
+		sets.push(new MatchSet(config.beginner as Player));
 
 		maximumPoints = config.maximumPoints as Number;
 		absoluteMaximumPoints = config.absoluteMaximumPoints as Number;
@@ -108,15 +110,46 @@ class Match {
 		session.discard();
 	}
 
-	hidden function end(winner_player as Player) as Void {
-		winner = winner_player;
-		var event = new BusEvent(:onMatchEnd, winner as Object);
+	function end(winner_player as Player?) as Void {
+		if(hasEnded()) {
+			throw new OperationNotAllowedException("Unable to end a match that has already been ended");
+		}
+		ended = true;
+
+		var you_sets_won = getSetsWon(YOU);
+		var opponent_sets_won = getSetsWon(OPPONENT);
+		var you_total_score = getTotalScore(YOU);
+		var opponent_total_score = getTotalScore(OPPONENT);
+
+		//in endless mode, the winner must be determined now
+		if(isEndless()) {
+			//determine winner based on sets
+			if(you_sets_won != opponent_sets_won) {
+				winner = you_sets_won > opponent_sets_won ? YOU : OPPONENT;
+			}
+			//determine winner based on total score
+			if(winner == null && you_total_score != opponent_total_score) {
+				winner = you_total_score > opponent_total_score ? YOU : OPPONENT;
+			}
+		}
+		else {
+			winner = winner_player;
+		}
+
+		//manage activity session
+		fieldSetPlayer1.setData(you_sets_won);
+		fieldSetPlayer2.setData(opponent_sets_won);
+		fieldScorePlayer1.setData(you_total_score);
+		fieldScorePlayer2.setData(opponent_total_score);
+		session.stop();
+
+		//encapsulate event payload in an object so this object can never be null
+		var event = new BusEvent(:onMatchEnd, {"winner" => winner});
 		(Application.getApp() as BadmintonScoreTrackerApp).getBus().dispatch(event);
 	}
 
 	function nextSet() as Void {
-		var i = getCurrentSetIndex();
-		var set = sets[i] as MatchSet;
+		var set = getCurrentSet();
 
 		if(!set.hasEnded()) {
 			throw new OperationNotAllowedException("Unable to start next set if current set has not ended");
@@ -129,23 +162,15 @@ class Match {
 		var beginner = set.getWinner();
 
 		//create next set
-		sets[i +1] = new MatchSet(beginner as Player);
+		sets.push(new MatchSet(beginner as Player));
 	}
 
-	function getSetsNumber() as Number {
-		return sets.size();
-	}
-
-	function getCurrentSetIndex() as Number {
-		var i = 0;
-		while(i < sets.size() && sets[i] != null) {
-			i++;
-		}
-		return i - 1;
+	function getMaximumSets() as Number {
+		return maximumSets;
 	}
 
 	function getCurrentSet() as MatchSet {
-		return sets[getCurrentSetIndex()] as MatchSet;
+		return sets.last() as MatchSet;
 	}
 
 	function score(scorer as Player) as Void {
@@ -155,25 +180,22 @@ class Match {
 		var set = getCurrentSet();
 		set.score(scorer);
 
+		//manage activity session
+		//remember that that match can be ended anytime (if the user decides to stop it)
+		//activity must always be kept up to date
+		fieldSetScorePlayer1.setData(set.getScore(YOU));
+		fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
+
 		//detect if match has a set winner
 		var set_winner = isSetWon(set);
 		if(set_winner != null) {
 			set.end(set_winner);
 
-			//manage activity session
-			fieldSetScorePlayer1.setData(set.getScore(YOU));
-			fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
-
-			var match_winner = isWon();
-			if(match_winner != null) {
-				end(match_winner);
-
-				//manage activity session
-				fieldSetPlayer1.setData(getSetsWon(YOU));
-				fieldSetPlayer2.setData(getSetsWon(OPPONENT));
-				fieldScorePlayer1.setData(getTotalScore(YOU));
-				fieldScorePlayer2.setData(getTotalScore(OPPONENT));
-				session.stop();
+			if(!isEndless()) {
+				var match_winner = isWon();
+				if(match_winner != null) {
+					end(match_winner);
+				}
 			}
 		}
 	}
@@ -191,7 +213,11 @@ class Match {
 	}
 
 	hidden function isWon() as Player? {
-		var winning_sets = sets.size() / 2;
+		//in endless mode, no winner can be determined wile the match has not been ended
+		if(isEndless()) {
+			return null;
+		}
+		var winning_sets = maximumSets / 2;
 		var player_1_sets = getSetsWon(YOU);
 		if(player_1_sets > winning_sets) {
 			return YOU;
@@ -206,6 +232,7 @@ class Match {
 	function undo() as Void {
 		var set = getCurrentSet();
 		if(set.getRallies().size() > 0) {
+			ended = false;
 			winner = null;
 			set.undo();
 		}
@@ -225,36 +252,41 @@ class Match {
 		return type;
 	}
 
-	function getSets() as Array<MatchSet?> {
+	function isEndless() as Boolean {
+		return maximumSets == null;
+	}
+
+	function getSets() as List {
 		return sets;
 	}
 
 	function hasEnded() as Boolean {
-		return winner != null;
+		return ended;
 	}
 
 	function getTotalRalliesNumber() as Number {
-		var i = 0;
 		var number = 0;
-		while(i < sets.size() && sets[i] != null) {
-			number += (sets[i] as MatchSet).getRalliesNumber();
-			i++;
+		for(var i = 0; i < sets.size(); i++) {
+			var set = sets.get(i) as MatchSet;
+			number += set.getRalliesNumber();
 		}
 		return number;
 	}
 
 	function getTotalScore(player as Player) as Number {
 		var score = 0;
-		for(var i = 0; i <= getCurrentSetIndex(); i++) {
-			score = score + (sets[i] as MatchSet).getScore(player);
+		for(var i = 0; i < sets.size(); i++) {
+			var set = sets.get(i) as MatchSet;
+			score += set.getScore(player);
 		}
 		return score;
 	}
 
 	function getSetsWon(player as Player) as Number {
 		var won = 0;
-		for(var i = 0; i <= getCurrentSetIndex(); i++) {
-			if((sets[i] as MatchSet).getWinner() == player) {
+		for(var i = 0; i < sets.size(); i++) {
+			var set = sets.get(i) as MatchSet;
+			if(set.getWinner() == player) {
 				won++;
 			}
 		}

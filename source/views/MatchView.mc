@@ -274,26 +274,29 @@ class MatchView extends WatchUi.View {
 	}
 
 	function drawSets(dc as Dc, match as Match) as Void {
-		var sets = match.getSets();
-		if(sets.size() > 1) {
-			var current_set = match.getCurrentSetIndex();
-			for(var i = 0; i < sets.size(); i++) {
-				var color;
-				if(i == current_set) {
-					color = Graphics.COLOR_BLUE;
-				}
-				else {
-					var set = sets[i];
-					if(set == null) {
-						color = Graphics.COLOR_WHITE;
+		//do not draw sets in endless mode
+		if(!match.isEndless()) {
+			var maximum_sets = match.getMaximumSets();
+			if(maximum_sets > 1) {
+				var sets = match.getSets();
+				for(var i = 0; i < maximum_sets; i++) {
+					var color;
+					if(i < sets.size()) {
+						var set = sets.get(i) as MatchSet;
+						if(set.hasEnded()) {
+							var winner = set.getWinner();
+							color = winner == YOU ? Graphics.COLOR_GREEN : Graphics.COLOR_RED;
+						}
+						else {
+							color = Graphics.COLOR_BLUE;
+						}
 					}
 					else {
-						var winner = set.getWinner();
-						color = winner == YOU ? Graphics.COLOR_GREEN : Graphics.COLOR_RED;
+						color = Graphics.COLOR_WHITE;
 					}
+					dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+					dc.fillCircle(boundaries.board[i][0] as Float, boundaries.board[i][1] as Float, MatchBoundaries.SET_BALL_RADIUS);
 				}
-				dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-				dc.fillCircle(boundaries.board[i][0] as Float, boundaries.board[i][1] as Float, MatchBoundaries.SET_BALL_RADIUS);
 			}
 		}
 	}
@@ -395,7 +398,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 			match.undo();
 			WatchUi.requestUpdate();
 		}
-		else if(match.getCurrentSetIndex() == 0) {
+		else if(match.getSets().size() == 1) {
 			match.discard();
 			//return to beginner screen if match has not started yet
 			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);

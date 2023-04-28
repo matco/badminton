@@ -46,11 +46,10 @@ class BadmintonScoreTrackerApp extends Application.AppBase {
 		}
 	}
 
-	function onMatchEnd(winner as Player) as Void {
-		if(Attention has :playTone) {
-			if(Properties.getValue("enable_sound")) {
-				Attention.playTone(winner == YOU ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
-			}
+	function onMatchEnd(payload) as Void {
+		var winner = payload["winner"];
+		if(winner != null && Attention has :playTone && Properties.getValue("enable_sound")) {
+			Attention.playTone(winner == YOU ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
 		}
 		if(Attention has :vibrate) {
 			Attention.vibrate([new Attention.VibeProfile(80, 200)] as Array<VibeProfile>);

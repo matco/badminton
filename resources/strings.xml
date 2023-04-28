@@ -13,6 +13,7 @@
 	<string id="set_1">1</string>
 	<string id="set_3">3</string>
 	<string id="set_5">5</string>
+	<string id="set_endless">Endless</string>
 
 	<string id="beginner_who">Who starts?</string>
 	<string id="beginner_opponent">Opponent</string>
@@ -29,6 +30,7 @@
 
 	<string id="end_you_won">You won!</string>
 	<string id="end_opponent_won">They won!</string>
+	<string id="end_draw">Draw</string>
 	<string id="end_total_rallies">${rallies} total rallies</string>
 	<string id="end_save_garmin_connect">Save match?</string>
 

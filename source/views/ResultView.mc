@@ -37,7 +37,11 @@ class ResultView extends WatchUi.View {
 		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
 		//draw end of match text
 		var winner = match.getWinner();
-		var won_text = WatchUi.loadResource(winner == YOU ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won) as String;
+		var won_resource = Rez.Strings.end_draw;
+		if(winner != null) {
+			won_resource = winner == YOU ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won;
+		}
+		var won_text = WatchUi.loadResource(won_resource) as String;
 		(findDrawableById("result_won_text") as Text).setText(won_text);
 		//draw match score or last set score
 		var score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();

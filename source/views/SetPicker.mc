@@ -50,7 +50,13 @@ class SetPickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.sets = values[0] as Number;
+		var value = values[0];
+		if(value == :endless) {
+			InitialView.config.sets = null;
+		}
+		else {
+			InitialView.config.sets = value as Number;
+		}
 		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

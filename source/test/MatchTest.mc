@@ -2,7 +2,7 @@ import Toybox.Lang;
 
 module MatchTest {
 
-	function create_match_config(type as MatchType, sets as Number, beginner as Player, server as Boolean, maximum_points as Number, absolute_maximum_points as Number) as MatchConfig {
+	function create_match_config(type as MatchType, sets as Number?, beginner as Player, server as Boolean, maximum_points as Number, absolute_maximum_points as Number) as MatchConfig {
 		var config = new MatchConfig();
 		config.type = type;
 		config.sets = sets;
@@ -17,8 +17,8 @@ module MatchTest {
 	function testNewMatch(logger) {
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		BetterTest.assertEqual(match.getType(), SINGLE, "Match is created with correct type");
-		BetterTest.assertEqual(match.getSetsNumber(), 1, "Match is created with corret number of set");
-		BetterTest.assertEqual(match.getCurrentSetIndex(), 0, "Match current set index returns the correct index");
+		BetterTest.assertEqual(match.getMaximumSets(), 1, "Match is created with corret maximum number of set");
+		BetterTest.assertEqual(match.getSets().size(), 1, "Match has only one set at the beginning");
 		BetterTest.assertEqual(match.getCurrentSet().getBeginner(), YOU, "Match is created with correct player");
 
 		BetterTest.assertEqual(match.getTotalRalliesNumber(), 0, "Newly created match has 0 rally");
@@ -150,6 +150,7 @@ module MatchTest {
 		//single set match, using undo
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));
 		var set = match.getCurrentSet();
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if no rallies have been played");
 
 		match.score(YOU);
 		match.score(YOU);
@@ -216,6 +217,123 @@ module MatchTest {
 			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to score in a match that has ended", "It is not possible to score after a match has ended");
 			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to score after a match has ended");
 		}
+
+		return true;
+	}
+
+	(:test)
+	function testEndless(logger) {
+		//match ended while no set has been ended
+		var match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		var set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(OPPONENT);
+		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is now 2");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 is now 1");
+		BetterTest.assertFalse(match.hasEnded(), "Match can never end automatically in endless mode");
+
+		match.end(null);
+		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the highest score");
+
+		//match ended while second set is being played
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
+		BetterTest.assertFalse(match.hasEnded(), "Match can never end automatically in endless mode");
+
+		match.nextSet();
+		set = match.getCurrentSet();
+		BetterTest.assertEqual(match.getSets().size(), 2, "A new set has been created");
+
+		match.score(OPPONENT);
+		BetterTest.assertEqual(set.getScore(YOU), 0, "Score of player 1 is now 0");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 is now 1");
+		BetterTest.assertFalse(match.hasEnded(), "Match can never end automatically in endless mode");
+
+		match.end(null);
+		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the most sets won");
+
+		//match draw while no set has been ended
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is now 2");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 2, "Score of player 2 is now 2");
+		BetterTest.assertFalse(match.hasEnded(), "Match can never end automatically in endless mode");
+
+		match.end(null);
+		BetterTest.assertNull(match.getWinner(), "There is no winner if both players have the same score in the first set");
+
+		//match draw in the third set
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+
+		//first set
+		match.score(YOU);
+		match.score(YOU);
+		match.score(OPPONENT);
+		match.score(YOU);
+
+		match.nextSet();
+
+		//second set
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+		match.score(YOU);
+		match.score(OPPONENT);
+
+		match.nextSet();
+
+		BetterTest.assertEqual(match.getSets().size(), 3, "A new set has been created");
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(OPPONENT);
+
+		BetterTest.assertEqual(match.getTotalScore(YOU), 5, "Total score of player 1 is 5");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 5, "Total score of player 2 is 5");
+
+		match.end(null);
+		BetterTest.assertNull(match.getWinner(), "There is no winner if both players have the same number of sets won and the same total score");
+
+		//match ended after the same number of sets won but different total scores
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+
+		//first set
+		match.score(YOU);
+		match.score(YOU);
+		match.score(OPPONENT);
+		match.score(YOU);
+
+		match.nextSet();
+
+		//second set
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+
+		match.nextSet();
+
+		BetterTest.assertEqual(match.getSets().size(), 3, "A new set has been created");
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(OPPONENT);
+
+		BetterTest.assertEqual(match.getTotalScore(YOU), 4, "Total score of player 1 is 4");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 5, "Total score of player 2 is 5");
+
+		match.end(null);
+		BetterTest.assertEqual(match.getWinner(), OPPONENT, "If both players have the same number of sets won, the match is won by the player with the highest score");
 
 		return true;
 	}
