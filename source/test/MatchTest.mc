@@ -118,6 +118,7 @@ module MatchTest {
 
 	(:test)
 	function testEnd(logger) {
+		//single set match, using undo
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));
 		var set = match.getCurrentSet();
 
@@ -125,28 +126,68 @@ module MatchTest {
 		match.score(YOU);
 		match.score(YOU);
 		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
-		BetterTest.assertTrue(match.hasEnded(), "Match has ended if maximum point has been reached");
+		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its singled set has ended");
 
 		match.undo();
 		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is now 2");
-		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if no player has reached the maximum point");
+		BetterTest.assertFalse(set.hasEnded(), "Set has not ended if no player has reached the maximum point");
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if its single has not ended");
 
 		match.score(OPPONENT);
 		match.score(OPPONENT);
 		match.score(YOU);
 		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 2, "Score of player 2 is now 2");
-		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if there is not a difference of two points");
+		BetterTest.assertFalse(set.hasEnded(), "Set has not ended if there is not a difference of two points");
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if its single has not ended");
 
-		match.score(YOU);
-		match.score(YOU);
-		BetterTest.assertEqual(set.getScore(YOU), 4, "Score of player 1 is now 4");
-		BetterTest.assertTrue(match.hasEnded(), "Match has ended if absolute maximum point has been reached");
-
-		match.score(YOU);
-		BetterTest.assertEqual(set.getScore(YOU), 4, "Score after match has ended does nothing");
 		match.score(OPPONENT);
-		BetterTest.assertEqual(set.getScore(OPPONENT), 2, "Score after match has ended does nothing");
+		match.score(YOU);
+		match.score(YOU);
+		BetterTest.assertEqual(set.getScore(YOU), 5, "Score of player 1 is now 5");
+		BetterTest.assertTrue(set.hasEnded(), "Set has ended if absolute maximum point has been reached");
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its single set has ended");
+
+		//multi sets match
+		match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5));
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
+		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if only one of its sets has ended");
+
+		try {
+			match.score(YOU);
+			BetterTest.fail("Scoring after the set has ended should throw an operation not allowed exception");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to score in a set that has ended", "It is not possible to score after a set has ended");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to score after a set has ended");
+		}
+
+		match.nextSet();
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if all its sets have ended");
+
+		try {
+			match.score(YOU);
+			BetterTest.fail("Scoring after the match has ended should throw an operation not allowed exception");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to score in a match that has ended", "It is not possible to score after a match has ended");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to score after a match has ended");
+		}
+
 		return true;
 	}
 

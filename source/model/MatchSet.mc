@@ -34,11 +34,12 @@ class MatchSet {
 	}
 
 	function score(scorer as Player) as Void {
-		if(!hasEnded()) {
-			rallies.push(scorer as Object);
-			var score = scores[scorer] as Number;
-			scores[scorer] = score + 1;
+		if(hasEnded()) {
+			throw new OperationNotAllowedException("Unable to score in a set that has ended");
 		}
+		rallies.push(scorer as Object);
+		var score = scores[scorer] as Number;
+		scores[scorer] = score + 1;
 	}
 
 	function undo() as Void {
