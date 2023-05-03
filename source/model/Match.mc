@@ -55,7 +55,7 @@ class Match {
 	private var type as MatchType; //type of the match, SINGLE or DOUBLE
 	private var sets as Array<MatchSet?>; //array of all sets, containing null for a set not played
 
-	private var server as Boolean; //in double, true if the player 1 (watch carrier) is currently the server
+	private var server as Boolean; //in double, true if the watch carrier is the first to serve (among himself and his teammate)
 	private var winner as Player?; //store the winner of the match, YOU or OPPONENT
 
 	private var maximumPoints as Number;
