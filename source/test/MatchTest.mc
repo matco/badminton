@@ -117,6 +117,35 @@ module MatchTest {
 	}
 
 	(:test)
+	function testNextSet(logger) {
+		var match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5));
+		var set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+
+		try {
+			match.nextSet();
+			BetterTest.fail("Next set cannot be called if current set has not ended");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to start next set if current set has not ended", "It is not possible to start next set if current set has not ended");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to start next set if current set has not ended");
+		}
+
+		match.score(YOU);
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 in first set is 3");
+		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
+
+		match.nextSet();
+		set = match.getCurrentSet();
+
+		BetterTest.assertEqual(set.getScore(YOU), 0, "Score of player 1 in second set is 0");
+
+		return true;
+	}
+
+	(:test)
 	function testEnd(logger) {
 		//single set match, using undo
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));

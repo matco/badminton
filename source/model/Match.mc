@@ -115,12 +115,18 @@ class Match {
 	}
 
 	function nextSet() as Void {
+		var i = getCurrentSetIndex();
+		var set = sets[i] as MatchSet;
+
+		if(!set.hasEnded()) {
+			throw new OperationNotAllowedException("Unable to start next set if current set has not ended");
+		}
+
 		//manage activity session
 		session.addLap();
 
 		//the player who won the previous game will serve first in the next set
-		var i = getCurrentSetIndex();
-		var beginner = (sets[i] as MatchSet).getWinner();
+		var beginner = set.getWinner();
 
 		//create next set
 		sets[i +1] = new MatchSet(beginner as Player);
