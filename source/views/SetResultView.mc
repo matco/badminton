@@ -45,13 +45,13 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 
 	function onSelect() as Boolean {
 		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
-		if(match.getWinner() == null) {
+		if(match.hasEnded()) {
+			WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+		}
+		else {
 			match.nextSet();
 			var view = new MatchView();
 			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
-		}
-		else {
-			WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		return true;
 	}
