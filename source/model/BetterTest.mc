@@ -28,7 +28,7 @@ module BetterTest {
 	}
 
 	function assertEqual(actual as Object, expected as Object?, message as String) as Void {
-		Test.assertEqualMessage(actual, expected, message);
+		Test.assertEqualMessage(actual, expected, message + " (expected [" + expected + "], actual [" + actual + "])");
 	}
 
 	function assertNotEqual(actual as Object, expected as Object?, message as String) as Void {
