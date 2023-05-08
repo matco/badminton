@@ -62,11 +62,6 @@ class ActivityStatsViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
-		//undo last point
-		match.undo();
-		var view = new MatchView();
-		WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 

@@ -63,7 +63,6 @@ class ResultViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
-		WatchUi.switchToView(new SetResultView(), new SetResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
