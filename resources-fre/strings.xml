@@ -60,8 +60,8 @@
 	<string id="fit_activity_name">Badminton</string>
 	<string id="fit_set_unit_label">sets</string>
 	<string id="fit_score_unit_label">points</string>
-	<string id="fit_set_player_1_label">Set gagnés</string>
-	<string id="fit_set_player_2_label">Set perdus</string>
+	<string id="fit_set_player_1_label">Sets gagnés</string>
+	<string id="fit_set_player_2_label">Sets perdus</string>
 	<string id="fit_set_score_player_1_label">Votre score (set)</string>
 	<string id="fit_set_score_player_2_label">Score de l'adversaire (set)</string>
 	<string id="fit_score_player_1_label">Votre score total</string>
