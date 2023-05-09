@@ -324,8 +324,8 @@ class Match {
 		var current_set = getCurrentSet();
 		//in singles, the player 1 (watch carrier) position only depends on the current score
 		if(type == SINGLE) {
-			var server = current_set.getServerTeam();
-			var server_score = current_set.getScore(server);
+			var server_team = current_set.getServerTeam();
+			var server_score = current_set.getScore(server_team);
 			return server_score % 2 == 0 ? YOU_RIGHT : YOU_LEFT;
 		}
 		//in doubles, it's not possible to give the position using only the current score
