@@ -34,6 +34,15 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 		BehaviorDelegate.initialize();
 	}
 
+	function onMenu() {
+		var menu = new WatchUi.Menu2({:title => Rez.Strings.menu_title});
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_end_game, null, :menu_end_game, null));
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_reset_game, null, :menu_reset_game, null));
+
+		WatchUi.pushView(menu, new MatchMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
+		return true;
+	}
+
 	function onBack() {
 		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
 		//undo last point
