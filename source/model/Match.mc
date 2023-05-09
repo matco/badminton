@@ -188,12 +188,12 @@ class Match {
 		set.score(scorer);
 
 		//manage activity session
-		//remember that that match can be ended anytime (if the user decides to stop it)
-		//activity must always be kept up to date
+		//remember that the match can be ended anytime (if the user decides to stop it)
+		//the activity must always be kept up to date
 		fieldSetScorePlayer1.setData(set.getScore(YOU));
 		fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 
-		//detect if match has a set winner
+		//end the set if it has been won
 		var set_winner = isSetWon(set);
 		if(set_winner != null) {
 			set.end(set_winner);

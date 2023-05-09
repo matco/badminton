@@ -400,7 +400,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		}
 		else if(match.getSets().size() == 1) {
 			match.discard();
-			//return to beginner screen if match has not started yet
+			//return to the initial view if the match has not been started yet
 			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
 		return true;
