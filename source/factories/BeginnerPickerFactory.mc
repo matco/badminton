@@ -4,8 +4,8 @@ using Toybox.WatchUi;
 
 class BeginnerPickerFactory extends WatchUi.PickerFactory {
 
-	var beginners as Array<Player> = [YOU, OPPONENT] as Array<Player>;
-	var beginners_label as Array<Symbol> = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent] as Array<Symbol>;
+	var beginners as Array<Player or Symbol> = [YOU, OPPONENT, :random] as Array<Player or Symbol>;
+	var beginners_label as Array<Symbol> = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent, Rez.Strings.beginner_random] as Array<Symbol>;
 
 	function initialize() {
 		PickerFactory.initialize();
@@ -22,7 +22,7 @@ class BeginnerPickerFactory extends WatchUi.PickerFactory {
 	}
 
 	function getValue(index) {
-		return beginners[index] as Number;
+		return beginners[index];
 	}
 
 	function getSize() {
