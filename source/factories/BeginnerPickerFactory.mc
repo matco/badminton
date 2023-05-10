@@ -1,10 +1,11 @@
+import Toybox.Lang;
 using Toybox.Graphics;
 using Toybox.WatchUi;
 
 class BeginnerPickerFactory extends WatchUi.PickerFactory {
 
-	var beginners = [YOU, OPPONENT];
-	var beginners_label = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent];
+	var beginners as Array<Player> = [YOU, OPPONENT] as Array<Player>;
+	var beginners_label as Array<Symbol> = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent] as Array<Symbol>;
 
 	function initialize() {
 		PickerFactory.initialize();
@@ -12,7 +13,7 @@ class BeginnerPickerFactory extends WatchUi.PickerFactory {
 
 	function getDrawable(index, selected) {
 		return new WatchUi.Text({
-			:text => WatchUi.loadResource(beginners_label[index]),
+			:text => WatchUi.loadResource(beginners_label[index]) as String,
 			:color => Graphics.COLOR_WHITE,
 			:font=> Graphics.FONT_SMALL,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
@@ -21,7 +22,7 @@ class BeginnerPickerFactory extends WatchUi.PickerFactory {
 	}
 
 	function getValue(index) {
-		return beginners[index];
+		return beginners[index] as Number;
 	}
 
 	function getSize() {

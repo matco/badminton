@@ -1,8 +1,8 @@
-using Toybox.Time;
-using Toybox.ActivityRecording;
-using Toybox.Activity;
-using Toybox.FitContributor;
-using Toybox.WatchUi;
+import Toybox.Lang;
+import Toybox.Activity;
+import Toybox.ActivityRecording;
+import Toybox.FitContributor;
+import Toybox.Time;
 
 enum Player {
 	YOU = 1,
@@ -22,15 +22,15 @@ enum Corner {
 }
 
 class MatchConfig {
-	public var step = 0;
-	public var type;
-	public var sets;
-	public var beginner;
-	public var server;
-	public var maximumPoints;
-	public var absoluteMaximumPoints;
+	public var step as Number = 0;
+	public var type as MatchType?;
+	public var sets as Number?;
+	public var beginner as Player?;
+	public var server as Boolean?;
+	public var maximumPoints as Number?;
+	public var absoluteMaximumPoints as Number?;
 
-	function isValid() {
+	function isValid() as Boolean {
 		return type == SINGLE && step == 3 || step == 4;
 	}
 }
@@ -43,7 +43,7 @@ class Match {
 		OPPONENT_LEFT => YOU_LEFT,
 		YOU_LEFT => OPPONENT_LEFT,
 		YOU_RIGHT => OPPONENT_RIGHT
-	};
+	} as Dictionary<Corner, Corner>;
 
 	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
 	const TOTAL_SCORE_PLAYER_2_FIELD_ID = 1;
@@ -52,126 +52,162 @@ class Match {
 	const SET_SCORE_PLAYER_1_FIELD_ID = 4;
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
-	private var type; //type of the match, SINGLE or DOUBLE
-	private var sets; //array of all sets, containing null for a set not played
+	private var type as MatchType; //type of the match, SINGLE or DOUBLE
+	private var maximumSets as Number?; //maximum number of sets for this match, null for match in endless mode
+	private var sets as List; //list of played sets
 
-	private var server; //in double, true if the player 1 (watch carrier) is currently the server
-	private var winner; //store the winner of the match, YOU or OPPONENT
+	private var server as Boolean; //in double, true if the watch carrier is the first to serve (among himself and his teammate)
+	private var winner as Player?; //store the winner of the match, YOU or OPPONENT
+	private var ended as Boolean; //store if the match has ended
 
-	private var maximumPoints;
-	private var absoluteMaximumPoints;
+	private var maximumPoints as Number;
+	private var absoluteMaximumPoints as Number;
 
-	private var session;
-	private var fieldSetPlayer1;
-	private var fieldSetPlayer2;
-	private var fieldSetScorePlayer1;
-	private var fieldSetScorePlayer2;
-	private var fieldScorePlayer1;
-	private var fieldScorePlayer2;
+	private var session as Session;
+	private var fieldSetPlayer1 as Field;
+	private var fieldSetPlayer2 as Field;
+	private var fieldSetScorePlayer1 as Field;
+	private var fieldSetScorePlayer2 as Field;
+	private var fieldScorePlayer1 as Field;
+	private var fieldScorePlayer2 as Field;
 
-	function initialize(config) {
-		type = config.type;
+	function initialize(config as MatchConfig) {
+		type = config.type as MatchType;
+		maximumSets = config.sets;
 
 		//in singles, the server is necessary the watch carrier
 		//in doubles, server is either the watch carrier or his teammate
-		server = config.type == DOUBLE ? config.server : true;
+		server = config.type == DOUBLE ? config.server as Boolean : true;
+
+		ended = false;
 
 		//prepare array of sets and create first set
-		sets = new [config.sets];
-		sets[0] = new MatchSet(config.beginner);
-		for(var i = 1; i < config.sets; i++) {
-			sets[i] = null;
-		}
+		sets = new List();
+		sets.push(new MatchSet(config.beginner as Player));
 
-		maximumPoints = config.maximumPoints;
-		absoluteMaximumPoints = config.absoluteMaximumPoints;
+		maximumPoints = config.maximumPoints as Number;
+		absoluteMaximumPoints = config.absoluteMaximumPoints as Number;
+
+		//determine sport and subsport
+		//it would be better to use feature detection instead of checking the version, but this does not work, see IQTest.mc
+		var version = System.getDeviceSettings().monkeyVersion;
+		var v410 = version[0] > 4 || version[0] == 4 && version[1] >= 1;
+		var sport = v410 ? Activity.SPORT_RACKET : ActivityRecording.SPORT_GENERIC;
+		var sub_sport = v410 ? Activity.SUB_SPORT_BADMINTON : ActivityRecording.SUB_SPORT_MATCH;
 
 		//manage activity session
-		session = ActivityRecording.createSession({:sport => ActivityRecording.SPORT_GENERIC, :subSport => ActivityRecording.SUB_SPORT_MATCH, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name)});
-		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
-		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label)});
-		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
-		fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
-		fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
-		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label)});
+		session = ActivityRecording.createSession({:sport => sport, :subSport => sub_sport, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name) as String});
+		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
+		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
+		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
 		session.start();
 
-		Application.getApp().getBus().dispatch(new BusEvent(:onMatchBegin, null));
+		(Application.getApp() as BadmintonScoreTrackerApp).getBus().dispatch(new BusEvent(:onMatchBegin, null));
 	}
 
-	function save() {
+	function save() as Void {
 		//session can only be save once
 		session.save();
 	}
 
-	function discard() {
+	function discard() as Void {
 		session.discard();
 	}
 
-	hidden function end(winner_player) {
-		winner = winner_player;
+	function end(winner_player as Player?) as Void {
+		if(hasEnded()) {
+			throw new OperationNotAllowedException("Unable to end a match that has already been ended");
+		}
+		ended = true;
 
-		Application.getApp().getBus().dispatch(new BusEvent(:onMatchEnd, winner));
+		var you_sets_won = getSetsWon(YOU);
+		var opponent_sets_won = getSetsWon(OPPONENT);
+		var you_total_score = getTotalScore(YOU);
+		var opponent_total_score = getTotalScore(OPPONENT);
+
+		//in endless mode, the winner must be determined now
+		if(isEndless()) {
+			//determine winner based on sets
+			if(you_sets_won != opponent_sets_won) {
+				winner = you_sets_won > opponent_sets_won ? YOU : OPPONENT;
+			}
+			//determine winner based on total score
+			if(winner == null && you_total_score != opponent_total_score) {
+				winner = you_total_score > opponent_total_score ? YOU : OPPONENT;
+			}
+		}
+		else {
+			winner = winner_player;
+		}
+
+		//manage activity session
+		fieldSetPlayer1.setData(you_sets_won);
+		fieldSetPlayer2.setData(opponent_sets_won);
+		fieldScorePlayer1.setData(you_total_score);
+		fieldScorePlayer2.setData(opponent_total_score);
+		session.stop();
+
+		//encapsulate event payload in an object so this object can never be null
+		var event = new BusEvent(:onMatchEnd, {"winner" => winner});
+		(Application.getApp() as BadmintonScoreTrackerApp).getBus().dispatch(event);
 	}
 
-	function nextSet() {
+	function nextSet() as Void {
+		var set = getCurrentSet();
+
+		if(!set.hasEnded()) {
+			throw new OperationNotAllowedException("Unable to start next set if current set has not ended");
+		}
+
 		//manage activity session
 		session.addLap();
 
 		//the player who won the previous game will serve first in the next set
-		var i = getCurrentSetIndex();
-		var beginner = sets[i].getWinner();
+		var beginner = set.getWinner();
 
 		//create next set
-		sets[i +1] = new MatchSet(beginner);
+		sets.push(new MatchSet(beginner as Player));
 	}
 
-	function getSetsNumber() {
-		return sets.size();
+	function getMaximumSets() as Number {
+		return maximumSets;
 	}
 
-	function getCurrentSetIndex() {
-		var i = 0;
-		while(i < sets.size() && sets[i] != null) {
-			i++;
+	function getCurrentSet() as MatchSet {
+		return sets.last() as MatchSet;
+	}
+
+	function score(scorer as Player) as Void {
+		if(hasEnded()) {
+			throw new OperationNotAllowedException("Unable to score in a match that has ended");
 		}
-		return i - 1;
-	}
+		var set = getCurrentSet();
+		set.score(scorer);
 
-	function getCurrentSet() {
-		return sets[getCurrentSetIndex()];
-	}
+		//manage activity session
+		//remember that the match can be ended anytime (if the user decides to stop it)
+		//the activity must always be kept up to date
+		fieldSetScorePlayer1.setData(set.getScore(YOU));
+		fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 
-	function score(scorer) {
-		if(!hasEnded()) {
-			var set = getCurrentSet();
-			set.score(scorer);
+		//end the set if it has been won
+		var set_winner = isSetWon(set);
+		if(set_winner != null) {
+			set.end(set_winner);
 
-			//detect if match has a set winner
-			var set_winner = isSetWon(set);
-			if(set_winner != null) {
-				set.end(set_winner);
-
-				//manage activity session
-				fieldSetScorePlayer1.setData(set.getScore(YOU));
-				fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
-
+			if(!isEndless()) {
 				var match_winner = isWon();
 				if(match_winner != null) {
 					end(match_winner);
-
-					//manage activity session
-					fieldSetPlayer1.setData(getSetsWon(YOU));
-					fieldSetPlayer2.setData(getSetsWon(OPPONENT));
-					fieldScorePlayer1.setData(getTotalScore(YOU));
-					fieldScorePlayer2.setData(getTotalScore(OPPONENT));
-					session.stop();
 				}
 			}
 		}
 	}
 
-	hidden function isSetWon(set) {
+	hidden function isSetWon(set as MatchSet) as Player? {
 		var scorePlayer1 = set.getScore(YOU);
 		var scorePlayer2 = set.getScore(OPPONENT);
 		if(scorePlayer1 >= absoluteMaximumPoints || scorePlayer1 >= maximumPoints && (scorePlayer1 - scorePlayer2) > 1) {
@@ -183,8 +219,12 @@ class Match {
 		return null;
 	}
 
-	hidden function isWon() {
-		var winning_sets = sets.size() / 2;
+	hidden function isWon() as Player? {
+		//in endless mode, no winner can be determined wile the match has not been ended
+		if(isEndless()) {
+			return null;
+		}
+		var winning_sets = maximumSets / 2;
 		var player_1_sets = getSetsWon(YOU);
 		if(player_1_sets > winning_sets) {
 			return YOU;
@@ -196,97 +236,103 @@ class Match {
 		return null;
 	}
 
-	function undo() {
+	function undo() as Void {
 		var set = getCurrentSet();
 		if(set.getRallies().size() > 0) {
+			ended = false;
 			winner = null;
 			set.undo();
 		}
 	}
 
-	function getActivity() {
+	function getActivity() as Info {
 		return Activity.getActivityInfo();
 	}
 
-	function getDuration() {
+	function getDuration() as Duration {
 		var time = getActivity().elapsedTime;
 		var seconds = time != null ? time / 1000 : 0;
 		return new Time.Duration(seconds);
 	}
 
-	function getType() {
+	function getType() as MatchType {
 		return type;
 	}
 
-	function getSets() {
+	function isEndless() as Boolean {
+		return maximumSets == null;
+	}
+
+	function getSets() as List {
 		return sets;
 	}
 
-	function hasEnded() {
-		return winner != null;
+	function hasEnded() as Boolean {
+		return ended;
 	}
 
-	function getTotalRalliesNumber() {
-		var i = 0;
+	function getTotalRalliesNumber() as Number {
 		var number = 0;
-		while(i < sets.size() && sets[i] != null) {
-			number += sets[i].getRalliesNumber();
-			i++;
+		for(var i = 0; i < sets.size(); i++) {
+			var set = sets.get(i) as MatchSet;
+			number += set.getRalliesNumber();
 		}
 		return number;
 	}
 
-	function getTotalScore(player) {
+	function getTotalScore(player as Player) as Number {
 		var score = 0;
-		for(var i = 0; i <= getCurrentSetIndex(); i++) {
-			score = score + sets[i].getScore(player);
+		for(var i = 0; i < sets.size(); i++) {
+			var set = sets.get(i) as MatchSet;
+			score += set.getScore(player);
 		}
 		return score;
 	}
 
-	function getSetsWon(player) {
+	function getSetsWon(player as Player) as Number {
 		var won = 0;
-		for(var i = 0; i <= getCurrentSetIndex(); i++) {
-			if(sets[i].getWinner() == player) {
+		for(var i = 0; i < sets.size(); i++) {
+			var set = sets.get(i) as MatchSet;
+			if(set.getWinner() == player) {
 				won++;
 			}
 		}
 		return won;
 	}
 
-	function getWinner() {
+	function getWinner() as Player {
 		return winner;
 	}
 
-	function getServerTeam() {
+	function getServerTeam() as Player {
 		return getCurrentSet().getServerTeam();
 	}
 
-	function getServingCorner() {
+	function getServingCorner() as Corner {
 		return getCurrentSet().getServingCorner();
 	}
 
-	function getReceivingCorner() {
+	function getReceivingCorner() as Corner {
 		var serving_corner = getServingCorner();
 		return OPPOSITE_CORNER[serving_corner];
 	}
 
-	function getPlayerIsServer() {
+	function getPlayerIsServer() as Boolean {
 		var player_corner = getPlayerCorner();
 		return player_corner == getServingCorner();
 	}
 
 	//methods used from perspective of player 1 (watch carrier)
-	function getPlayerTeamIsServer() {
+	function getPlayerTeamIsServer() as Boolean {
 		return getServerTeam() == YOU;
 	}
 
-	function getPlayerCorner() {
+	function getPlayerCorner() as Corner {
 		var current_set = getCurrentSet();
 		//in singles, the player 1 (watch carrier) position only depends on the current score
 		if(type == SINGLE) {
-			var server = current_set.getServerTeam();
-			var server_score = current_set.getScore(server);
+			var server_team = current_set.getServerTeam();
+			var server_score = current_set.getScore(server_team);
 			return server_score % 2 == 0 ? YOU_RIGHT : YOU_LEFT;
 		}
 		//in doubles, it's not possible to give the position using only the current score

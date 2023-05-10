@@ -1,20 +1,23 @@
-using Toybox.WatchUi;
+import Toybox.Lang;
+import Toybox.WatchUi;
 
-class MenuDelegate extends WatchUi.MenuInputDelegate {
+class MatchMenuDelegate extends WatchUi.Menu2InputDelegate {
 
 	function initialize() {
-		MenuInputDelegate.initialize();
+		Menu2InputDelegate.initialize();
 	}
 
-	function onMenuItem(item) {
-		if(item == :menu_end_game) {
+	function onSelect(item as MenuItem) {
+		var id = item.getId();
+		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		if(id == :menu_end_game) {
+			match.end(null);
 			//pop once to close the menu
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
-			var save_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.end_save_garmin_connect));
-			WatchUi.pushView(save_match_confirmation, new SaveMatchConfirmationDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			//go to result screen
+			WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
-		else if(item == :menu_reset_game) {
-			var match = Application.getApp().getMatch();
+		else if(id == :menu_reset_game) {
 			match.discard();
 			//pop once to close the menu
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

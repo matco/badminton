@@ -1,5 +1,7 @@
+import Toybox.Lang;
 using Toybox.WatchUi;
 using Toybox.Application;
+using Toybox.Application.Properties;
 using Toybox.Graphics;
 
 class SetPicker extends WatchUi.Picker {
@@ -8,13 +10,13 @@ class SetPicker extends WatchUi.Picker {
 		var factory = new SetPickerFactory();
 
 		var title = new WatchUi.Text({
-			:text => WatchUi.loadResource(Rez.Strings.sets_number),
+			:text => WatchUi.loadResource(Rez.Strings.sets_number) as String,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
 			:locY => WatchUi.LAYOUT_VALIGN_BOTTOM,
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_number_of_sets = Application.getApp().getProperty("default_match_number_of_sets");
+		var default_number_of_sets = Properties.getValue("default_match_number_of_sets");
 		if(default_number_of_sets == null) {
 			default_number_of_sets = 0;
 		}
@@ -48,7 +50,13 @@ class SetPickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.sets = values[0];
+		var value = values[0];
+		if(value == :endless) {
+			InitialView.config.sets = null;
+		}
+		else {
+			InitialView.config.sets = value as Number;
+		}
 		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

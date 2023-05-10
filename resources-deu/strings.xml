@@ -1,6 +1,7 @@
 <resources>
 	<string id="application_name">Badminton</string>
 
+	<string id="menu_title">Spiel</string>
 	<string id="menu_reset_game">Reset</string>
 	<string id="menu_end_game">Beenden</string>
 
@@ -12,6 +13,7 @@
 	<string id="set_1">1</string>
 	<string id="set_3">3</string>
 	<string id="set_5">5</string>
+	<string id="set_endless">Endlos</string>
 
 	<string id="beginner_who">Wer fängt an?</string>
 	<string id="beginner_opponent">Gegner</string>
@@ -28,6 +30,7 @@
 
 	<string id="end_you_won">Gewonnen!</string>
 	<string id="end_opponent_won">Verloren!</string>
+	<string id="end_draw">Unentschieden</string>
 	<string id="end_total_rallies">${rallies} Wechsel</string>
 	<string id="end_save_garmin_connect">Spiel speichern?</string>
 
