@@ -23,17 +23,17 @@
 
 ## 3.1.0
 - Add support for Forerunner 745
-- Fix beginner of sets after first has been won (thanks to lshako)
+- Fix wrong server from second set (thanks to lshako)
 - Add settings to configure default values for type of match and number of sets
-- Allow to prematurely end a match (with save or discard)
+- Allow to end prematurely a match (with save or discard)
 
 ## 3.0.1
-- Remove optimization on "Match" view that may fail with some watches
-- Update "Match" view when application settings are updated
+- Remove optimization on the match view that may fail with some watches
+- Update the match view when application settings are updated
 
 ## 3.0.0
-- Redesign match view
-- Redesign match configuration process to be able to support more watches
+- Redesign the match view
+- Redesign the match configuration process to be able to support more watches
 - Add support for Venu series, Forerunner 245 and Forerunner 945
 
 ## 2.2.1
@@ -72,11 +72,11 @@
 - Add support for Vivoactive HR
 
 ## 1.4.2
-- Disable sound on Vivoactive since it does not support sound feature.
+- Disable sound on Vivoactive since it does not support sounds
 - Clean code
 
 ## 1.4.1
-- Add a setting to enable or disable sound in the application.
+- Add a setting to enable or disable sound in the application
 - Improve code
 
 ## 1.4.0
@@ -98,7 +98,7 @@
 - Fallback on English labels when language is not supported
 
 ## 1.3.0
-- Code rewrite to prepare support of tactile watches and round watches of any dimension
+- Code rewrite to prepare support for tactile watches and round watches of any dimension
 - Add support for Forerunner 630
 
 ## 1.2.0
@@ -113,7 +113,7 @@
 - Fix bug with buttons after update to ConnectIQ 1.1.3
 
 ## 1.1.1
-- Set maximum points to 30 (official rule)
+- Set the absolute maximum points to 30 (official rule)
 
 ## 1.1.0
 - Update application icon
