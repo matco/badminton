@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.0.0
+- Add endless mode to play an unlimited number of sets
+- Add support for Forerunner 265 series, Forerunner 955 and Forerunner 965
+- Rely on the official support of badminton by Garmin (for devices that support Connect IQ >= 4.1.0)
+- Save data even if the match is ended prematurely
+- Drop support for devices that don't support Connect IQ 3.1.0
+
 ## 3.6.0
 - Display your position in singles and doubles, anytime
 - Improve design of the court
