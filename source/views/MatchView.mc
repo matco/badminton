@@ -7,7 +7,7 @@ using Toybox.Application;
 using Toybox.Application.Properties;
 
 class MatchBoundaries {
-	static const COURT_WIDTH_RATIO = 0.7; //width of the back compared to the front of the court
+	static const COURT_WIDTH_RATIO = 0.6; //width of the back compared to the front of the court
 	static const COURT_SIDELINE_SIZE = 0.1;
 	static const COURT_LONG_SERVICE_SIZE = 0.05;
 	static const COURT_SHORT_SERVICE_SIZE = 0.1;
@@ -108,7 +108,7 @@ class MatchBoundaries {
 	function initialize(match as Match, device as DeviceSettings) {
 		//calculate margins
 		marginHeight = device.screenHeight * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
-		var margin_width = device.screenWidth * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
+		var margin_width = device.screenWidth * 0.09;
 
 		//calculate strategic positions
 		xCenter = device.screenWidth / 2f;
@@ -127,14 +127,22 @@ class MatchBoundaries {
 		var court_margin = SET_BALL_RADIUS * 2 + margin_width;
 		//rectangular watches
 		if(device.screenShape == System.SCREEN_SHAPE_RECTANGLE) {
+			//simulate perspective using the arbitrary court width ratio
 			front_width = (device.screenWidth / 2) - court_margin;
 			back_width = front_width * COURT_WIDTH_RATIO;
 		}
 		//round watches
 		else {
 			var radius = device.screenWidth / 2f;
+			//use the available space to draw the court
 			front_width = Geometry.chordLength(radius, yFront - yCenter) / 2f - court_margin;
 			back_width = Geometry.chordLength(radius, yCenter - yBack) / 2f - court_margin;
+			//however, this may not result in a good perspective, for example when the current time is displayed
+			//in this case, the top and bottom margins are the same, resulting in a court that has the shape of a rectangle
+			//perspective must be created it artificially
+			if((back_width / front_width) > COURT_WIDTH_RATIO) {
+				back_width = front_width * COURT_WIDTH_RATIO;
+			}
 		}
 
 		//perspective is defined by its two side vanishing lines
