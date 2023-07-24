@@ -56,6 +56,7 @@
 
 	<string id="settings_enable_sound">Enable sound</string>
 	<string id="settings_display_time">Display time</string>
+	<string id="settings_display_heart_rate">Display heart rate</string>
 
 	<string id="fit_activity_name">Badminton</string>
 	<string id="fit_set_unit_label">sets</string>
