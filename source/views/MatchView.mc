@@ -229,18 +229,18 @@ class MatchView extends WatchUi.View {
 	}
 
 	function calculateBoundaries() as Void {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		boundaries = new MatchBoundaries(match, System.getDeviceSettings());
 	}
 
 	function onShow() {
 		timer.start(method(:onTimer), 1000, true);
-		(Application.getApp() as BadmintonScoreTrackerApp).getBus().register(self);
+		(Application.getApp() as BadmintonApp).getBus().register(self);
 	}
 
 	function onHide() as Void {
 		timer.stop();
-		(Application.getApp() as BadmintonScoreTrackerApp).getBus().unregister(self);
+		(Application.getApp() as BadmintonApp).getBus().unregister(self);
 	}
 
 	function onTimer() as Void {
@@ -420,7 +420,7 @@ class MatchView extends WatchUi.View {
 			dc.setAntiAlias(true);
 		}
 
-		var app = (Application.getApp() as BadmintonScoreTrackerApp);
+		var app = (Application.getApp() as BadmintonApp);
 		var match = app.getMatch();
 
 		drawCourt(dc, match);
@@ -461,7 +461,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function manageScore(player as Player) as Boolean {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		match.score(player);
 		var winner = match.getCurrentSet().getWinner();
 		if(winner != null) {
@@ -485,7 +485,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
 	//undo last action
 	function onBack() {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		if(match.getTotalRalliesNumber() > 0) {
 			//undo last rally
 			match.undo();

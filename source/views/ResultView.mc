@@ -9,7 +9,7 @@ class SaveMatchConfirmationDelegate extends WatchUi.ConfirmationDelegate {
 	}
 
 	function onResponse(value) as Boolean {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		if(value == CONFIRM_YES) {
 			match.save();
 		}
@@ -34,7 +34,7 @@ class ResultView extends WatchUi.View {
 	}
 
 	function onShow() {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		//draw end of match text
 		var winner = match.getWinner();
 		var won_resource = Rez.Strings.end_draw;

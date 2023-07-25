@@ -27,7 +27,7 @@ class InitialView extends WatchUi.View {
 			//create match
 			var match = new Match(config);
 
-			var app = Application.getApp() as BadmintonScoreTrackerApp;
+			var app = Application.getApp() as BadmintonApp;
 			app.setMatch(match);
 
 			//prepare a new config

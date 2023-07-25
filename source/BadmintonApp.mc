@@ -5,7 +5,7 @@ import Toybox.Attention;
 using Toybox.Application;
 using Toybox.Timer;
 
-class BadmintonScoreTrackerApp extends Application.AppBase {
+class BadmintonApp extends Application.AppBase {
 	//create bus for the whole application
 	private const bus = new Bus();
 	private var match as Match?;

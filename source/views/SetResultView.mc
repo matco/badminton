@@ -13,7 +13,7 @@ class SetResultView extends WatchUi.View {
 	}
 
 	function onShow() {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		var set = match.getCurrentSet();
 		//draw end of match text
 		var set_winner = set.getWinner();
@@ -44,7 +44,7 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		//undo last point
 		match.undo();
 		var view = new MatchView();
@@ -53,7 +53,7 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onSelect() as Boolean {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		if(match.hasEnded()) {
 			WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
