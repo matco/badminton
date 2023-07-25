@@ -5,9 +5,11 @@ import Toybox.WatchUi;
 import Toybox.System;
 using Toybox.Application;
 using Toybox.Application.Properties;
+using Toybox.Activity;
+using Toybox.UserProfile;
 
 class MatchBoundaries {
-	static const COURT_WIDTH_RATIO = 0.7; //width of the back compared to the front of the court
+	static const COURT_WIDTH_RATIO = 0.6; //width of the back compared to the front of the court
 	static const COURT_SIDELINE_SIZE = 0.1;
 	static const COURT_LONG_SERVICE_SIZE = 0.05;
 	static const COURT_SHORT_SERVICE_SIZE = 0.1;
@@ -105,10 +107,12 @@ class MatchBoundaries {
 	public var corners as Dictionary<Corner, Array>;
 	public var board as Array<Array>;
 
+	public var hr_coordinates as Dictionary<String, Array or Number>;
+
 	function initialize(match as Match, device as DeviceSettings) {
 		//calculate margins
 		marginHeight = device.screenHeight * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
-		var margin_width = device.screenWidth * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
+		var margin_width = device.screenWidth * 0.09;
 
 		//calculate strategic positions
 		xCenter = device.screenWidth / 2f;
@@ -127,14 +131,22 @@ class MatchBoundaries {
 		var court_margin = SET_BALL_RADIUS * 2 + margin_width;
 		//rectangular watches
 		if(device.screenShape == System.SCREEN_SHAPE_RECTANGLE) {
+			//simulate perspective using the arbitrary court width ratio
 			front_width = (device.screenWidth / 2) - court_margin;
 			back_width = front_width * COURT_WIDTH_RATIO;
 		}
 		//round watches
 		else {
 			var radius = device.screenWidth / 2f;
+			//use the available space to draw the court
 			front_width = Geometry.chordLength(radius, yFront - yCenter) / 2f - court_margin;
 			back_width = Geometry.chordLength(radius, yCenter - yBack) / 2f - court_margin;
+			//however, this may not result in a good perspective, for example when the current time is displayed
+			//in this case, the top and bottom margins are the same, resulting in a court that has the shape of a rectangle
+			//perspective must be created it artificially
+			if((back_width / front_width) > COURT_WIDTH_RATIO) {
+				back_width = front_width * COURT_WIDTH_RATIO;
+			}
 		}
 
 		//perspective is defined by its two side vanishing lines
@@ -164,6 +176,35 @@ class MatchBoundaries {
 			var transformed_coordinates = perspective.transform([-0.5, y] as Array<Float>);
 			board[i] = [transformed_coordinates[0] - SET_BALL_RADIUS * 2, transformed_coordinates[1]];
 		}
+
+		//calculate hear rate position
+		var hr_center = BetterMath.roundAll(perspective.transform([0.75, 0.6])) as Array<Numeric>;
+		//size the icon according to the size of the tiny font
+		var size = Math.round(Graphics.getFontHeight(Graphics.FONT_TINY) * 0.2);
+		var icon_center = [hr_center[0], hr_center[1] - size * 2];
+		//the heart icon is composed of two a-little-more-than-half circles, a triangle, and a rectangle to cover the space between the two circles
+		var angle = Math.PI / 4;
+		var circle_y_extension = Math.round(size * Math.sin(angle));
+		var circle_x_extension = Math.round(size * (1 - Math.cos(angle)));
+		hr_coordinates = {
+			"center" => hr_center,
+			"size" => size,
+			"icon_center" => icon_center,
+			"circle_y_extension" => circle_y_extension,
+			"heart_circle_left" => [icon_center[0] - size, icon_center[1]],
+			"heart_circle_right" => [icon_center[0] + size, icon_center[1]],
+			"heart_triangle" => [
+				[icon_center[0] - 2 * size + circle_x_extension, icon_center[1] + circle_y_extension],
+				[icon_center[0] + 2 * size - circle_x_extension, icon_center[1] + circle_y_extension],
+				[icon_center[0], icon_center[1] + 2 * size]
+			],
+			"heart_rectangle" => [
+				[icon_center[0] - size / 2, icon_center[1]],
+				[icon_center[0] + size / 2, icon_center[1]],
+				[icon_center[0] + size / 2, icon_center[1] + size],
+				[icon_center[0] - size / 2, icon_center[1] + size]
+			]
+		};
 	}
 }
 
@@ -301,6 +342,50 @@ class MatchView extends WatchUi.View {
 		}
 	}
 
+	function drawHeartRate(dc as Dc) as Void {
+		var rate = Activity.getActivityInfo().currentHeartRate;
+
+		if(rate != null) {
+			var profile = UserProfile.getCurrentSport();
+			var zones = UserProfile.getHeartRateZones(profile);
+
+			//choose color for the heart icon depending on the current user zone
+			var color = Graphics.COLOR_GREEN;
+			if(zones != null && zones.size() > 4) {
+				if(rate > zones[4]) {
+					color= Graphics.COLOR_RED;
+				}
+				else if(rate > zones[3]) {
+					color = Graphics.COLOR_YELLOW;
+				}
+			}
+
+			var hr_coordinates = boundaries.hr_coordinates;
+			var size = hr_coordinates["size"] as Numeric;
+			var icon_center = hr_coordinates["icon_center"] as Array<Numeric>;
+			var circle_y_extension = hr_coordinates["circle_y_extension"];
+			dc.setColor(color, Graphics.COLOR_TRANSPARENT);
+			//draw half circles by clipping the bottom part of full circles
+			//add a margin on the top and bottom because rounded coordinates may result in bad clipping
+			var margin = 1;
+			dc.setClip(
+				icon_center[0] as Numeric - size * 2 - margin,
+				icon_center[1] as Numeric - size - margin,
+				size * 4 + 2 * margin,
+				size + circle_y_extension + 2 * margin);
+			var heart_circle_left = hr_coordinates["heart_circle_left"] as Array<Numeric>;
+			dc.fillCircle(heart_circle_left[0] as Numeric, heart_circle_left[1] as Numeric, size);
+			var heart_circle_right = hr_coordinates["heart_circle_right"] as Array<Numeric>;
+			dc.fillCircle(heart_circle_right[0] as Numeric, heart_circle_right[1] as Numeric, size);
+			dc.clearClip();
+			dc.fillPolygon(hr_coordinates["heart_triangle"] as Array<Array>);
+			dc.fillPolygon(hr_coordinates["heart_rectangle"] as Array<Array>);
+			dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
+			var center = hr_coordinates["center"] as Array<Numeric>;
+			dc.drawText(center[0], center[1], Graphics.FONT_TINY, rate.toString(), Graphics.TEXT_JUSTIFY_CENTER);
+		}
+	}
+
 	function drawTimer(dc as Dc, match as Match) as Void {
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
 		dc.drawText(
@@ -345,6 +430,14 @@ class MatchView extends WatchUi.View {
 
 		if(Properties.getValue("display_time")) {
 			drawTime(dc);
+		}
+
+		if(Properties.getValue("display_heart_rate")) {
+			//disable anti aliasing to draw a pixel perfect icon
+			if(dc has :setAntiAlias) {
+				dc.setAntiAlias(false);
+			}
+			drawHeartRate(dc);
 		}
 	}
 }

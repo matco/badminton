@@ -34,4 +34,8 @@
 	<setting propertyKey="@Properties.display_time" title="@Strings.settings_display_time">
 		<settingConfig type="boolean" />
 	</setting>
+
+	<setting propertyKey="@Properties.display_heart_rate" title="@Strings.settings_display_heart_rate">
+		<settingConfig type="boolean" />
+	</setting>
 </settings>

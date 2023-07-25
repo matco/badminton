@@ -1,0 +1,33 @@
+{
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"type": "monkeyc",
+			"request": "launch",
+			"name": "Run",
+			"stopAtLaunch": false,
+			"device": "${command:GetTargetDevice}"
+		},
+		{
+			"type": "monkeyc",
+			"request": "launch",
+			"name": "Run on Fenix 7",
+			"stopAtLaunch": false,
+			"device": "fenix7"
+		},
+		{
+			"type": "monkeyc",
+			"request": "launch",
+			"name": "Run tests",
+			"runTests": true,
+			"device": "${command:GetTargetDevice}"
+		},
+		{
+			"type": "monkeyc",
+			"request": "launch",
+			"name": "Run tests on Fenix 7",
+			"runTests": true,
+			"device": "fenix7"
+		},
+	]
+}

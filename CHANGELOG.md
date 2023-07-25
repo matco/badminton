@@ -1,15 +1,21 @@
 # Changelog
 
+## 4.1.0
+- Display your heart rate
+- Add support for Epix 2 pro and Fenix 7 pro series
+- Improve display of the court
+- Restore the possibility to choose the beginner randomly
+
 ## 4.0.0
 - Add endless mode to play an unlimited number of sets
 - Add support for Forerunner 265 series, Forerunner 955 and Forerunner 965
-- Rely on the official support of badminton by Garmin (for devices that support Connect IQ >= 4.1.0)
+- Rely on the official support of badminton by Garmin (for devices that support Connect IQ 4.1.0)
 - Save data even if the match is ended prematurely
 - Drop support for devices that don't support Connect IQ 3.1.0
 
 ## 3.6.0
 - Display your position in singles and doubles, anytime
-- Improve design of the court
+- Improve the design of the court
 - Display the boundaries of the court according to the type of match
 - Add support for Forerunner 255 and Venus Sq 2 series
 - Improve settings

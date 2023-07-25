@@ -44,7 +44,14 @@ class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) as Boolean {
 		//update match configuration
-		InitialView.config.beginner = values[0] as Player;
+		var value = values[0];
+		if(value == :random) {
+			var number = Math.rand();
+			InitialView.config.beginner = number % 2 == 0 ? YOU : OPPONENT;
+		}
+		else {
+			InitialView.config.beginner = values[0] as Player;
+		}
 		InitialView.config.step++;
 		//remove picker from view stack to go back to initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
