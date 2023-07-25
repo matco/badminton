@@ -62,7 +62,7 @@ class List {
 		return elements[length - 1];
 	}
 
-	hidden function grow() as Void {
+	private function grow() as Void {
 		var new_elements = new [elements.size() + INITIAL_SIZE] as Array<Object>;
 		for(var i = 0; i < length; i++) {
 			new_elements[i] = elements[i];

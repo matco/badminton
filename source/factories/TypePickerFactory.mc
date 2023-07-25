@@ -4,8 +4,8 @@ using Toybox.WatchUi;
 
 class TypePickerFactory extends WatchUi.PickerFactory {
 
-	var types as Array<MatchType> = [SINGLE, DOUBLE] as Array<MatchType>;
-	var types_labels as Array<Symbol> = [Rez.Strings.type_single, Rez.Strings.type_double] as Array<Symbol>;
+	private const TYPES as Array<MatchType> = [SINGLE, DOUBLE] as Array<MatchType>;
+	private const TYPES_LABELS as Array<Symbol> = [Rez.Strings.type_single, Rez.Strings.type_double] as Array<Symbol>;
 
 	function initialize() {
 		PickerFactory.initialize();
@@ -13,7 +13,7 @@ class TypePickerFactory extends WatchUi.PickerFactory {
 
 	function getDrawable(index, selected) {
 		return new WatchUi.Text({
-			:text => WatchUi.loadResource(types_labels[index]) as String,
+			:text => WatchUi.loadResource(TYPES_LABELS[index]) as String,
 			:color => Graphics.COLOR_WHITE,
 			:font=> Graphics.FONT_SMALL,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
@@ -22,10 +22,10 @@ class TypePickerFactory extends WatchUi.PickerFactory {
 	}
 
 	function getValue(index) {
-		return types[index];
+		return TYPES[index];
 	}
 
 	function getSize() as Number {
-		return types.size();
+		return TYPES.size();
 	}
 }

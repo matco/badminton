@@ -7,7 +7,7 @@ using Toybox.Timer;
 
 class BadmintonApp extends Application.AppBase {
 	//create bus for the whole application
-	private const bus = new Bus();
+	private const BUS = new Bus();
 	private var match as Match?;
 
 	function initialize() {
@@ -16,7 +16,7 @@ class BadmintonApp extends Application.AppBase {
 
 	function onStart(state as Dictionary?) as Void {
 		//register application itself in the bus
-		bus.register(self);
+		BUS.register(self);
 	}
 
 	function getInitialView() {
@@ -24,7 +24,7 @@ class BadmintonApp extends Application.AppBase {
 	}
 
 	function getBus() as Bus {
-		return bus;
+		return BUS;
 	}
 
 	function getMatch() as Match {
@@ -60,6 +60,6 @@ class BadmintonApp extends Application.AppBase {
 		//dispatch updated settings event
 		//do not name the event "onSettingsChanged" to avoid recursion
 		//"onSettingsChanged" is the native event and "onUpdateSettings" is the custom event for this app (that views can catch)
-		bus.dispatch(new BusEvent(:onUpdateSettings, null));
+		BUS.dispatch(new BusEvent(:onUpdateSettings, null));
 	}
 }

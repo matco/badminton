@@ -107,7 +107,7 @@ class MatchBoundaries {
 	public var corners as Dictionary<Corner, Array>;
 	public var board as Array<Array>;
 
-	public var hr_coordinates as Dictionary<String, Array or Number>;
+	public var hrCoordinates as Dictionary<String, Array or Number>;
 
 	function initialize(match as Match, device as DeviceSettings) {
 		//calculate margins
@@ -186,7 +186,7 @@ class MatchBoundaries {
 		var angle = Math.PI / 4;
 		var circle_y_extension = Math.round(size * Math.sin(angle));
 		var circle_x_extension = Math.round(size * (1 - Math.cos(angle)));
-		hr_coordinates = {
+		hrCoordinates = {
 			"center" => hr_center,
 			"size" => size,
 			"icon_center" => icon_center,
@@ -360,7 +360,7 @@ class MatchView extends WatchUi.View {
 				}
 			}
 
-			var hr_coordinates = boundaries.hr_coordinates;
+			var hr_coordinates = boundaries.hrCoordinates;
 			var size = hr_coordinates["size"] as Numeric;
 			var icon_center = hr_coordinates["icon_center"] as Array<Numeric>;
 			var circle_y_extension = hr_coordinates["circle_y_extension"];

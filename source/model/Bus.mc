@@ -29,22 +29,22 @@ class Bus {
 }
 
 class BusEvent {
-	private var method_name as Symbol;
+	private var methodName as Symbol;
 	private var payload as Object?;
 
 	function initialize(mn as Symbol, p as Object?) {
-		method_name = mn;
+		methodName = mn;
 		payload = p;
 	}
 
 	function hit(listener as Object) as Void {
-		if(listener has method_name) {
+		if(listener has methodName) {
 			if(payload != null) {
-				var method = listener.method(method_name) as Method(payload as Object?) as Void;
+				var method = listener.method(methodName) as Method(payload as Object?) as Void;
 				method.invoke(payload);
 			}
 			else {
-				var method = listener.method(method_name) as Method() as Void;
+				var method = listener.method(methodName) as Method() as Void;
 				method.invoke();
 			}
 		}

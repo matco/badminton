@@ -207,7 +207,7 @@ class Match {
 		}
 	}
 
-	hidden function isSetWon(set as MatchSet) as Player? {
+	private function isSetWon(set as MatchSet) as Player? {
 		var scorePlayer1 = set.getScore(YOU);
 		var scorePlayer2 = set.getScore(OPPONENT);
 		if(scorePlayer1 >= absoluteMaximumPoints || scorePlayer1 >= maximumPoints && (scorePlayer1 - scorePlayer2) > 1) {
@@ -219,7 +219,7 @@ class Match {
 		return null;
 	}
 
-	hidden function isWon() as Player? {
+	private function isWon() as Player? {
 		//in endless mode, no winner can be determined wile the match has not been ended
 		if(isEndless()) {
 			return null;
