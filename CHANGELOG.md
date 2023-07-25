@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.1.0
+- Display your heart rate
+- Add support for Epix 2 pro and Fenix 7 pro series
+- Improve display of the court
+- Restore the possibility to choose the beginner randomly
+
 ## 4.0.0
 - Add endless mode to play an unlimited number of sets
 - Add support for Forerunner 265 series, Forerunner 955 and Forerunner 965
