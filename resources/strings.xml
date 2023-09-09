@@ -24,14 +24,14 @@
 	<string id="server_you">You</string>
 	<string id="server_teammate">Teammate</string>
 
+	<string id="total_rallies">${rallies} rallies</string>
+
 	<string id="set_end_you_won">Set won!</string>
 	<string id="set_end_opponent_won">Set lost!</string>
-	<string id="set_end_rallies">${rallies} rallies</string>
 
 	<string id="end_you_won">You won!</string>
 	<string id="end_opponent_won">They won!</string>
 	<string id="end_draw">Draw</string>
-	<string id="end_total_rallies">${rallies} total rallies</string>
 	<string id="end_save_garmin_connect">Save match?</string>
 
 	<string id="time_am">am</string>

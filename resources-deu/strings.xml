@@ -24,14 +24,14 @@
 	<string id="server_you">Du</string>
 	<string id="server_teammate">Mitspieler</string>
 
+	<string id="total_rallies">${rallies} Wechsel</string>
+
 	<string id="set_end_you_won">Satz gewonnen!</string>
 	<string id="set_end_opponent_won">Satz verloren!</string>
-	<string id="set_end_rallies">${rallies} Wechsel</string>
 
 	<string id="end_you_won">Gewonnen!</string>
 	<string id="end_opponent_won">Verloren!</string>
 	<string id="end_draw">Unentschieden</string>
-	<string id="end_total_rallies">${rallies} Wechsel</string>
 	<string id="end_save_garmin_connect">Spiel speichern?</string>
 
 	<string id="time_am">am</string>

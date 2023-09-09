@@ -49,7 +49,7 @@ class ResultView extends WatchUi.View {
 		//draw match time
 		(findDrawableById("result_time") as Text).setText(Helpers.formatDuration(match.getDuration()));
 		//draw rallies
-		var rallies_text = WatchUi.loadResource(Rez.Strings.end_total_rallies) as String;
+		var rallies_text = WatchUi.loadResource(Rez.Strings.total_rallies) as String;
 		(findDrawableById("result_rallies") as Text).setText(Helpers.formatString(rallies_text, {"rallies" => match.getTotalRalliesNumber().toString()}));
 	}
 }
