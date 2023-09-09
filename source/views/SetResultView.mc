@@ -22,6 +22,9 @@ class SetResultView extends WatchUi.View {
 		//draw set score
 		var score_text = set.getScore(YOU).toString() + " - " + set.getScore(OPPONENT).toString();
 		(findDrawableById("set_result_score") as Text).setText(score_text);
+		//draw match score
+		var match_score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();
+		(findDrawableById("set_result_match_score") as Text).setText(match_score_text);
 		//draw rallies
 		var rallies_text = WatchUi.loadResource(Rez.Strings.set_end_rallies) as String;
 		(findDrawableById("set_result_rallies") as Text).setText(Helpers.formatString(rallies_text, {"rallies" => set.getRalliesNumber().toString()}));

@@ -43,7 +43,7 @@ class ResultView extends WatchUi.View {
 		}
 		var won_text = WatchUi.loadResource(won_resource) as String;
 		(findDrawableById("result_won_text") as Text).setText(won_text);
-		//draw match score or last set score
+		//draw match score
 		var score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();
 		(findDrawableById("result_score") as Text).setText(score_text);
 		//draw match time
