@@ -6,6 +6,8 @@ venusq.resourcePath = resources;icons/36x36
 venusqm.resourcePath = resources;icons/36x36
 venu2.resourcePath = resources;icons/70x70
 venu2s.resourcePath = resources;icons/61x61
+venu3.resourcePath = resources;icons/70x70
+venu3s.resourcePath = resources;icons/70x70
 
 vivoactive3.resourcePath = resources;icons/40x33
 vivoactive3m.resourcePath = resources;icons/40x33
