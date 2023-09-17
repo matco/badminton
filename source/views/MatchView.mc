@@ -214,10 +214,11 @@ class MatchView extends WatchUi.View {
 
 	public var boundaries as MatchBoundaries?;
 
-	private var timer as Timer.Timer;
 	private var clock24Hour as Boolean;
 	private var timeAMLabel as String;
 	private var timePMLabel as String;
+
+	private var refreshTimer as Timer.Timer;
 
 	function initialize() {
 		View.initialize();
@@ -225,7 +226,7 @@ class MatchView extends WatchUi.View {
 		timeAMLabel = WatchUi.loadResource(Rez.Strings.time_am) as String;
 		timePMLabel = WatchUi.loadResource(Rez.Strings.time_pm) as String;
 		calculateBoundaries();
-		timer = new Timer.Timer();
+		refreshTimer = new Timer.Timer();
 	}
 
 	function calculateBoundaries() as Void {
@@ -234,16 +235,16 @@ class MatchView extends WatchUi.View {
 	}
 
 	function onShow() {
-		timer.start(method(:onTimer), 1000, true);
+		refreshTimer.start(method(:refresh), 1000, true);
 		(Application.getApp() as BadmintonApp).getBus().register(self);
 	}
 
 	function onHide() as Void {
-		timer.stop();
+		refreshTimer.stop();
 		(Application.getApp() as BadmintonApp).getBus().unregister(self);
 	}
 
-	function onTimer() as Void {
+	function refresh() as Void {
 		WatchUi.requestUpdate();
 	}
 
