@@ -6,6 +6,7 @@ venusq.resourcePath = resources;icons/36x36
 venusqm.resourcePath = resources;icons/36x36
 venu2.resourcePath = resources;icons/70x70
 venu2s.resourcePath = resources;icons/61x61
+venu2plus.resourcePath = resources;icons/70x70
 venu3.resourcePath = resources;icons/70x70
 venu3s.resourcePath = resources;icons/70x70
 
@@ -18,6 +19,7 @@ vivoactive4s.resourcePath = resources;icons/30x30
 
 fenix5s.resourcePath = resources;icons/36x36
 
+epix2.resourcePath = resources;icons/60x60
 epix2pro51mm.resourcePath = resources;icons/60x60
 epix2pro47mm.resourcePath = resources;icons/60x60
 epix2pro42mm.resourcePath = resources;icons/60x60
