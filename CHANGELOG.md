@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.2.0
+- Animate the court
+- Add support for Venu 3 series
+- Display match score on the set result screen
+
 ## 4.1.0
 - Display your heart rate
 - Add support for Epix 2 pro and Fenix 7 pro series
