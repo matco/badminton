@@ -24,14 +24,14 @@
 	<string id="server_you">Du</string>
 	<string id="server_teammate">Mitspieler</string>
 
+	<string id="total_rallies">${rallies} Wechsel</string>
+
 	<string id="set_end_you_won">Satz gewonnen!</string>
 	<string id="set_end_opponent_won">Satz verloren!</string>
-	<string id="set_end_rallies">${rallies} Wechsel</string>
 
 	<string id="end_you_won">Gewonnen!</string>
 	<string id="end_opponent_won">Verloren!</string>
 	<string id="end_draw">Unentschieden</string>
-	<string id="end_total_rallies">${rallies} Wechsel</string>
 	<string id="end_save_garmin_connect">Spiel speichern?</string>
 
 	<string id="time_am">am</string>
@@ -55,6 +55,8 @@
 	<string id="settings_default_match_number_of_sets">Standardanzahl der Sätze</string>
 
 	<string id="settings_enable_sound">Töne einschalten</string>
+	<string id="settings_enable_animation">Animation aktivieren</string>
+
 	<string id="settings_display_time">Anzeige der Uhrzeit</string>
 	<string id="settings_display_heart_rate">Heartbeat-Anzeige aktivieren</string>
 

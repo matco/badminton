@@ -15,7 +15,7 @@ class ActivityStatsView extends WatchUi.View {
 	}
 
 	function onShow() {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		//retrieve stats from activity
 		var activity = match.getActivity();
 		var stats_available = false;

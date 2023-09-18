@@ -9,7 +9,7 @@ class MatchMenuDelegate extends WatchUi.Menu2InputDelegate {
 
 	function onSelect(item as MenuItem) {
 		var id = item.getId();
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		if(id == :menu_end_game) {
 			match.end(null);
 			//pop once to close the menu

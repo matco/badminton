@@ -107,9 +107,9 @@ class MatchBoundaries {
 	public var corners as Dictionary<Corner, Array>;
 	public var board as Array<Array>;
 
-	public var hr_coordinates as Dictionary<String, Array or Number>;
+	public var hrCoordinates as Dictionary<String, Array or Number>;
 
-	function initialize(match as Match, device as DeviceSettings) {
+	function initialize(match as Match, device as DeviceSettings, elapsed_time as Number?) {
 		//calculate margins
 		marginHeight = device.screenHeight * (device.screenShape == System.SCREEN_SHAPE_RECTANGLE ? 0.04 : 0.09);
 		var margin_width = device.screenWidth * 0.09;
@@ -123,7 +123,6 @@ class MatchBoundaries {
 			yBack += TIME_HEIGHT;
 		}
 		yFront = device.screenHeight - marginHeight - TIME_HEIGHT;
-		yMiddle = BetterMath.mean(yFront, yBack);
 
 		var back_width, front_width;
 
@@ -148,6 +147,36 @@ class MatchBoundaries {
 				back_width = front_width * COURT_WIDTH_RATIO;
 			}
 		}
+
+		if(elapsed_time != null) {
+			var half_time = MatchView.ANIMATION_TIME / 2;
+			if(elapsed_time < half_time) {
+				var width = BetterMath.mean(front_width, back_width);
+				var zoom = 0.7 + (0.3 * elapsed_time / half_time);
+				front_width = width * zoom;
+				back_width = width * zoom;
+
+				//adjust back and front positions
+				yBack = (yBack - 25 + 15 - 15 * elapsed_time / half_time);
+				yFront = (yFront + 25 - 15 + 15 * elapsed_time / half_time);
+			}
+			else if(elapsed_time < MatchView.ANIMATION_TIME) {
+				var time = elapsed_time - half_time;
+				var width = BetterMath.mean(front_width, back_width);
+				var width_offset = (front_width - width) * time / half_time;
+				front_width = width + width_offset;
+				back_width = width - width_offset;
+
+				//adjust back and front positions
+				var offset = 25 * time / half_time;
+				yBack = yBack - 25 + offset;
+				yFront = yFront + 25 - offset;
+				//yBack = Math.sqrt(Math.pow(radius, 2) - Math.pow(back_width / 2, 2));
+				//yFront = Math.sqrt(Math.pow(radius, 2) - Math.pow(front_width / 2, 2));
+			}
+		}
+
+		yMiddle = BetterMath.mean(yFront, yBack);
 
 		//perspective is defined by its two side vanishing lines
 		perspective = new Perspective(
@@ -186,7 +215,7 @@ class MatchBoundaries {
 		var angle = Math.PI / 4;
 		var circle_y_extension = Math.round(size * Math.sin(angle));
 		var circle_x_extension = Math.round(size * (1 - Math.cos(angle)));
-		hr_coordinates = {
+		hrCoordinates = {
 			"center" => hr_center,
 			"size" => size,
 			"icon_center" => icon_center,
@@ -212,44 +241,70 @@ class MatchView extends WatchUi.View {
 	const SCORE_PLAYER_1_FONT = Graphics.FONT_LARGE;
 	const SCORE_PLAYER_2_FONT = Graphics.FONT_MEDIUM;
 
+	const REFRESH_TIME_ANIMATION = 50;
+	const REFRESH_TIME_STANDARD = 1000;
+	const ANIMATION_TIME = 800;
+
 	public var boundaries as MatchBoundaries?;
 
-	private var timer as Timer.Timer;
 	private var clock24Hour as Boolean;
 	private var timeAMLabel as String;
 	private var timePMLabel as String;
+
+	private var startTime as Number;
+	private var refreshTime = null as Number?;
+	private var inAnimation = false;
+	private var refreshTimer as Timer.Timer;
 
 	function initialize() {
 		View.initialize();
 		clock24Hour = System.getDeviceSettings().is24Hour;
 		timeAMLabel = WatchUi.loadResource(Rez.Strings.time_am) as String;
 		timePMLabel = WatchUi.loadResource(Rez.Strings.time_pm) as String;
-		calculateBoundaries();
-		timer = new Timer.Timer();
+
+		startTime = System.getTimer();
+		refreshTimer = new Timer.Timer();
 	}
 
-	function calculateBoundaries() as Void {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
-		boundaries = new MatchBoundaries(match, System.getDeviceSettings());
+	function calculateBoundaries(elapsed_time as Number?) as Void {
+		var match = (Application.getApp() as BadmintonApp).getMatch();
+		var device = System.getDeviceSettings();
+		boundaries = new MatchBoundaries(match, device, elapsed_time);
 	}
 
-	function onShow() {
-		timer.start(method(:onTimer), 1000, true);
-		(Application.getApp() as BadmintonScoreTrackerApp).getBus().register(self);
+	function onShow() as Void {
+		(Application.getApp() as BadmintonApp).getBus().register(self);
+		inAnimation = Properties.getValue("enable_animation");
+		var refresh_time = inAnimation ? REFRESH_TIME_ANIMATION : REFRESH_TIME_STANDARD;
+		setRefreshTime(refresh_time);
 	}
 
 	function onHide() as Void {
-		timer.stop();
-		(Application.getApp() as BadmintonScoreTrackerApp).getBus().unregister(self);
+		refreshTimer.stop();
+		(Application.getApp() as BadmintonApp).getBus().unregister(self);
 	}
 
-	function onTimer() as Void {
+	function getElapsedTime() as Number {
+		return System.getTimer() - startTime;
+	}
+
+	function refresh() as Void {
 		WatchUi.requestUpdate();
+	}
+
+	function setRefreshTime(time as Number) as Void {
+		if(refreshTime != time) {
+			refreshTime = time;
+			refreshTimer.stop();
+			refreshTimer.start(method(:refresh), refreshTime, true);
+			System.println("set refresh time to " + time);
+		}
 	}
 
 	function onUpdateSettings() as Void {
 		//recalculate boundaries as they may change if "display time" setting is updated
-		calculateBoundaries();
+		//calculate the boundaries as they should be after the animation has ended
+		calculateBoundaries(ANIMATION_TIME);
 		WatchUi.requestUpdate();
 	}
 
@@ -360,7 +415,7 @@ class MatchView extends WatchUi.View {
 				}
 			}
 
-			var hr_coordinates = boundaries.hr_coordinates;
+			var hr_coordinates = boundaries.hrCoordinates;
 			var size = hr_coordinates["size"] as Numeric;
 			var icon_center = hr_coordinates["icon_center"] as Array<Numeric>;
 			var circle_y_extension = hr_coordinates["circle_y_extension"];
@@ -420,24 +475,39 @@ class MatchView extends WatchUi.View {
 			dc.setAntiAlias(true);
 		}
 
-		var app = (Application.getApp() as BadmintonScoreTrackerApp);
+		var app = (Application.getApp() as BadmintonApp);
 		var match = app.getMatch();
 
-		drawCourt(dc, match);
-		drawScores(dc, match);
-		drawSets(dc, match);
-		drawTimer(dc, match);
-
-		if(Properties.getValue("display_time")) {
-			drawTime(dc);
+		if(inAnimation) {
+			var elapsed_time = getElapsedTime();
+			if(elapsed_time > ANIMATION_TIME) {
+				inAnimation = false;
+				setRefreshTime(REFRESH_TIME_STANDARD);
+			}
+			calculateBoundaries(elapsed_time);
+		}
+		else if(boundaries == null) {
+			calculateBoundaries(null);
 		}
 
-		if(Properties.getValue("display_heart_rate")) {
-			//disable anti aliasing to draw a pixel perfect icon
-			if(dc has :setAntiAlias) {
-				dc.setAntiAlias(false);
+		drawCourt(dc, match);
+
+		if(!inAnimation) {
+			drawScores(dc, match);
+			drawSets(dc, match);
+			drawTimer(dc, match);
+
+			if(Properties.getValue("display_time")) {
+				drawTime(dc);
 			}
-			drawHeartRate(dc);
+
+			if(Properties.getValue("display_heart_rate")) {
+				//disable anti aliasing to draw a pixel perfect icon
+				if(dc has :setAntiAlias) {
+					dc.setAntiAlias(false);
+				}
+				drawHeartRate(dc);
+			}
 		}
 	}
 }
@@ -461,7 +531,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function manageScore(player as Player) as Boolean {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		match.score(player);
 		var winner = match.getCurrentSet().getWinner();
 		if(winner != null) {
@@ -485,7 +555,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
 	//undo last action
 	function onBack() {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		if(match.getTotalRalliesNumber() > 0) {
 			//undo last rally
 			match.undo();

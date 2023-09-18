@@ -9,7 +9,7 @@ class SaveMatchConfirmationDelegate extends WatchUi.ConfirmationDelegate {
 	}
 
 	function onResponse(value) as Boolean {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		if(value == CONFIRM_YES) {
 			match.save();
 		}
@@ -34,7 +34,7 @@ class ResultView extends WatchUi.View {
 	}
 
 	function onShow() {
-		var match = (Application.getApp() as BadmintonScoreTrackerApp).getMatch();
+		var match = (Application.getApp() as BadmintonApp).getMatch();
 		//draw end of match text
 		var winner = match.getWinner();
 		var won_resource = Rez.Strings.end_draw;
@@ -43,13 +43,13 @@ class ResultView extends WatchUi.View {
 		}
 		var won_text = WatchUi.loadResource(won_resource) as String;
 		(findDrawableById("result_won_text") as Text).setText(won_text);
-		//draw match score or last set score
+		//draw match score
 		var score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();
 		(findDrawableById("result_score") as Text).setText(score_text);
 		//draw match time
 		(findDrawableById("result_time") as Text).setText(Helpers.formatDuration(match.getDuration()));
 		//draw rallies
-		var rallies_text = WatchUi.loadResource(Rez.Strings.end_total_rallies) as String;
+		var rallies_text = WatchUi.loadResource(Rez.Strings.total_rallies) as String;
 		(findDrawableById("result_rallies") as Text).setText(Helpers.formatString(rallies_text, {"rallies" => match.getTotalRalliesNumber().toString()}));
 	}
 }

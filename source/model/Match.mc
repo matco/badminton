@@ -105,7 +105,7 @@ class Match {
 		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
 		session.start();
 
-		(Application.getApp() as BadmintonScoreTrackerApp).getBus().dispatch(new BusEvent(:onMatchBegin, null));
+		(Application.getApp() as BadmintonApp).getBus().dispatch(new BusEvent(:onMatchBegin, null));
 	}
 
 	function save() as Void {
@@ -152,7 +152,7 @@ class Match {
 
 		//encapsulate event payload in an object so this object can never be null
 		var event = new BusEvent(:onMatchEnd, {"winner" => winner});
-		(Application.getApp() as BadmintonScoreTrackerApp).getBus().dispatch(event);
+		(Application.getApp() as BadmintonApp).getBus().dispatch(event);
 	}
 
 	function nextSet() as Void {
@@ -207,7 +207,7 @@ class Match {
 		}
 	}
 
-	hidden function isSetWon(set as MatchSet) as Player? {
+	private function isSetWon(set as MatchSet) as Player? {
 		var scorePlayer1 = set.getScore(YOU);
 		var scorePlayer2 = set.getScore(OPPONENT);
 		if(scorePlayer1 >= absoluteMaximumPoints || scorePlayer1 >= maximumPoints && (scorePlayer1 - scorePlayer2) > 1) {
@@ -219,7 +219,7 @@ class Match {
 		return null;
 	}
 
-	hidden function isWon() as Player? {
+	private function isWon() as Player? {
 		//in endless mode, no winner can be determined wile the match has not been ended
 		if(isEndless()) {
 			return null;
