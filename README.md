@@ -1,6 +1,6 @@
 # Badminton
 
-Badminton is an application for Garmin watches that will help you to track your score when you're playing badminton.
+Badminton is an application for Garmin watches that will help you track your score when you're playing badminton.
 
 It is available on the Garmin store here:
 [https://apps.garmin.com/en-US/apps/51606451-57e2-4f99-9420-2ba5a80b5df6](https://apps.garmin.com/en-US/apps/51606451-57e2-4f99-9420-2ba5a80b5df6).
@@ -8,14 +8,14 @@ It is available on the Garmin store here:
 ## Features
 
 Here are the best features of the app:
-- Choose type of match (double or single)
-- Choose number of sets
-- Choose which player has service (you, opponent, or random)
+- Choose the type of match (double or single)
+- Choose a number of sets
+- Choose which player has service (you, your opponent, or random)
 - Display the boundaries of the court according to the type of match
 - Show the service corners and your position
 - Display match duration
 - Declares the winner of the match
-- Use menu (long press on "Up") to reset scores and start a new match
+- Use the menu (long press on "Up") to reset scores and start a new match
 - Save matches as Garmin Connect activities
 
 ## Installation
