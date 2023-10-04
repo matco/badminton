@@ -318,8 +318,7 @@ class Match {
 	}
 
 	function getPlayerIsServer() as Boolean {
-		var player_corner = getPlayerCorner();
-		return player_corner == getServingCorner();
+		return getPlayerCorner() == getServingCorner();
 	}
 
 	//methods used from perspective of player 1 (watch carrier)
