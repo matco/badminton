@@ -629,7 +629,7 @@ module MatchTest {
 		return true;
 	}
 
-	function scorePoints(match, points) {
+	function scorePoints(match as Match, points as Number) as Void {
 		for(var i = 0; i < points; i++) {
 			match.score(YOU);
 			match.score(OPPONENT);

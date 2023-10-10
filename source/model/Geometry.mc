@@ -27,7 +27,7 @@ class Perspective {
 
 	function initialize(front_left_corner as Array<Float>, back_left_corner as Array<Float>, front_right_corner as Array<Float>, back_right_corner as Array<Float>) {
 		origin = [
-			BetterMath.mean(front_right_corner[0], front_left_corner[0]) as Float,
+			BetterMath.mean(front_right_corner[0], front_left_corner[0]),
 			front_left_corner[1]
 		] as Array<Float>;
 		height = front_left_corner[1] - back_left_corner[1];
@@ -56,10 +56,10 @@ class Perspective {
 		return [origin[0] + adjusted_x, origin[1] - adjusted_y] as Array<Float>;
 	}
 
-	function transformArray(coordinates as Array<Array>) as Array<Array> {
-		var transformed_coordinates = new [coordinates.size()] as Array<Array>;
+	function transformArray(coordinates as Array<Array<Float>>) as Array<Array<Float>> {
+		var transformed_coordinates = new [coordinates.size()] as Array<Array<Float>>;
 		for(var i = 0; i < coordinates.size(); i++) {
-			transformed_coordinates[i] = transform(coordinates[i] as Array<Float>);
+			transformed_coordinates[i] = transform(coordinates[i]);
 		}
 		return transformed_coordinates;
 	}
@@ -80,7 +80,7 @@ class Perspective {
 		dc.drawLine(beginning[0], beginning[1], end[0], end[1]);
 	}
 
-	function fillPolygon(dc as Dc, coordinates as Array<Array>) as Void {
+	function fillPolygon(dc as Dc, coordinates as Array<Array<Float>>) as Void {
 		dc.fillPolygon(transformArray(coordinates));
 	}
 

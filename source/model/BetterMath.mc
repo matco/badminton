@@ -19,7 +19,7 @@ module BetterMath {
 		return (number1 - number2).abs() * weight_ratio + min(number1, number2);
 	}
 
-	function roundAll(numbers as Array<Numeric>) {
+	function roundAll(numbers as Array<Numeric>) as Array<Numeric> {
 		var rounded = new [numbers.size()] as Array<Numeric>;
 		for(var i = 0; i < numbers.size(); i++) {
 			rounded[i] = Math.round(numbers[i]);

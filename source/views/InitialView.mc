@@ -21,8 +21,8 @@ class InitialView extends WatchUi.View {
 		//if config is valid, start the match
 		else if(config.isValid()) {
 			//adjust match configuration with app configuration
-			config.maximumPoints = Properties.getValue("maximum_points");
-			config.absoluteMaximumPoints = Properties.getValue("absolute_maximum_points");
+			config.maximumPoints = Properties.getValue("maximum_points") as Number;
+			config.absoluteMaximumPoints = Properties.getValue("absolute_maximum_points") as Number;
 
 			//create match
 			var match = new Match(config);
