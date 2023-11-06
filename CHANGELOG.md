@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.3.0
+- Add support for Vivoactive 5
+- Drop support for Vivoactive 3
+- Fix icons size
+
 ## 4.2.0
 - Animate the court
 - Add support for Venu 3 series
