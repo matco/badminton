@@ -172,7 +172,7 @@ class Match {
 		sets.push(new MatchSet(beginner as Player));
 	}
 
-	function getMaximumSets() as Number {
+	function getMaximumSets() as Number? {
 		return maximumSets;
 	}
 
@@ -224,7 +224,7 @@ class Match {
 		if(isEndless()) {
 			return null;
 		}
-		var winning_sets = maximumSets / 2;
+		var winning_sets = maximumSets as Number / 2; //if not in endless mode, maximum sets cannot be null
 		var player_1_sets = getSetsWon(YOU);
 		if(player_1_sets > winning_sets) {
 			return YOU;
@@ -245,12 +245,9 @@ class Match {
 		}
 	}
 
-	function getActivity() as Info {
-		return Activity.getActivityInfo();
-	}
-
 	function getDuration() as Duration {
-		var time = getActivity().elapsedTime;
+		var info = Activity.getActivityInfo() as Info;
+		var time = info.elapsedTime;
 		var seconds = time != null ? time / 1000 : 0;
 		return new Time.Duration(seconds);
 	}
@@ -300,7 +297,7 @@ class Match {
 		return won;
 	}
 
-	function getWinner() as Player {
+	function getWinner() as Player? {
 		return winner;
 	}
 
@@ -314,12 +311,11 @@ class Match {
 
 	function getReceivingCorner() as Corner {
 		var serving_corner = getServingCorner();
-		return OPPOSITE_CORNER[serving_corner];
+		return OPPOSITE_CORNER[serving_corner] as Corner;
 	}
 
 	function getPlayerIsServer() as Boolean {
-		var player_corner = getPlayerCorner();
-		return player_corner == getServingCorner();
+		return getPlayerCorner() == getServingCorner();
 	}
 
 	//methods used from perspective of player 1 (watch carrier)

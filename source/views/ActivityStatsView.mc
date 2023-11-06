@@ -1,8 +1,7 @@
 import Toybox.Lang;
 import Toybox.WatchUi;
-using Toybox.WatchUi;
+import Toybox.Activity;
 using Toybox.Graphics;
-using Toybox.Activity;
 
 class ActivityStatsView extends WatchUi.View {
 
@@ -15,9 +14,8 @@ class ActivityStatsView extends WatchUi.View {
 	}
 
 	function onShow() {
-		var match = (Application.getApp() as BadmintonApp).getMatch();
 		//retrieve stats from activity
-		var activity = match.getActivity();
+		var activity = Activity.getActivityInfo() as Info;
 		var stats_available = false;
 
 		var average_heart_rate = activity.averageHeartRate;

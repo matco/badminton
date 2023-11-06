@@ -27,7 +27,7 @@ class BadmintonApp extends Application.AppBase {
 		return BUS;
 	}
 
-	function getMatch() as Match {
+	function getMatch() as Match? {
 		return match;
 	}
 
@@ -46,7 +46,7 @@ class BadmintonApp extends Application.AppBase {
 		}
 	}
 
-	function onMatchEnd(payload) as Void {
+	function onMatchEnd(payload as Dictionary) as Void {
 		var winner = payload["winner"];
 		if(winner != null && Attention has :playTone && Properties.getValue("enable_sound")) {
 			Attention.playTone(winner == YOU ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);

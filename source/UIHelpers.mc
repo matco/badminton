@@ -9,7 +9,7 @@ module UIHelpers {
 
 	//for now consider all drawables are labels and are justified
 	//improve this as soon as a method getJustification exists
-	function findTappedDrawable(event as ClickEvent, drawables as Array<Drawable>) as Drawable {
+	function findTappedDrawable(event as ClickEvent, drawables as Array<Drawable>) as Drawable? {
 		var coordinate = event.getCoordinates();
 		var event_x = coordinate[0];
 		var event_y = coordinate[1];
@@ -28,8 +28,8 @@ module UIHelpers {
 			}
 		}
 		//second loop to find closest drawable
-		var closest_distance = null as Float;
-		var closest_drawable = null;
+		var closest_distance = null as Float?;
+		var closest_drawable = null as Drawable?;
 		for(var i = 0; i < drawables.size(); i++) {
 			var drawable = drawables[i];
 			var drawable_x = drawable.locX;
@@ -44,11 +44,11 @@ module UIHelpers {
 		return closest_drawable;
 	}
 
-	function drawPolygon(dc as Dc, points as Array<Array>) as Void {
+	function drawPolygon(dc as Dc, points as Array<Array<Float>>) as Void {
 		var counts = points.size();
 		for(var i = 0; i < counts; i++) {
 			var next_index = (i + 1) % counts;
-			dc.drawLine(points[i][0] as Number, points[i][1] as Number, points[next_index][0] as Number, points[next_index][1] as Number);
+			dc.drawLine(points[i][0], points[i][1], points[next_index][0], points[next_index][1]);
 		}
 	}
 

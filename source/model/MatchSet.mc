@@ -56,7 +56,7 @@ class MatchSet {
 	}
 
 	function getScore(player as Player) as Number {
-		return scores[player];
+		return scores[player] as Number;
 	}
 
 	function getServerTeam() as Player {

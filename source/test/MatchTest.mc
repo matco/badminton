@@ -628,4 +628,42 @@ module MatchTest {
 
 		return true;
 	}
+
+	function scorePoints(match as Match, points as Number) as Void {
+		for(var i = 0; i < points; i++) {
+			match.score(YOU);
+			match.score(OPPONENT);
+		}
+	}
+
+	(:test)
+	function testMemory(logger) {
+		//create a very complex match
+		var match = new Match(create_match_config(SINGLE, Match.MAX_SETS, YOU, true, 21, 30));
+		//set 1, won by YOU
+		scorePoints(match, 29);
+		match.score(YOU);
+		//set 2, won by OPPONENT
+		match.nextSet();
+		scorePoints(match, 29);
+		match.score(OPPONENT);
+		//set 3, won by YOU
+		match.nextSet();
+		scorePoints(match, 29);
+		match.score(YOU);
+		//set 4, won by OPPONENT
+		match.nextSet();
+		scorePoints(match, 29);
+		match.score(OPPONENT);
+		//set 5, won by YOU
+		match.nextSet();
+		scorePoints(match, 29);
+		match.score(YOU);
+		//end of match, won by YOU 3-2
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if all its sets have ended");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 148, "Total score of player 1 is 148");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 147, "Total score of player 2 is 147");
+
+		return true;
+	}
 }
