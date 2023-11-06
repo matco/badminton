@@ -9,13 +9,13 @@ It is available on the Garmin store here:
 
 Here are the best features of the app:
 - Choose the type of match (double or single)
-- Choose a number of sets
+- Choose a number of sets or play in endless mode
 - Choose which player has service (you, your opponent, or random)
 - Display the boundaries of the court according to the type of match
 - Show the service corners and your position
 - Display match duration
 - Declares the winner of the match
-- Use the menu (long press on "Up") to reset scores and start a new match
+- Use the menu (long press on "Up") to reset or end the match anytime
 - Save matches as Garmin Connect activities
 
 ## Installation
