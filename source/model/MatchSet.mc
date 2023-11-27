@@ -1,9 +1,9 @@
 import Toybox.Lang;
 
 class MatchSet {
-	private var type; //type of the set, SINGLE or DOUBLE
+	private var type as MatchType; //type of the set, SINGLE or DOUBLE
 	private var beginner as Player; //store the beginner of the set, YOU or OPPONENT
-	private var server; //in double, true if the player 1 (watch carrier) is currently the server
+	private var server as Boolean; //in double, true if the player 1 (watch carrier) is currently the server
 	private var rallies as List; //list of all rallies
 
 	private var scores as Dictionary<Player, Number>; //dictionnary containing players current scores
@@ -39,9 +39,13 @@ class MatchSet {
 		return rallies;
 	}
 
+	function getCurrentRally() as MatchRally {
+		return rallies.last() as MatchRally;
+	}
+
 	function nextRally() as Void {
 		//last team who score serves next
-		var last_winner = rallies.last().getWinner();
+		var last_winner = getCurrentRally().getWinner() as Player;
 		var server = getPlayerIsServer();
 		var rally = new MatchRally(last_winner, server);
 		rallies.push(rally);
@@ -51,7 +55,7 @@ class MatchSet {
 		if(hasEnded()) {
 			throw new OperationNotAllowedException("Unable to score in a set that has ended");
 		}
-		rallies.last().end(scorer);
+		getCurrentRally().end(scorer);
 		var score = scores[scorer] as Number;
 		scores[scorer] = score + 1;
 		nextRally();
@@ -61,21 +65,19 @@ class MatchSet {
 		if(rallies.size() > 1) {
 			winner = null;
 			rallies.pop();
-			var last_rally = rallies.last() as MatchRally;
-			scores[last_rally.getWinner()]--;
+			var last_rally = getCurrentRally();
+			var last_winner = last_rally.getWinner() as Player;
+			var score = scores[last_winner] as Number;
+			scores[last_winner] = score - 1;
 			last_rally.undo();
 		}
-	}
-
-	function getCurrentRally() as MatchRally {
-		return rallies.last();
 	}
 
 	function getRalliesNumber() as Number {
 		//when asking for the number of rallies, the number of ended rallies must be returned
 		var count = rallies.size() - 1;
 		//the last rally is often pending (it has started but is not finished yet)
-		if(rallies.last().hasEnded()) {
+		if(getCurrentRally().hasEnded()) {
 			count++;
 		}
 		return count;
@@ -86,7 +88,7 @@ class MatchSet {
 	}
 
 	function getServerTeam() as Player {
-		return rallies.last().getBeginner();
+		return getCurrentRally().getBeginner();
 	}
 
 	function getServingCorner() as Corner {
@@ -123,8 +125,8 @@ class MatchSet {
 		var corner = beginner == YOU ? server ? YOU_RIGHT : YOU_LEFT : server ? YOU_LEFT : YOU_RIGHT;
 		var ended_rallies_number = getRalliesNumber();
 		for(var i = 0; i < ended_rallies_number; i++) {
-			var previous_rally_winner = i > 0 ? rallies.get(i - 1).getWinner() : beginner;
-			var current_rally_winner = rallies.get(i).getWinner();
+			var previous_rally_winner = i > 0 ? (rallies.get(i - 1) as MatchRally).getWinner() : beginner;
+			var current_rally_winner = (rallies.get(i) as MatchRally).getWinner();
 			if(previous_rally_winner == current_rally_winner && current_rally_winner == YOU) {
 				corner = corner == YOU_RIGHT ? YOU_LEFT : YOU_RIGHT;
 			}

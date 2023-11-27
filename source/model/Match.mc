@@ -66,8 +66,6 @@ class Match {
 	private var maximumPoints as Number;
 	private var absoluteMaximumPoints as Number;
 
-	private var stats as MatchStats;
-
 	private var session as Session;
 	private var fieldSetPlayer1 as Field;
 	private var fieldSetPlayer2 as Field;
@@ -167,7 +165,7 @@ class Match {
 		fieldScorePlayer1.setData(you_total_score);
 		fieldScorePlayer2.setData(opponent_total_score);
 
-		calculateStats();
+		var stats = calculateStats();
 
 		System.println(stats.averageRallyDuration);
 		System.println(stats.averageRallyDurationServing);
@@ -175,11 +173,11 @@ class Match {
 		fieldRallyDuration.setData(stats.averageRallyDuration);
 		//duration may be null if the player did not serve any rally
 		if(stats.averageRallyDurationServing != null) {
-			fieldRallyDurationServing.setData(stats.averageRallyDurationServing);
+			fieldRallyDurationServing.setData(stats.averageRallyDurationServing as Number);
 		}
 		//duration may be null if the player did not receive any rally
 		if(stats.averageRallyDurationReceiving != null) {
-			fieldRallyDurationReceiving.setData(stats.averageRallyDurationReceiving);
+			fieldRallyDurationReceiving.setData(stats.averageRallyDurationReceiving as Number);
 		}
 		session.stop();
 
@@ -358,7 +356,7 @@ class Match {
 		return getCurrentSet().getPlayerCorner();
 	}
 
-	function calculateStats() as Void {
+	function calculateStats() as MatchStats {
 		var count = 0;
 		var count_serving = 0;
 		var count_receiving = 0;
@@ -372,22 +370,24 @@ class Match {
 
 		var sets = getSets();
 		for(var i = 0; i < sets.size(); i++) {
-			var rallies = sets.get(i).getRallies();
+			var set = sets.get(i) as MatchSet;
+			var rallies = set.getRallies();
 			count += rallies.size();
 			for(var j = 0; j < rallies.size(); j++) {
-				var rally = rallies.get(j);
+				var rally = rallies.get(j) as MatchRally;
 				if(rally.hasEnded()) {
-					duration_rallies += rally.getDuration();
+					var duration = rally.getDuration() as Number;
+					duration_rallies += duration;
 					if(rally.getBeginner() == YOU) {
 						count_serving++;
-						duration_rallies_serving += rally.getDuration();
+						duration_rallies_serving += duration;
 						if(rally.getWinner() == YOU) {
 							winning_serving++;
 						}
 					}
 					else {
 						count_receiving++;
-						duration_rallies_receiving += rally.getDuration();
+						duration_rallies_receiving += duration;
 						if(rally.getWinner() == YOU) {
 							winning_receiving++;
 						}
@@ -396,15 +396,18 @@ class Match {
 			}
 		}
 
-		stats = new MatchStats();
-		stats.averageRallyDuration = duration_rallies / count;
-		stats.averageRallyDurationServing = count_serving > 0 ? Math.round(duration_rallies_serving / count_serving) : null;
-		stats.averageRallyDurationReceiving = count_receiving > 0 ? Math.round(duration_rallies_receiving / count_receiving) : null;
-		stats.percentageWinningServing = count_serving > 0 ? Math.round(100 * winning_serving / count_serving) : null;
-		stats.percentageWinningReceiving = count_receiving > 0 ? Math.round(100 * winning_receiving / count_receiving) : null;
-	}
+		var average_rally_duration = duration_rallies / count;
+		var average_rally_duration_serving = count_serving > 0 ? Math.round(duration_rallies_serving / count_serving) as Number : null;
+		var average_rally_duration_receiving = count_receiving > 0 ? Math.round(duration_rallies_receiving / count_receiving) as Number : null;
+		var percentage_winning_serving = count_serving > 0 ? Math.round(100 * winning_serving / count_serving) as Number : null;
+		var percentage_winning_receiving = count_receiving > 0 ? Math.round(100 * winning_receiving / count_receiving) as Number : null;
 
-	function getStats() as MatchStats {
-		return stats;
+		return new MatchStats(
+			average_rally_duration,
+			average_rally_duration_serving,
+			average_rally_duration_receiving,
+			percentage_winning_serving,
+			percentage_winning_receiving
+		);
 	}
 }

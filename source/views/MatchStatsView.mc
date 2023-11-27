@@ -1,4 +1,5 @@
-using Toybox.WatchUi;
+import Toybox.Lang;
+import Toybox.WatchUi;
 using Toybox.Graphics;
 using Toybox.Activity;
 
@@ -13,29 +14,29 @@ class MatchStatsView extends WatchUi.View {
 	}
 
 	function onShow() {
-		var match = Application.getApp().getMatch();
-		var stats = match.getStats();
+		var match = Application.getApp().getMatch() as Match;
+		var stats = match.calculateStats();
 
 		var average_rally_duration_text = Helpers.formatString(
-			WatchUi.loadResource(Rez.Strings.stats_average_rally_duration),
+			WatchUi.loadResource(Rez.Strings.stats_average_rally_duration) as String,
 			{"average_rally_duration" => stats.averageRallyDuration.toString()}
 		);
-		findDrawableById("stats_average_rally_duration").setText(average_rally_duration_text);
+		(findDrawableById("stats_average_rally_duration") as Text).setText(average_rally_duration_text);
 
 		if(stats.percentageWinningServing != null) {
 			var text = Helpers.formatString(
-				WatchUi.loadResource(Rez.Strings.stats_percentage_winning_serving_rally),
-				{"percentage_winning_serving_rally" => stats.percentageWinningServing.toString()}
+				WatchUi.loadResource(Rez.Strings.stats_percentage_winning_serving_rally) as String,
+				{"percentage_winning_serving_rally" => (stats.percentageWinningServing as Number).toString()}
 			);
-			findDrawableById("stats_percentage_winning_serving").setText(text);
+			(findDrawableById("stats_percentage_winning_serving") as Text).setText(text);
 		}
 
 		if(stats.percentageWinningReceiving != null) {
 			var text = Helpers.formatString(
-				WatchUi.loadResource(Rez.Strings.stats_percentage_winning_receiving_rally),
-				{"percentage_winning_receiving_rally" => stats.percentageWinningReceiving.toString()}
+				WatchUi.loadResource(Rez.Strings.stats_percentage_winning_receiving_rally) as String,
+				{"percentage_winning_receiving_rally" => (stats.percentageWinningReceiving as Number).toString()}
 			);
-			findDrawableById("stats_percentage_winning_receiving").setText(text);
+			(findDrawableById("stats_percentage_winning_receiving") as Text).setText(text);
 		}
 	}
 }
@@ -50,7 +51,7 @@ class MatchStatsViewDelegate extends WatchUi.BehaviorDelegate {
 		return onPreviousPage();
 	}
 
-	function onPreviousPage() {
+	function onPreviousPage() as Boolean {
 		WatchUi.switchToView(new ResultView(), new ResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
