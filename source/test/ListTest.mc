@@ -1,7 +1,10 @@
+import Toybox.Lang;
+import Toybox.Test;
+
 module ListTest {
 
 	(:test)
-	function testNewList(logger) {
+	function testNewList(logger as Logger) as Boolean {
 		var list = new List();
 		BetterTest.assertTrue(list.isEmpty(), "Newly created list is empty");
 		BetterTest.assertEqual(list.size(), 0, "Newly created list size is 0");
@@ -25,7 +28,7 @@ module ListTest {
 	}
 
 	(:test)
-	function testOneElementList(logger) {
+	function testOneElementList(logger as Logger) as Boolean {
 		var list = new List();
 		list.push(3);
 		BetterTest.assertFalse(list.isEmpty(), "Adding an element to a list makes it not empty");
@@ -36,7 +39,7 @@ module ListTest {
 	}
 
 	(:test)
-	function testTwoElementsList(logger) {
+	function testTwoElementsList(logger as Logger) as Boolean {
 		var list = new List();
 		list.push(3);
 		list.push(5);
@@ -47,7 +50,7 @@ module ListTest {
 	}
 
 	(:test)
-	function testRetrieval(logger) {
+	function testRetrieval(logger as Logger) as Boolean {
 		var list = new List();
 		list.push(3);
 		list.push(5);
@@ -65,7 +68,7 @@ module ListTest {
 	}
 
 	(:test)
-	function testIndexOf(logger) {
+	function testIndexOf(logger as Logger) as Boolean {
 		var list = new List();
 		list.push(3);
 		list.push(4);
@@ -77,7 +80,7 @@ module ListTest {
 	}
 
 	(:test)
-	function testRemoval(logger) {
+	function testRemoval(logger as Logger) as Boolean {
 		var list = new List();
 		list.push(3);
 		list.push(4);

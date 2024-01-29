@@ -1,4 +1,5 @@
 import Toybox.Lang;
+import Toybox.Test;
 
 module MatchTest {
 
@@ -14,7 +15,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testNewMatch(logger) {
+	function testNewMatch(logger as Logger) as Boolean {
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		BetterTest.assertEqual(match.getType(), SINGLE, "Match is created with correct type");
 		BetterTest.assertEqual(match.getMaximumSets(), 1, "Match is created with corret maximum number of set");
@@ -35,7 +36,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testBeginMatch(logger) {
+	function testBeginMatch(logger as Logger) as Boolean {
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		//BetterTest.assertEqual(match.beginner, YOU, "Beginner of match began with player 1 is player 1");
 
@@ -48,7 +49,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testScore(logger) {
+	function testScore(logger as Logger) as Boolean {
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		var set = match.getCurrentSet();
 
@@ -77,7 +78,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testUndo(logger) {
+	function testUndo(logger as Logger) as Boolean {
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		var set = match.getCurrentSet();
 
@@ -117,7 +118,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testNextSet(logger) {
+	function testNextSet(logger as Logger) as Boolean {
 		var match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5));
 		var set = match.getCurrentSet();
 
@@ -146,7 +147,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testEnd(logger) {
+	function testEnd(logger as Logger) as Boolean {
 		//single set match, using undo
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));
 		var set = match.getCurrentSet();
@@ -222,7 +223,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testEndless(logger) {
+	function testEndless(logger as Logger) as Boolean {
 		//match ended while no set has been ended
 		var match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
 		var set = match.getCurrentSet();
@@ -339,7 +340,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testServer(logger) {
+	function testServer(logger as Logger) as Boolean {
 		//single, player begins the match
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		BetterTest.assertTrue(match.getPlayerTeamIsServer(), "In singles, player team serves if it begins a match");
@@ -637,7 +638,7 @@ module MatchTest {
 	}
 
 	(:test)
-	function testMemory(logger) {
+	function testMemory(logger as Logger) as Boolean {
 		//create a very complex match
 		var match = new Match(create_match_config(SINGLE, Match.MAX_SETS, YOU, true, 21, 30));
 		//set 1, won by YOU

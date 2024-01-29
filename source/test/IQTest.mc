@@ -1,3 +1,5 @@
+import Toybox.Lang;
+import Toybox.Test;
 import Toybox.System;
 import Toybox.Activity;
 import Toybox.ActivityRecording;
@@ -7,7 +9,7 @@ module IQTest {
 	//this is more a documentation than a test
 	//this test can be run on the Fenix 5 (max API v3.1.0), the Fenix 6 (max API v3.4.0) or the Fenix 7 (max API v4.2.0)
 	(:test)
-	function testActivity(logger) {
+	function testActivity(logger as Logger) as Boolean {
 		var version = System.getDeviceSettings().monkeyVersion;
 		var v320 = version[0] > 3 || version[0] == 3 && version[1] >= 2;
 		var v410 = version[0] > 4 || version[0] == 4 && version[1] >= 1;
