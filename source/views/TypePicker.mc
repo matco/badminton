@@ -15,7 +15,7 @@ class TypePicker extends WatchUi.Picker {
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_type = Properties.getValue("default_match_type");
+		var default_type = Properties.getValue("default_match_type") as Number;
 		if(default_type == null) {
 			default_type = 0;
 		}
