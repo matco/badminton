@@ -15,16 +15,16 @@ class MatchBoundaries {
 	static const COURT_SHORT_SERVICE_SIZE = 0.1;
 	//court boundaries coordinates (clockwise, starting from top left point)
 	static const COURT_SINGLE = [
-		[-0.5 + COURT_SIDELINE_SIZE, 1],
-		[0.5 - COURT_SIDELINE_SIZE, 1],
-		[0.5 - COURT_SIDELINE_SIZE, 0],
-		[-0.5 + COURT_SIDELINE_SIZE, 0]
+		[-0.5 + COURT_SIDELINE_SIZE, 1f],
+		[0.5 - COURT_SIDELINE_SIZE, 1f],
+		[0.5 - COURT_SIDELINE_SIZE, 0f],
+		[-0.5 + COURT_SIDELINE_SIZE, 0f]
 	] as Array<Array<Float>>;
 	static const COURT_DOUBLE = [
-		[-0.5, 1],
-		[0.5, 1],
-		[0.5, 0],
-		[-0.5, 0]
+		[-0.5, 1f],
+		[0.5, 1f],
+		[0.5, 0f],
+		[-0.5, 0f]
 	] as Array<Array<Float>>;
 	//corners boundaries coordinate
 	static const COURT_SINGLE_CORNERS = {
