@@ -34,7 +34,7 @@ class InitialView extends WatchUi.View {
 			config = new MatchConfig();
 
 			//go to match view
-			var view = new MatchView();
+			var view = new MatchView(false);
 			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}
 		else {

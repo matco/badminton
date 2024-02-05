@@ -255,10 +255,11 @@ class MatchView extends WatchUi.View {
 
 	private var startTime as Number;
 	private var refreshTime as Number = REFRESH_TIME_STANDARD;
+	private var enableAnimation as Boolean;
 	private var inAnimation as Boolean = false;
 	private var refreshTimer as Timer.Timer;
 
-	function initialize() {
+	function initialize(disable_animation as Boolean) {
 		View.initialize();
 		match = (Application.getApp() as BadmintonApp).getMatch() as Match;
 
@@ -268,6 +269,8 @@ class MatchView extends WatchUi.View {
 
 		startTime = System.getTimer();
 		refreshTimer = new Timer.Timer();
+
+		enableAnimation = Properties.getValue("enable_animation") as Boolean && !disable_animation;
 	}
 
 	function calculateBoundaries(elapsed_time as Number?) as Void {
@@ -277,7 +280,7 @@ class MatchView extends WatchUi.View {
 
 	function onShow() as Void {
 		(Application.getApp() as BadmintonApp).getBus().register(self);
-		inAnimation = Properties.getValue("enable_animation") as Boolean;
+		inAnimation = enableAnimation;
 		var refresh_time = inAnimation ? REFRESH_TIME_ANIMATION : REFRESH_TIME_STANDARD;
 		setRefreshTime(refresh_time);
 	}
