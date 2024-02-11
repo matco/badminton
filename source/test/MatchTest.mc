@@ -20,31 +20,16 @@ module MatchTest {
 		BetterTest.assertEqual(match.getType(), SINGLE, "Match is created with correct type");
 		BetterTest.assertEqual(match.getMaximumSets(), 1, "Match is created with corret maximum number of set");
 		BetterTest.assertEqual(match.getSets().size(), 1, "Match has only one set at the beginning");
-		BetterTest.assertEqual(match.getCurrentSet().getBeginner(), YOU, "Match is created with correct player");
-
-		BetterTest.assertEqual(match.getTotalRalliesNumber(), 0, "Newly created match has 0 rally");
-		BetterTest.assertFalse(match.hasEnded(), "Newly created match has not ended");
-		BetterTest.assertNull(match.getWinner(), "Newly created match has no winner");
-		BetterTest.assertEqual(match.getTotalScore(YOU), 0, "Newly created match has a total score of 0 for player 1");
-		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Newly created match has a total score of 0 for player 2");
-
-		BetterTest.assertEqual(match.getCurrentSet().getScore(YOU), 0, "Newly created match has a set score of 0 for player 1");
-		BetterTest.assertEqual(match.getCurrentSet().getScore(OPPONENT), 0, "Newly created match has a set score of 0 for player 2");
 
 		BetterTest.assertEqual(match.getDuration().value(), 0, "Newly created match has a duration of 0");
-		return true;
-	}
+		BetterTest.assertFalse(match.hasEnded(), "Newly created match has not ended");
+		BetterTest.assertNull(match.getWinner(), "Newly created match has no winner");
 
-	(:test)
-	function testBeginMatch(logger as Logger) as Boolean {
-		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
-		//BetterTest.assertEqual(match.beginner, YOU, "Beginner of match began with player 1 is player 1");
+		var set = match.getCurrentSet();
+		BetterTest.assertEqual(set.getBeginner(), YOU, "Match first set is created with the right beginner");
+		BetterTest.assertFalse(set.hasEnded(), "Match first set has not ended");
+		BetterTest.assertNull(set.getWinner(), "Match first set has no winner");
 
-		BetterTest.assertFalse(match.hasEnded(), "Began match has not ended");
-
-		BetterTest.assertEqual(match.getTotalRalliesNumber(), 0, "Just began match has 0 rally");
-		BetterTest.assertNull(match.getWinner(), "Just began match has now winner");
-		BetterTest.assertNotNull(match.getDuration(), "Began match has a non null duration");
 		return true;
 	}
 
@@ -53,27 +38,34 @@ module MatchTest {
 		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 21, 30));
 		var set = match.getCurrentSet();
 
+		BetterTest.assertEqual(set.getScore(YOU), 0, "Newly created match has a set score of 0 for player 1");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 0, "Newly created match has a set score of 0 for player 2");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 0, "Newly created match has a total score of 0 for player 1");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Newly created match has a total score of 0 for player 2");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 0, "Newly created match has 0 rally");
+
 		match.score(YOU);
-
-		BetterTest.assertEqual(match.getTotalScore(YOU), 1, "Score of player 1 is set to 1 after player 1 scored once");
-		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Score of player 2 is still 0 after player 1 scored once");
-
 		BetterTest.assertEqual(set.getScore(YOU), 1, "Score of player 1 is set to 1 after player 1 scored");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 0, "Score of player 2 is still 0 after player 1 scored");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 1, "Total score of player 1 is set to 1 after player 1 scored once");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Total score of player 2 is still 0 after player 1 scored once");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 1, "Rallies are counted properly");
 
 		match.score(YOU);
 		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is set to 2 after player 1 scored twice");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 0, "Score of player 2 is still 0 after player 1 scored twice");
-
-		BetterTest.assertFalse(match.hasEnded(), "Began match has not ended");
-		BetterTest.assertEqual(match.getTotalRalliesNumber(), 2, "Match with 2 rallies has 2 rally number");
-		BetterTest.assertNull(match.getWinner(), "Just began match has no winner");
-		BetterTest.assertNotNull(match.getDuration(), "Began match has a non null duration");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 2, "Total score of player 1 is set to 2 after player 1 scored twice");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Total score of player 2 is still 0 after player 1 scored twice");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 2, "Rallies are counted properly");
 
 		match.score(YOU);
 		match.score(OPPONENT);
 		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 who scored twice is 2");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 who scored once is 1");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 3, "Total score of player 1 who scored twice is 2");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 1, "Total score of player 2 who scored once is 1");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 4, "Rallies are counted properly");
+
 		return true;
 	}
 
@@ -83,44 +75,61 @@ module MatchTest {
 		var set = match.getCurrentSet();
 
 		match.undo();
-		BetterTest.assertEqual(match.getTotalScore(YOU), 0, "Undo when match has not begun does nothing");
-		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Undo when match has not begun does nothing");
 		BetterTest.assertEqual(set.getScore(YOU), 0, "Undo when match has not begun does nothing");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 0, "Undo when match has not begun does nothing");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 0, "Undo when match has not begun does nothing");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Undo when match has not begun does nothing");
 
 		match.score(YOU);
 		match.undo();
 
-		BetterTest.assertEqual(match.getTotalScore(YOU), 0, "Undo removes a point from the last player who scored");
-		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Undo does not touch the score of the other player");
 		BetterTest.assertEqual(set.getScore(YOU), 0, "Undo removes a point from the last player who scored");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 0, "Undo does not touch the score of the other player");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 0, "Undo removes a point from the last player who scored");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Undo does not touch the score of the other player");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 0, "Undo handles rallies property");
 
 		match.undo();
 		BetterTest.assertEqual(match.getTotalScore(YOU), 0, "Undo when match has not begun does nothing");
 		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Undo when match has not begun does nothing");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 0, "Undo handles rallies property");
 
 		match.score(YOU);
 		match.score(YOU);
 		match.score(OPPONENT);
 		match.score(YOU);
-		BetterTest.assertEqual(match.getTotalScore(YOU), 3, "Score of player 1 is now 3");
-		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 1, "Score of player 2 is now 1");
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 is now 1");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 3, "Total score of player 1 is now 3");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 1, "Total score of player 2 is now 1");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 4, "Total number of rallies is now 4");
 
 		match.undo();
 		BetterTest.assertEqual(match.getTotalScore(YOU), 2, "Undo removes a point from the last player who scored");
 		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 1, "Undo does not touch the score of the other player");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 3, "Undo handles rallies property");
 
 		match.undo();
 		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 0, "Undo does not touch the score of the other player");
 		BetterTest.assertEqual(match.getTotalScore(YOU), 2, "Undo removes a point from the last player who scored");
+		BetterTest.assertEqual(match.getTotalRalliesNumber(), 2, "Undo handles rallies property");
+
 		return true;
 	}
 
 	(:test)
-	function testNextSet(logger as Logger) as Boolean {
+	function testSet(logger as Logger) as Boolean {
 		var match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5));
 		var set = match.getCurrentSet();
+
+		try {
+			match.nextSet();
+			BetterTest.fail("Next set cannot be called if current set has not ended");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to start next set if current set has not ended", "It is not possible to start next set if current set has not ended");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to start next set if current set has not ended");
+		}
 
 		match.score(YOU);
 		match.score(YOU);
@@ -138,60 +147,6 @@ module MatchTest {
 		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 in first set is 3");
 		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
 
-		match.nextSet();
-		set = match.getCurrentSet();
-
-		BetterTest.assertEqual(set.getScore(YOU), 0, "Score of player 1 in second set is 0");
-
-		return true;
-	}
-
-	(:test)
-	function testEnd(logger as Logger) as Boolean {
-		//single set match, using undo
-		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));
-		var set = match.getCurrentSet();
-		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if no rallies have been played");
-
-		match.score(YOU);
-		match.score(YOU);
-		match.score(YOU);
-		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
-		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
-		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its singled set has ended");
-
-		match.undo();
-		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is now 2");
-		BetterTest.assertFalse(set.hasEnded(), "Set has not ended if no player has reached the maximum point");
-		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if its single has not ended");
-
-		match.score(OPPONENT);
-		match.score(OPPONENT);
-		match.score(YOU);
-		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
-		BetterTest.assertEqual(set.getScore(OPPONENT), 2, "Score of player 2 is now 2");
-		BetterTest.assertFalse(set.hasEnded(), "Set has not ended if there is not a difference of two points");
-		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if its single has not ended");
-
-		match.score(OPPONENT);
-		match.score(YOU);
-		match.score(YOU);
-		BetterTest.assertEqual(set.getScore(YOU), 5, "Score of player 1 is now 5");
-		BetterTest.assertTrue(set.hasEnded(), "Set has ended if absolute maximum point has been reached");
-		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its single set has ended");
-
-		//multi sets match
-		match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5));
-		set = match.getCurrentSet();
-
-		match.score(YOU);
-		match.score(YOU);
-		match.score(YOU);
-
-		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
-		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
-		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if only one of its sets has ended");
-
 		try {
 			match.score(YOU);
 			BetterTest.fail("Scoring after the set has ended should throw an operation not allowed exception");
@@ -204,11 +159,76 @@ module MatchTest {
 		match.nextSet();
 		set = match.getCurrentSet();
 
+		BetterTest.assertEqual(set.getScore(YOU), 0, "Score of player 1 in second set is 0");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 0, "Score of player 2 in second set is 0");
+
+		return true;
+	}
+
+	(:test)
+	function testEnd(logger as Logger) as Boolean {
+		//single set match, using undo
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));
+		var set = match.getCurrentSet();
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if no rallies have been played");
+
+		match.score(YOU);
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if its single set has not ended");
+
+		match.score(YOU);
+		match.score(YOU);
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
+		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its singled set has ended");
+
+		match.undo();
+		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is now 2");
+		BetterTest.assertFalse(set.hasEnded(), "Set has not ended if no player has reached the maximum point");
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if its single set has not ended");
+
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+		match.score(YOU);
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 2, "Score of player 2 is now 2");
+		BetterTest.assertFalse(set.hasEnded(), "Set has not ended if there is not a difference of two points");
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if its single has not ended");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 0, "Player 1 won no set if no set have been completed");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won no set if no set have been completed");
+
+		match.score(OPPONENT);
+		match.score(YOU);
+		match.score(YOU);
+		BetterTest.assertEqual(set.getScore(YOU), 5, "Score of player 1 is now 5");
+		BetterTest.assertTrue(set.hasEnded(), "Set has ended if absolute maximum point has been reached");
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its single set has ended");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 1, "Player 1 won 1 set");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won 0 set");
+
+		//multi sets match
+		match = new Match(create_match_config(SINGLE, 3, YOU, true, 3, 5));
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+
+		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
+		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if only one of its sets has ended");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 1, "Player 1 won 1 set");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won no set");
+
+		match.nextSet();
+		set = match.getCurrentSet();
+
 		match.score(YOU);
 		match.score(YOU);
 		match.score(YOU);
 		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
 		BetterTest.assertTrue(match.hasEnded(), "Match has ended if all its sets have ended");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 2, "Player 1 won 2 set");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won no set");
 
 		try {
 			match.score(YOU);
@@ -234,6 +254,8 @@ module MatchTest {
 		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is now 2");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 is now 1");
 		BetterTest.assertFalse(match.hasEnded(), "Match can never end automatically in endless mode");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 0, "Player 1 won no set if no set have been completed");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won no set if no set have been completed");
 
 		match.end(null);
 		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the highest score");
@@ -247,6 +269,8 @@ module MatchTest {
 		match.score(YOU);
 		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
 		BetterTest.assertFalse(match.hasEnded(), "Match can never end automatically in endless mode");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 1, "Player 1 won 1 set");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won 0 set");
 
 		match.nextSet();
 		set = match.getCurrentSet();
@@ -256,9 +280,22 @@ module MatchTest {
 		BetterTest.assertEqual(set.getScore(YOU), 0, "Score of player 1 is now 0");
 		BetterTest.assertEqual(set.getScore(OPPONENT), 1, "Score of player 2 is now 1");
 		BetterTest.assertFalse(match.hasEnded(), "Match can never end automatically in endless mode");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 1, "Player 1 won 1 set");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won 0 set");
 
 		match.end(null);
 		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the most sets won");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 1, "Player 1 won 1 set");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won 0 set");
+
+		try {
+			match.end(null);
+			BetterTest.fail("Match cannot be ended twice");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to end a match that has already been ended", "It is not possible to end a match that has already been ended");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to end a match that has already been ended");
+		}
 
 		//match draw while no set has been ended
 		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
@@ -335,6 +372,31 @@ module MatchTest {
 
 		match.end(null);
 		BetterTest.assertEqual(match.getWinner(), OPPONENT, "If both players have the same number of sets won, the match is won by the player with the highest score");
+
+		//match ended after the third set has ended
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+
+		match.nextSet();
+
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+		match.score(OPPONENT);
+
+		match.nextSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+
+		match.end(null);
+		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the most sets won");
+		BetterTest.assertEqual(match.getTotalScore(YOU), 6, "Total score of player 1 is 6");
+		BetterTest.assertEqual(match.getTotalScore(OPPONENT), 3, "Total score of player 2 is 3");
 
 		return true;
 	}
