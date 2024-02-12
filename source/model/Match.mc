@@ -138,6 +138,11 @@ class Match {
 			if(winner == null && you_total_score != opponent_total_score) {
 				winner = you_total_score > opponent_total_score ? YOU : OPPONENT;
 			}
+
+			//manage activity session
+			var set = getCurrentSet();
+			fieldSetScorePlayer1.setData(set.getScore(YOU));
+			fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 		}
 		else {
 			winner = winner_player;
@@ -187,16 +192,14 @@ class Match {
 		var set = getCurrentSet();
 		set.score(scorer);
 
-		//manage activity session
-		//remember that the match can be ended anytime (if the user decides to stop it)
-		//the activity must always be kept up to date
-		fieldSetScorePlayer1.setData(set.getScore(YOU));
-		fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
-
 		//end the set if it has been won
 		var set_winner = isSetWon(set);
 		if(set_winner != null) {
 			set.end(set_winner);
+
+			//manage activity session
+			fieldSetScorePlayer1.setData(set.getScore(YOU));
+			fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 
 			if(!isEndless()) {
 				var match_winner = isWon();
