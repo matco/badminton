@@ -128,8 +128,10 @@ class Match {
 		var you_total_score = getTotalScore(YOU);
 		var opponent_total_score = getTotalScore(OPPONENT);
 
-		//in endless mode, the winner must be determined now
-		if(isEndless()) {
+		//in there is no winner yet, the winner must be determined now
+		//this occurs in endless mode, or when the user ends the match manually
+		//in standard mode, the winner has already been determined when the last set has been won
+		if(winner_player == null) {
 			//determine winner based on sets
 			if(you_sets_won != opponent_sets_won) {
 				winner = you_sets_won > opponent_sets_won ? YOU : OPPONENT;

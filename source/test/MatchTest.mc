@@ -179,7 +179,7 @@ module MatchTest {
 		match.score(YOU);
 		BetterTest.assertEqual(set.getScore(YOU), 3, "Score of player 1 is now 3");
 		BetterTest.assertTrue(set.hasEnded(), "Set has ended if maximum point has been reached");
-		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its singled set has ended");
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if its single set has ended");
 
 		match.undo();
 		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is now 2");
@@ -237,6 +237,63 @@ module MatchTest {
 		catch(exception) {
 			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to score in a match that has ended", "It is not possible to score after a match has ended");
 			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to score after a match has ended");
+		}
+
+		return true;
+	}
+
+	(:test)
+	function testEndPrematurely(logger as Logger) as Boolean {
+		//match ended prematurely while no set has been ended
+		var match = new Match(create_match_config(SINGLE, 1, YOU, true, 3, 5));
+		var set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		BetterTest.assertFalse(match.hasEnded(), "Match has not ended if its single set has not ended");
+
+		match.end(null);
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if the user ended it prematurely");
+		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the highest score");
+		BetterTest.assertEqual(set.getScore(YOU), 2, "Score of player 1 is now 2");
+		BetterTest.assertEqual(set.getScore(OPPONENT), 0, "Score of player 2 is now 0");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 0, "Player 1 won no set if no set have been completed");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won no set if no set have been completed");
+
+		try {
+			match.end(null);
+			BetterTest.fail("Match cannot be ended twice");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to end a match that has already been ended", "It is not possible to end a match that has already been ended");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to end a match that has already been ended");
+		}
+
+		//match ended while second set is being played
+		match = new Match(create_match_config(SINGLE, null, YOU, true, 3, 5));
+		set = match.getCurrentSet();
+
+		match.score(YOU);
+		match.score(YOU);
+		match.score(YOU);
+
+		match.nextSet();
+
+		match.score(OPPONENT);
+
+		match.end(null);
+		BetterTest.assertTrue(match.hasEnded(), "Match has ended if the user ended it prematurely");
+		BetterTest.assertEqual(match.getWinner(), YOU, "Match is won by the player with the most sets won");
+		BetterTest.assertEqual(match.getSetsWon(YOU), 1, "Player 1 won 1 set");
+		BetterTest.assertEqual(match.getSetsWon(OPPONENT), 0, "Player 2 won 0 set");
+
+		try {
+			match.end(null);
+			BetterTest.fail("Match cannot be ended twice");
+		}
+		catch(exception) {
+			BetterTest.assertEqual(exception.getErrorMessage(), "Unable to end a match that has already been ended", "It is not possible to end a match that has already been ended");
+			BetterTest.assertTrue(exception instanceof Toybox.Lang.OperationNotAllowedException, "It is not possible to end a match that has already been ended");
 		}
 
 		return true;
