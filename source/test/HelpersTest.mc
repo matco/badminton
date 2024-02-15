@@ -1,9 +1,11 @@
+import Toybox.Lang;
+import Toybox.Test;
 using Toybox.Time;
 
 module HelpersTest {
 
 	(:test)
-	function testFormatString(logger) {
+	function testFormatString(logger as Logger) as Boolean {
 		var string = "${name} is the ${family-relation} of ${other_name}";
 		var replacements = {"name" => "Luke", "family-relation" => "son", "other_name" => "Anakin"};
 		BetterTest.assertEqual(Helpers.formatString(string, replacements), "Luke is the son of Anakin", "Format string function fill a special string with data from a dictionary");
@@ -17,7 +19,7 @@ module HelpersTest {
 	}
 
 	(:test)
-	function testFormatDuration(logger) {
+	function testFormatDuration(logger as Logger) as Boolean {
 		var duration = 2 * 3600 + 28 * 60 + 42;
 		BetterTest.assertEqual(Helpers.formatDuration(new Time.Duration(duration)), "02:28:42", "Formatting a duration gives the good string");
 

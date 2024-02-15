@@ -97,12 +97,12 @@ class Match {
 
 		//manage activity session
 		session = ActivityRecording.createSession({:sport => sport, :subSport => sub_sport, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name) as String});
-		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
-		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
-		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
+		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
+		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT16, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT16, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
 		session.start();
 
 		(Application.getApp() as BadmintonApp).getBus().dispatch(new BusEvent(:onMatchBegin, null));
@@ -128,8 +128,10 @@ class Match {
 		var you_total_score = getTotalScore(YOU);
 		var opponent_total_score = getTotalScore(OPPONENT);
 
-		//in endless mode, the winner must be determined now
-		if(isEndless()) {
+		//in there is no winner yet, the winner must be determined now
+		//this occurs in endless mode, or when the user ends the match manually
+		//in standard mode, the winner has already been determined when the last set has been won
+		if(winner_player == null) {
 			//determine winner based on sets
 			if(you_sets_won != opponent_sets_won) {
 				winner = you_sets_won > opponent_sets_won ? YOU : OPPONENT;
@@ -138,6 +140,11 @@ class Match {
 			if(winner == null && you_total_score != opponent_total_score) {
 				winner = you_total_score > opponent_total_score ? YOU : OPPONENT;
 			}
+
+			//manage activity session
+			var set = getCurrentSet();
+			fieldSetScorePlayer1.setData(set.getScore(YOU));
+			fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 		}
 		else {
 			winner = winner_player;
@@ -187,16 +194,14 @@ class Match {
 		var set = getCurrentSet();
 		set.score(scorer);
 
-		//manage activity session
-		//remember that the match can be ended anytime (if the user decides to stop it)
-		//the activity must always be kept up to date
-		fieldSetScorePlayer1.setData(set.getScore(YOU));
-		fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
-
 		//end the set if it has been won
 		var set_winner = isSetWon(set);
 		if(set_winner != null) {
 			set.end(set_winner);
+
+			//manage activity session
+			fieldSetScorePlayer1.setData(set.getScore(YOU));
+			fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 
 			if(!isEndless()) {
 				var match_winner = isWon();

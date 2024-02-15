@@ -27,12 +27,18 @@ module BetterTest {
 		assertNotSame(condition, null, message);
 	}
 
-	function assertEqual(actual as Object, expected as Object?, message as String) as Void {
-		Test.assertEqualMessage(actual, expected, message + " (expected [" + expected + "], actual [" + actual + "])");
+	function assertEqual(actual as Object?, expected as Object?, message as String) as Void {
+		if(actual == null) {
+			fail(message);
+		}
+		Test.assertEqualMessage(actual as Object, expected, message + " (expected [" + expected + "], actual [" + actual + "])");
 	}
 
-	function assertNotEqual(actual as Object, expected as Object?, message as String) as Void {
-		Test.assertNotEqualMessage(actual, expected, message);
+	function assertNotEqual(actual as Object?, expected as Object?, message as String) as Void {
+		if(actual == null) {
+			fail(message);
+		}
+		Test.assertNotEqualMessage(actual as Object, expected, message);
 	}
 
 	function assertSame(actual as Object?, expected as Object?, message as String) as Void {

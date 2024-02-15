@@ -6,7 +6,7 @@ using Toybox.Time.Gregorian;
 module Helpers {
 
 	//TODO use Lang.format instead
-	function formatString(string as String, parameters as Dictionary<String, String?>) as String {
+	function formatString(string as String, parameters as Dictionary<String, Object>) as String {
 		var result = string;
 		var parameters_keys = parameters.keys();
 		//compiler does no accept for loop without incrementation phase
@@ -17,7 +17,8 @@ module Helpers {
 			if(parameter_index != null) {
 				var result_before = parameter_index > 0 ? result.substring(0, parameter_index) : "";
 				var result_after = result.substring(parameter_index + parameter_key.length(), result.length());
-				result = result_before + parameters[parameters_keys[i]] as String + result_after;
+				var parameter = parameters[parameters_keys[i]] as Object;
+				result = result_before + parameter.toString() + result_after;
 				//compiler does no accept for loop without incrementation phase
 				//loog again with same parameter until it is no more found in the string
 				i--;

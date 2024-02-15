@@ -50,7 +50,7 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 		var match = (Application.getApp() as BadmintonApp).getMatch() as Match;
 		//undo last point
 		match.undo();
-		var view = new MatchView();
+		var view = new MatchView(true);
 		WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
@@ -62,7 +62,7 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 		}
 		else {
 			match.nextSet();
-			var view = new MatchView();
+			var view = new MatchView(true);
 			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}
 		return true;
