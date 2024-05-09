@@ -5,7 +5,7 @@ using Toybox.WatchUi;
 class BeginnerPickerFactory extends WatchUi.PickerFactory {
 
 	private const BEGINNERS as Array<Player or Symbol> = [YOU, OPPONENT, :random] as Array<Player or Symbol>;
-	private const BEGINNERS_LABELS as Array<Symbol> = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent, Rez.Strings.beginner_random] as Array<Symbol>;
+	private const BEGINNERS_LABELS as Array<ResourceId> = [Rez.Strings.beginner_you, Rez.Strings.beginner_opponent, Rez.Strings.beginner_random] as Array<ResourceId>;
 
 	function initialize() {
 		PickerFactory.initialize();

@@ -19,17 +19,17 @@ The axis system for Perspective is like the perpendicular symbol (⊥):
 */
 class Perspective {
 
-	private var origin as Array<Float>;
-	private var height as Float;
-	private var frontWidth as Float;
-	private var backWidth as Float;
-	private var depth as Float?; //depth from the baseline to the perspective point
+	private var origin as Point2D;
+	private var height as Numeric;
+	private var frontWidth as Numeric;
+	private var backWidth as Numeric;
+	private var depth as Numeric?; //depth from the baseline to the perspective point
 
-	function initialize(front_left_corner as Array<Float>, back_left_corner as Array<Float>, front_right_corner as Array<Float>, back_right_corner as Array<Float>) {
+	function initialize(front_left_corner as Point2D, back_left_corner as Point2D, front_right_corner as Point2D, back_right_corner as Point2D) {
 		origin = [
 			BetterMath.mean(front_right_corner[0], front_left_corner[0]),
 			front_left_corner[1]
-		] as Array<Float>;
+		] as Point2D;
 		height = front_left_corner[1] - back_left_corner[1];
 		frontWidth = front_right_corner[0] - front_left_corner[0];
 		backWidth = back_right_corner[0] - back_left_corner[0];
@@ -43,7 +43,7 @@ class Perspective {
 		}
 	}
 
-	function transform(coordinate as Array<Float>) as Array<Float> {
+	function transform(coordinate as Point2D) as Point2D {
 		//y is in [0,1] and must be scaled to [0,height]
 		var adjusted_y = coordinate[1] * height as Float;
 		//x is in [-0.5,0.5] and must be scaled [-frontWidth / 2,frontWidth / 2]
@@ -53,11 +53,11 @@ class Perspective {
 			adjusted_x = adjusted_x - adjusted_y * adjusted_x / depth;
 		}
 		//finally, translate scaled coordinates in the watch coordinates
-		return [origin[0] + adjusted_x, origin[1] - adjusted_y] as Array<Float>;
+		return [origin[0] + adjusted_x, origin[1] - adjusted_y] as Point2D;
 	}
 
-	function transformArray(coordinates as Array<Array<Float>>) as Array<Array<Float>> {
-		var transformed_coordinates = new [coordinates.size()] as Array<Array<Float>>;
+	function transformArray(coordinates as Array<Point2D>) as Array<Point2D> {
+		var transformed_coordinates = new [coordinates.size()] as Array<Point2D>;
 		for(var i = 0; i < coordinates.size(); i++) {
 			transformed_coordinates[i] = transform(coordinates[i]);
 		}
@@ -69,19 +69,18 @@ class Perspective {
 	}
 
 	function drawPartialVanishingLine(dc as Dc, x as Float, y1 as Float, y2 as Float) as Void {
-		var beginning = transform([x, y1] as Array<Float>);
-		var end = transform([x, y2] as Array<Float>);
+		var beginning = transform([x, y1] as Point2D);
+		var end = transform([x, y2] as Point2D);
 		dc.drawLine(beginning[0], beginning[1], end[0], end[1]);
 	}
 
 	function drawTransversalLine(dc as Dc, y as Float) as Void {
-		var beginning = transform([-0.5, y] as Array<Float>);
-		var end = transform([0.5, y] as Array<Float>);
+		var beginning = transform([-0.5, y] as Point2D);
+		var end = transform([0.5, y] as Point2D);
 		dc.drawLine(beginning[0], beginning[1], end[0], end[1]);
 	}
 
-	function fillPolygon(dc as Dc, coordinates as Array<Array<Float>>) as Void {
+	function fillPolygon(dc as Dc, coordinates as Array<Point2D>) as Void {
 		dc.fillPolygon(transformArray(coordinates));
 	}
-
 }

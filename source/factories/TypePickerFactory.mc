@@ -5,7 +5,7 @@ using Toybox.WatchUi;
 class TypePickerFactory extends WatchUi.PickerFactory {
 
 	private const TYPES as Array<MatchType> = [SINGLE, DOUBLE] as Array<MatchType>;
-	private const TYPES_LABELS as Array<Symbol> = [Rez.Strings.type_single, Rez.Strings.type_double] as Array<Symbol>;
+	private const TYPES_LABELS as Array<ResourceId> = [Rez.Strings.type_single, Rez.Strings.type_double] as Array<ResourceId>;
 
 	function initialize() {
 		PickerFactory.initialize();

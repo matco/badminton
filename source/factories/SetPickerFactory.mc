@@ -5,7 +5,7 @@ using Toybox.WatchUi;
 class SetPickerFactory extends WatchUi.PickerFactory {
 
 	private const SETS as Array<Number or Symbol> = [1, 3, 5, :endless] as Array<Number or Symbol>;
-	private const SETS_LABELS as Array<Symbol> = [Rez.Strings.set_1, Rez.Strings.set_3, Rez.Strings.set_5, Rez.Strings.set_endless] as Array<Symbol>;
+	private const SETS_LABELS as Array<ResourceId> = [Rez.Strings.set_1, Rez.Strings.set_3, Rez.Strings.set_5, Rez.Strings.set_endless] as Array<ResourceId>;
 
 	function initialize() {
 		PickerFactory.initialize();
