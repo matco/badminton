@@ -5,7 +5,7 @@ using Toybox.WatchUi;
 class ServerPickerFactory extends WatchUi.PickerFactory {
 
 	private const SERVERS as Array<Boolean> = [true, false] as Array<Boolean>;
-	private const SERVERS_LABELS as Array<Symbol> = [Rez.Strings.server_you, Rez.Strings.server_teammate] as Array<Symbol>;
+	private const SERVERS_LABELS as Array<ResourceId> = [Rez.Strings.server_you, Rez.Strings.server_teammate] as Array<ResourceId>;
 
 	function initialize() {
 		PickerFactory.initialize();

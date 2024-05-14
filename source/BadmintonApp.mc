@@ -20,7 +20,7 @@ class BadmintonApp extends Application.AppBase {
 	}
 
 	function getInitialView() {
-		return [new InitialView(), new InitialViewDelegate()] as Array<InputDelegate or View>;
+		return [new InitialView(), new InitialViewDelegate()];
 	}
 
 	function getBus() as Bus {

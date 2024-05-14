@@ -19,13 +19,13 @@ class MatchBoundaries {
 		[0.5 - COURT_SIDELINE_SIZE, 1f],
 		[0.5 - COURT_SIDELINE_SIZE, 0f],
 		[-0.5 + COURT_SIDELINE_SIZE, 0f]
-	] as Array<Array<Float>>;
+	] as Array<Point2D>;
 	static const COURT_DOUBLE = [
 		[-0.5, 1f],
 		[0.5, 1f],
 		[0.5, 0f],
 		[-0.5, 0f]
-	] as Array<Array<Float>>;
+	] as Array<Point2D>;
 	//corners boundaries coordinate
 	static const COURT_SINGLE_CORNERS = {
 		//OPPONENT_RIGHT is the top left corner
@@ -103,9 +103,9 @@ class MatchBoundaries {
 
 	public var perspective as Perspective;
 
-	public var court as Array<Array<Float>>;
-	public var corners as Dictionary<Corner, Array<Array<Float>>>;
-	public var board as Array<Array<Float>>;
+	public var court as Array<Point2D>;
+	public var corners as Dictionary<Corner, Array<Point2D>>;
+	public var board as Array<Point2D>;
 
 	public var hrCoordinates as Dictionary<String, Array or Number>;
 
@@ -176,38 +176,38 @@ class MatchBoundaries {
 			}
 		}
 
-		yMiddle = BetterMath.mean(yFront, yBack);
+		yMiddle = BetterMath.mean(yFront, yBack) as Float;
 
 		//perspective is defined by its two side vanishing lines
 		perspective = new Perspective(
-			[xCenter - front_width, yFront] as Array<Float>, [xCenter - back_width, yBack] as Array<Float>,
-			[xCenter + front_width, yFront] as Array<Float>, [xCenter + back_width, yBack] as Array<Float>
+			[xCenter - front_width, yFront], [xCenter - back_width, yBack],
+			[xCenter + front_width, yFront], [xCenter + back_width, yBack]
 		);
 
 		//select court boundaries coordinates (clockwise, starting from top left point)
 		court = perspective.transformArray(match.getType() == SINGLE ? COURT_SINGLE : COURT_DOUBLE);
 
 		//calculate court corners boundaries coordinates
-		var corner_coordinates = match.getType() == SINGLE ? COURT_SINGLE_CORNERS : COURT_DOUBLE_CORNERS ;
+		var corner_coordinates = match.getType() == SINGLE ? COURT_SINGLE_CORNERS : COURT_DOUBLE_CORNERS;
 		corners = {
-			OPPONENT_RIGHT => perspective.transformArray(corner_coordinates[OPPONENT_RIGHT] as Array<Array<Float>>),
-			OPPONENT_LEFT => perspective.transformArray(corner_coordinates[OPPONENT_LEFT] as Array<Array<Float>>),
-			YOU_LEFT => perspective.transformArray(corner_coordinates[YOU_LEFT] as Array<Array<Float>>),
-			YOU_RIGHT => perspective.transformArray(corner_coordinates[YOU_RIGHT] as Array<Array<Float>>)
-		} as Dictionary<Corner, Array<Array<Float>>>;
+			OPPONENT_RIGHT => perspective.transformArray(corner_coordinates[OPPONENT_RIGHT] as Array<Point2D>),
+			OPPONENT_LEFT => perspective.transformArray(corner_coordinates[OPPONENT_LEFT] as Array<Point2D>),
+			YOU_LEFT => perspective.transformArray(corner_coordinates[YOU_LEFT] as Array<Point2D>),
+			YOU_RIGHT => perspective.transformArray(corner_coordinates[YOU_RIGHT] as Array<Point2D>)
+		} as Dictionary<Corner, Array<Point2D>>;
 
 		//calculate set positions
-		board = new [Match.MAX_SETS] as Array<Array<Float>>;
+		board = new [Match.MAX_SETS] as Array<Point2D>;
 		for(var i = 0; i < Match.MAX_SETS; i++) {
 			var y = 0.1 + 0.7 * i / Match.MAX_SETS;
 			//dot not align the balls using the real perspective
 			//display them parallel to the left side of the court instead
-			var transformed_coordinates = perspective.transform([-0.5, y] as Array<Float>);
+			var transformed_coordinates = perspective.transform([-0.5, y]);
 			board[i] = [transformed_coordinates[0] - SET_BALL_RADIUS * 2, transformed_coordinates[1]];
 		}
 
 		//calculate hear rate position
-		var hr_center = BetterMath.roundAll(perspective.transform([0.75, 0.6] as Array<Float>));
+		var hr_center = BetterMath.roundAll(perspective.transform([0.75, 0.6]));
 		//size the icon according to the size of the tiny font
 		var size = Math.round(Graphics.getFontHeight(Graphics.FONT_TINY) * 0.2);
 		var icon_center = [hr_center[0], hr_center[1] - size * 2];
@@ -326,8 +326,8 @@ class MatchView extends WatchUi.View {
 		var serving_corner = match.getServingCorner();
 		var receiving_corner = match.getReceivingCorner();
 		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
-		dc.fillPolygon(bd.corners[serving_corner] as Array<Array<Numeric>>);
-		dc.fillPolygon(bd.corners[receiving_corner] as Array<Array<Numeric>>);
+		dc.fillPolygon(bd.corners[serving_corner] as Array<Point2D>);
+		dc.fillPolygon(bd.corners[receiving_corner] as Array<Point2D>);
 
 		//draw bounds
 		dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
@@ -361,7 +361,7 @@ class MatchView extends WatchUi.View {
 
 		//draw a dot for the player 1 (watch carrier) position
 		var player_x = match.getPlayerCorner() == YOU_LEFT ? -0.28 : 0.28 as Float;
-		var player_coordinates = bd.perspective.transform([player_x, 0.12] as Array<Float>);
+		var player_coordinates = bd.perspective.transform([player_x, 0.12] as Point2D);
 		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 		dc.fillCircle(player_coordinates[0], player_coordinates[1], 7);
 	}
@@ -373,8 +373,8 @@ class MatchView extends WatchUi.View {
 		//boundaries cannot be null at this point
 		var bd = boundaries as MatchBoundaries;
 
-		var player_1_coordinates = bd.perspective.transform([0f, 0.25] as Array<Float>);
-		var player_2_coordinates = bd.perspective.transform([0f, 0.75] as Array<Float>);
+		var player_1_coordinates = bd.perspective.transform([0f, 0.25] as Point2D);
+		var player_2_coordinates = bd.perspective.transform([0f, 0.75] as Point2D);
 		var player_1_color = server_team == YOU ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
 		var player_2_color = server_team == OPPONENT ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
 		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), player_1_color, 2, 4);
@@ -438,7 +438,7 @@ class MatchView extends WatchUi.View {
 
 			var hr_coordinates = bd.hrCoordinates;
 			var size = hr_coordinates["size"] as Numeric;
-			var icon_center = hr_coordinates["icon_center"] as Array<Numeric>;
+			var icon_center = hr_coordinates["icon_center"] as Point2D;
 			var circle_y_extension = hr_coordinates["circle_y_extension"] as Numeric;
 			dc.setColor(color, Graphics.COLOR_TRANSPARENT);
 			//draw half circles by clipping the bottom part of full circles
@@ -449,15 +449,15 @@ class MatchView extends WatchUi.View {
 				icon_center[1] as Numeric - size - margin,
 				size * 4 + 2 * margin,
 				size + circle_y_extension + 2 * margin);
-			var heart_circle_left = hr_coordinates["heart_circle_left"] as Array<Numeric>;
-			dc.fillCircle(heart_circle_left[0] as Numeric, heart_circle_left[1] as Numeric, size);
-			var heart_circle_right = hr_coordinates["heart_circle_right"] as Array<Numeric>;
-			dc.fillCircle(heart_circle_right[0] as Numeric, heart_circle_right[1] as Numeric, size);
+			var heart_circle_left = hr_coordinates["heart_circle_left"] as Point2D;
+			dc.fillCircle(heart_circle_left[0], heart_circle_left[1], size);
+			var heart_circle_right = hr_coordinates["heart_circle_right"] as Point2D;
+			dc.fillCircle(heart_circle_right[0], heart_circle_right[1], size);
 			dc.clearClip();
-			dc.fillPolygon(hr_coordinates["heart_triangle"] as Array<Array<Number>>);
-			dc.fillPolygon(hr_coordinates["heart_rectangle"] as Array<Array<Number>>);
+			dc.fillPolygon(hr_coordinates["heart_triangle"] as Array<Point2D>);
+			dc.fillPolygon(hr_coordinates["heart_rectangle"] as Array<Point2D>);
 			dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-			var center = hr_coordinates["center"] as Array<Numeric>;
+			var center = hr_coordinates["center"] as Point2D;
 			dc.drawText(center[0], center[1], Graphics.FONT_TINY, rate.toString(), Graphics.TEXT_JUSTIFY_CENTER);
 		}
 	}

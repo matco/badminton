@@ -44,7 +44,7 @@ module UIHelpers {
 		return closest_drawable;
 	}
 
-	function drawPolygon(dc as Dc, points as Array<Array<Float>>) as Void {
+	function drawPolygon(dc as Dc, points as Array<Point2D>) as Void {
 		var counts = points.size();
 		for(var i = 0; i < counts; i++) {
 			var next_index = (i + 1) % counts;
@@ -52,7 +52,7 @@ module UIHelpers {
 		}
 	}
 
-	function drawHighlightedNumber(dc as Dc, x as Float, y as Float, font as FontType, text as String, color as Number, vertical_padding as Number, horizontal_padding as Number) as Void {
+	function drawHighlightedNumber(dc as Dc, x as Numeric, y as Numeric, font as FontType, text as String, color as Number, vertical_padding as Number, horizontal_padding as Number) as Void {
 		var dimensions = dc.getTextDimensions(text, font);
 		//the font height includes a default top margin that is useless
 		var offset = dimensions[1] * 0.12;
