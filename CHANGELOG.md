@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.4.0
+- Add support for Descent Mk3 series
+
 ## 4.3.1
 - Fix and update custom fields in the Garmin Activity to allow much higher total scores
 - Fix duplicated scores in the last lap of the Garmin Activity in endless mode
