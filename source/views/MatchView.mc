@@ -91,6 +91,21 @@ class MatchBoundaries {
 	static const TIME_HEIGHT = Graphics.getFontHeight(Graphics.FONT_SMALL) * 1.1; //height of timer and clock
 	static const SET_BALL_RADIUS = 7; //width reserved to display sets
 
+	static const SERVICE_HINT = {
+		YOU => [
+			[0.5 + COURT_SIDELINE_SIZE / 2, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0.5 + COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
+			[0.5 + COURT_SIDELINE_SIZE, COURT_LONG_SERVICE_SIZE],
+			[0.5 + COURT_SIDELINE_SIZE / 2, COURT_LONG_SERVICE_SIZE]
+		],
+		OPPONENT => [
+			[0.5 + COURT_SIDELINE_SIZE / 2, 0.5 + COURT_SHORT_SERVICE_SIZE],
+			[0.5 + COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE],
+			[0.5 + COURT_SIDELINE_SIZE, 1 - COURT_LONG_SERVICE_SIZE],
+			[0.5 + COURT_SIDELINE_SIZE / 2, 1 - COURT_LONG_SERVICE_SIZE]
+		],
+	};
+
 	//center of the watch
 	public var xCenter as Float;
 	public var yCenter as Float;
@@ -106,6 +121,7 @@ class MatchBoundaries {
 	public var court as Array<Point2D>;
 	public var corners as Dictionary<Corner, Array<Point2D>>;
 	public var board as Array<Point2D>;
+	public var serviceHints as Dictionary<Player, Array<Point2D>>;
 
 	public var heart as Heart;
 
@@ -205,6 +221,12 @@ class MatchBoundaries {
 			var transformed_coordinates = perspective.transform([-0.5, y]);
 			board[i] = [transformed_coordinates[0] - SET_BALL_RADIUS * 2, transformed_coordinates[1]];
 		}
+
+		//calculate service hint positions
+		serviceHints = {
+			YOU => perspective.transformArray(SERVICE_HINT[YOU] as Array<Point2D>),
+			OPPONENT => perspective.transformArray(SERVICE_HINT[OPPONENT] as Array<Point2D>)
+		} as Dictionary<Player, Array<Point2D>>;
 
 		//calculate hear rate position
 		var heart_coordinates = BetterMath.roundAll(perspective.transform([0.75, 0.6])) as Point2D;
@@ -345,6 +367,19 @@ class MatchView extends WatchUi.View {
 		dc.fillCircle(player_coordinates[0], player_coordinates[1], 7);
 	}
 
+	function drawServiceHint(dc as Dc, match as Match) as Void {
+		var set = match.getCurrentSet();
+		var server_team = set.getServerTeam();
+
+		//boundaries cannot be null at this point
+		var bd = boundaries as MatchBoundaries;
+
+		var service_hint = bd.serviceHints[server_team] as Array<Point2D>;
+
+		dc.setColor(Graphics.COLOR_BLUE, Graphics.COLOR_TRANSPARENT);
+		dc.fillPolygon(service_hint);
+	}
+
 	function drawScores(dc as Dc, match as Match) as Void {
 		var set = match.getCurrentSet();
 		var server_team = set.getServerTeam();
@@ -448,6 +483,7 @@ class MatchView extends WatchUi.View {
 		drawCourt(dc, match);
 
 		if(!inAnimation) {
+			drawServiceHint(dc, match);
 			drawScores(dc, match);
 			drawSets(dc, match);
 			drawTimer(dc, match);
