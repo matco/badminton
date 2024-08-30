@@ -209,7 +209,7 @@ class MatchBoundaries {
 		//calculate hear rate position
 		var heart_coordinates = BetterMath.roundAll(perspective.transform([0.75, 0.6])) as Point2D;
 		//size the icon according to the size of the tiny font
-		var size = Math.round(Graphics.getFontHeight(Graphics.FONT_TINY) * 0.2);
+		var size = Math.round(Graphics.getFontHeight(Graphics.FONT_TINY) * 0.15);
 		heart = new Heart({
 			:locX => heart_coordinates[0],
 			:locY => heart_coordinates[1] - size * 2,
