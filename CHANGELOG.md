@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.5.0
+- Add support for Fenix 8 series
+- Add support for Fenix E
+- Add support for Enduro 3
+
 ## 4.4.0
 - Add support for Descent Mk3 series
 

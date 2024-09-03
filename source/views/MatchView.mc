@@ -107,7 +107,8 @@ class MatchBoundaries {
 	public var corners as Dictionary<Corner, Array<Point2D>>;
 	public var board as Array<Point2D>;
 
-	public var hrCoordinates as Dictionary<String, Array or Number>;
+	public var hrCoordinates as Point2D;
+	public var heart as Heart;
 
 	function initialize(match as Match, device as DeviceSettings, elapsed_time as Number?) {
 		//calculate margins
@@ -207,33 +208,11 @@ class MatchBoundaries {
 		}
 
 		//calculate hear rate position
-		var hr_center = BetterMath.roundAll(perspective.transform([0.75, 0.6]));
+		hrCoordinates = BetterMath.roundAll(perspective.transform([0.75, 0.6])) as Point2D;
 		//size the icon according to the size of the tiny font
 		var size = Math.round(Graphics.getFontHeight(Graphics.FONT_TINY) * 0.2);
-		var icon_center = [hr_center[0], hr_center[1] - size * 2];
-		//the heart icon is composed of two a-little-more-than-half circles, a triangle, and a rectangle to cover the space between the two circles
-		var angle = Math.PI / 4;
-		var circle_y_extension = Math.round(size * Math.sin(angle));
-		var circle_x_extension = Math.round(size * (1 - Math.cos(angle)));
-		hrCoordinates = {
-			"center" => hr_center,
-			"size" => size,
-			"icon_center" => icon_center,
-			"circle_y_extension" => circle_y_extension,
-			"heart_circle_left" => [icon_center[0] - size, icon_center[1]],
-			"heart_circle_right" => [icon_center[0] + size, icon_center[1]],
-			"heart_triangle" => [
-				[icon_center[0] - 2 * size + circle_x_extension, icon_center[1] + circle_y_extension],
-				[icon_center[0] + 2 * size - circle_x_extension, icon_center[1] + circle_y_extension],
-				[icon_center[0], icon_center[1] + 2 * size]
-			],
-			"heart_rectangle" => [
-				[icon_center[0] - size / 2, icon_center[1]],
-				[icon_center[0] + size / 2, icon_center[1]],
-				[icon_center[0] + size / 2, icon_center[1] + size],
-				[icon_center[0] - size / 2, icon_center[1] + size]
-			]
-		} as Dictionary<String, Array or Number>;
+		var heart_center = [hrCoordinates[0], hrCoordinates[1] - size * 2];
+		heart = new Heart(heart_center, size);
 	}
 }
 
@@ -436,29 +415,11 @@ class MatchView extends WatchUi.View {
 			//boundaries cannot be null at this point
 			var bd = boundaries as MatchBoundaries;
 
-			var hr_coordinates = bd.hrCoordinates;
-			var size = hr_coordinates["size"] as Numeric;
-			var icon_center = hr_coordinates["icon_center"] as Point2D;
-			var circle_y_extension = hr_coordinates["circle_y_extension"] as Numeric;
 			dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-			//draw half circles by clipping the bottom part of full circles
-			//add a margin on the top and bottom because rounded coordinates may result in bad clipping
-			var margin = 1;
-			dc.setClip(
-				icon_center[0] as Numeric - size * 2 - margin,
-				icon_center[1] as Numeric - size - margin,
-				size * 4 + 2 * margin,
-				size + circle_y_extension + 2 * margin);
-			var heart_circle_left = hr_coordinates["heart_circle_left"] as Point2D;
-			dc.fillCircle(heart_circle_left[0], heart_circle_left[1], size);
-			var heart_circle_right = hr_coordinates["heart_circle_right"] as Point2D;
-			dc.fillCircle(heart_circle_right[0], heart_circle_right[1], size);
-			dc.clearClip();
-			dc.fillPolygon(hr_coordinates["heart_triangle"] as Array<Point2D>);
-			dc.fillPolygon(hr_coordinates["heart_rectangle"] as Array<Point2D>);
+			bd.heart.draw(dc);
+
 			dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-			var center = hr_coordinates["center"] as Point2D;
-			dc.drawText(center[0], center[1], Graphics.FONT_TINY, rate.toString(), Graphics.TEXT_JUSTIFY_CENTER);
+			dc.drawText(bd.hrCoordinates[0], bd.hrCoordinates[1], Graphics.FONT_TINY, rate.toString(), Graphics.TEXT_JUSTIFY_CENTER);
 		}
 	}
 

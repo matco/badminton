@@ -19,6 +19,9 @@ vivoactive4s.resourcePath = resources;icons/30x30
 vivoactive5.resourcePath = resources;icons/70x70
 
 fenix5s.resourcePath = resources;icons/36x36
+fenixe.resourcePath = resources;icons/60x60
+fenix843mm.resourcePath = resources;icons/60x60
+fenix847mm.resourcePath = resources;icons/65x65
 
 epix2.resourcePath = resources;icons/60x60
 epix2pro51mm.resourcePath = resources;icons/60x60
