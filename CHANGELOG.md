@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.6.0
+- Add support for MARQ Gen 2 series
+
 ## 4.5.0
 - Add support for Fenix 8 series
 - Add support for Fenix E
