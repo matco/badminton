@@ -34,7 +34,7 @@ class Perspective {
 		frontWidth = front_right_corner[0] - front_left_corner[0];
 		backWidth = back_right_corner[0] - back_left_corner[0];
 		//if back width and front width are equals, it means there is no perspective
-		if(backWidth == frontWidth) {
+		if(backWidth.compareTo(frontWidth) == 0) {
 			//System.println("No perspective if back width and front width are equal");
 			depth = null;
 		}
