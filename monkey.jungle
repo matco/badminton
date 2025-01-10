@@ -30,6 +30,9 @@ epix2pro42mm.resourcePath = resources;icons/60x60
 
 fr55.resourcePath = resources;icons/35x35
 
+fr165.resourcePath = resources;icons/54x54
+fr165m.resourcePath = resources;icons/54x54
+
 fr265.resourcePath = resources;icons/60x60
 fr265s.resourcePath = resources;icons/60x60
 
