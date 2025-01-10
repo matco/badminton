@@ -515,6 +515,10 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		return true;
 	}
 
+	function onSelect() {
+		return onMenu();
+	}
+
 	function manageScore(player as Player) as Boolean {
 		var match = (Application.getApp() as BadmintonApp).getMatch() as Match;
 		match.score(player);
