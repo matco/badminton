@@ -44,6 +44,10 @@ epix2pro51mm.resourcePath = resources;icons/60x60
 epix2pro47mm.resourcePath = resources;icons/60x60
 epix2pro42mm.resourcePath = resources;icons/60x60
 
+instinct3amoled45mm.resourcePath = resources;icons/60x60
+instinct3amoled50mm.resourcePath = resources;icons/60x60
+instinct3solar45mm.resourcePath = resources;icons/62x62
+
 fr55.resourcePath = resources;icons/35x35
 fr165.resourcePath = resources;icons/54x54
 fr165m.resourcePath = resources;icons/54x54
