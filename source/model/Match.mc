@@ -172,7 +172,7 @@ class Match {
 		//manage activity session
 		session.addLap();
 
-		//the player who won the previous game will serve first in the next set
+		//the player who won the previous set will serve first in the next set
 		var beginner = set.getWinner();
 
 		//create next set
