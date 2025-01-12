@@ -10,7 +10,14 @@ class MatchMenuDelegate extends WatchUi.Menu2InputDelegate {
 	function onSelect(item as MenuItem) {
 		var id = item.getId();
 		var match = (Application.getApp() as BadmintonApp).getMatch() as Match;
-		if(id == :menu_end_game) {
+		if(id == :menu_resume_game) {
+			//pop once to close the menu
+			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+			//go back to the match screen
+			var view = new MatchView(true);
+			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
+		}
+		else if(id == :menu_end_game) {
 			match.end(null);
 			//pop once to close the menu
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

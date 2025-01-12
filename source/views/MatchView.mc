@@ -508,6 +508,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
 	function onMenu() {
 		var menu = new WatchUi.Menu2({:title => Rez.Strings.menu_title});
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_resume_game, null, :menu_resume_game, null));
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_end_game, null, :menu_end_game, null));
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_reset_game, null, :menu_reset_game, null));
 
