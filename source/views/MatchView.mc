@@ -278,12 +278,10 @@ class MatchView extends WatchUi.View {
 	}
 
 	function setRefreshTime(time as Number) as Void {
-		if(refreshTime != time) {
-			refreshTime = time;
-			refreshTimer.stop();
-			refreshTimer.start(method(:refresh), refreshTime, true);
-			System.println("set refresh time to " + time);
-		}
+		refreshTime = time;
+		refreshTimer.stop();
+		refreshTimer.start(method(:refresh), refreshTime, true);
+		System.println("set refresh time to " + time);
 	}
 
 	function onUpdateSettings() as Void {
