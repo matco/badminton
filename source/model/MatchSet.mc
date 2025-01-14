@@ -4,7 +4,7 @@ class MatchSet {
 	private var beginner as Player; //store the beginner of the set, YOU or OPPONENT
 	private var rallies as List; //list of all rallies
 
-	private var scores as Dictionary<Player, Number>; //dictionnary containing players current scores
+	private var scores as Dictionary<Player, Number>; //dictionary containing players current scores
 	private var winner as Player?; //store the winner of the match, ME or OPPONENT
 
 	function initialize(player as Player) {
