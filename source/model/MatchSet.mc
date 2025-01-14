@@ -1,4 +1,5 @@
 import Toybox.Lang;
+import Toybox.Time;
 
 class MatchSet {
 	private var beginner as Player; //store the beginner of the set, YOU or OPPONENT
@@ -7,14 +8,19 @@ class MatchSet {
 	private var scores as Dictionary<Player, Number>; //dictionary containing players current scores
 	private var winner as Player?; //store the winner of the match, ME or OPPONENT
 
+	private var beginningTime as Moment; //datetime of the beginning of the set
+	private var duration as Duration?; //store duration of the set (do not store the datetime of the end of the set to reduce memory footprint)
+
 	function initialize(player as Player) {
 		beginner = player;
 		rallies = new List();
 		scores = {YOU => 0, OPPONENT => 0} as Dictionary<Player, Number>;
+		beginningTime = Time.now();
 	}
 
 	function end(player as Player) as Void {
 		winner = player;
+		duration = Time.now().subtract(beginningTime) as Duration;
 	}
 
 	function hasEnded() as Boolean {
@@ -80,5 +86,9 @@ class MatchSet {
 	//methods used from perspective of player 1 (watch carrier)
 	function getPlayerTeamIsServer() as Boolean {
 		return getServerTeam() == YOU;
+	}
+
+	function getDuration() as Duration? {
+		return duration;
 	}
 }

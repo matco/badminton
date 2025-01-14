@@ -1,4 +1,5 @@
 import Toybox.Lang;
+import Toybox.Time;
 import Toybox.WatchUi;
 using Toybox.Graphics;
 
@@ -25,6 +26,8 @@ class SetResultView extends WatchUi.View {
 		//draw match score
 		var match_score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();
 		(findDrawableById("set_result_match_score") as Text).setText(match_score_text);
+		//draw set time
+		(findDrawableById("set_result_time") as Text).setText(Helpers.formatDuration(set.getDuration() as Duration));
 		//draw rallies
 		var rallies_text = WatchUi.loadResource(Rez.Strings.total_rallies) as String;
 		(findDrawableById("set_result_rallies") as Text).setText(Helpers.formatString(rallies_text, {"rallies" => set.getRalliesNumber().toString()}));
