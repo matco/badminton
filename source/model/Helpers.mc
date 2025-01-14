@@ -1,6 +1,5 @@
 import Toybox.Lang;
 import Toybox.Time;
-using Toybox.Time;
 using Toybox.Time.Gregorian;
 
 module Helpers {
