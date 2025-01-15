@@ -4,8 +4,8 @@ import Toybox.ActivityRecording;
 import Toybox.FitContributor;
 import Toybox.Time;
 
-enum Player {
-	YOU = 1,
+enum Team {
+	USER = 1,
 	OPPONENT = 2
 }
 
@@ -17,15 +17,15 @@ enum MatchType {
 enum Corner {
 	OPPONENT_RIGHT = 0, //top left corner on the screen
 	OPPONENT_LEFT = 1, //top right corner on the screen
-	YOU_LEFT = 2, //bottom left corner on the screen
-	YOU_RIGHT = 3 //bottom right corner on the screen
+	USER_LEFT = 2, //bottom left corner on the screen
+	USER_RIGHT = 3 //bottom right corner on the screen
 }
 
 class MatchConfig {
 	public var step as Number = 0;
 	public var type as MatchType?;
 	public var sets as Number?;
-	public var beginner as Player?;
+	public var beginner as Team?;
 	public var server as Boolean?;
 	public var maximumPoints as Number?;
 	public var absoluteMaximumPoints as Number?;
@@ -39,10 +39,10 @@ class Match {
 	static const MAX_SETS = 5;
 
 	const OPPOSITE_CORNER = {
-		OPPONENT_RIGHT => YOU_RIGHT,
-		OPPONENT_LEFT => YOU_LEFT,
-		YOU_LEFT => OPPONENT_LEFT,
-		YOU_RIGHT => OPPONENT_RIGHT
+		OPPONENT_RIGHT => USER_RIGHT,
+		OPPONENT_LEFT => USER_LEFT,
+		USER_LEFT => OPPONENT_LEFT,
+		USER_RIGHT => OPPONENT_RIGHT
 	} as Dictionary<Corner, Corner>;
 
 	const TOTAL_SCORE_PLAYER_1_FIELD_ID = 0;
@@ -56,8 +56,8 @@ class Match {
 	private var maximumSets as Number?; //maximum number of sets for this match, null for match in endless mode
 	private var sets as List; //list of played sets
 
-	private var server as Boolean; //in double, true if the watch carrier is the first to serve (among himself and his teammate)
-	private var winner as Player?; //store the winner of the match, YOU or OPPONENT
+	private var server as Boolean; //in double, true if the user is the first to serve (among himself and his teammate)
+	private var winner as Team?; //store the winner of the match, USER or OPPONENT
 	private var ended as Boolean; //store if the match has ended
 
 	private var maximumPoints as Number;
@@ -75,15 +75,15 @@ class Match {
 		type = config.type as MatchType;
 		maximumSets = config.sets;
 
-		//in singles, the server is necessary the watch carrier
-		//in doubles, server is either the watch carrier or his teammate
+		//in singles, the server is necessary the user
+		//in doubles, server is either the user or his teammate
 		server = config.type == DOUBLE ? config.server as Boolean : true;
 
 		ended = false;
 
 		//prepare array of sets and create first set
 		sets = new List();
-		sets.push(new MatchSet(config.beginner as Player));
+		sets.push(new MatchSet(config.beginner as Team));
 
 		maximumPoints = config.maximumPoints as Number;
 		absoluteMaximumPoints = config.absoluteMaximumPoints as Number;
@@ -117,37 +117,37 @@ class Match {
 		session.discard();
 	}
 
-	function end(winner_player as Player?) as Void {
+	function end(winner_team as Team?) as Void {
 		if(hasEnded()) {
 			throw new OperationNotAllowedException("Unable to end a match that has already been ended");
 		}
 		ended = true;
 
-		var you_sets_won = getSetsWon(YOU);
+		var you_sets_won = getSetsWon(USER);
 		var opponent_sets_won = getSetsWon(OPPONENT);
-		var you_total_score = getTotalScore(YOU);
+		var you_total_score = getTotalScore(USER);
 		var opponent_total_score = getTotalScore(OPPONENT);
 
 		//in there is no winner yet, the winner must be determined now
 		//this occurs in endless mode, or when the user ends the match manually
 		//in standard mode, the winner has already been determined when the last set has been won
-		if(winner_player == null) {
+		if(winner_team == null) {
 			//determine winner based on sets
 			if(you_sets_won != opponent_sets_won) {
-				winner = you_sets_won > opponent_sets_won ? YOU : OPPONENT;
+				winner = you_sets_won > opponent_sets_won ? USER : OPPONENT;
 			}
 			//determine winner based on total score
 			if(winner == null && you_total_score != opponent_total_score) {
-				winner = you_total_score > opponent_total_score ? YOU : OPPONENT;
+				winner = you_total_score > opponent_total_score ? USER : OPPONENT;
 			}
 
 			//manage activity session
 			var set = getCurrentSet();
-			fieldSetScorePlayer1.setData(set.getScore(YOU));
+			fieldSetScorePlayer1.setData(set.getScore(USER));
 			fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 		}
 		else {
-			winner = winner_player;
+			winner = winner_team;
 		}
 
 		//manage activity session
@@ -172,11 +172,11 @@ class Match {
 		//manage activity session
 		session.addLap();
 
-		//the player who won the previous set will serve first in the next set
+		//the team who won the previous set will serve first in the next set
 		var beginner = set.getWinner();
 
 		//create next set
-		sets.push(new MatchSet(beginner as Player));
+		sets.push(new MatchSet(beginner as Team));
 	}
 
 	function getMaximumSets() as Number? {
@@ -187,7 +187,7 @@ class Match {
 		return sets.last() as MatchSet;
 	}
 
-	function score(scorer as Player) as Void {
+	function score(scorer as Team) as Void {
 		if(hasEnded()) {
 			throw new OperationNotAllowedException("Unable to score in a match that has ended");
 		}
@@ -200,7 +200,7 @@ class Match {
 			set.end(set_winner);
 
 			//manage activity session
-			fieldSetScorePlayer1.setData(set.getScore(YOU));
+			fieldSetScorePlayer1.setData(set.getScore(USER));
 			fieldSetScorePlayer2.setData(set.getScore(OPPONENT));
 
 			if(!isEndless()) {
@@ -212,11 +212,11 @@ class Match {
 		}
 	}
 
-	private function isSetWon(set as MatchSet) as Player? {
-		var scorePlayer1 = set.getScore(YOU);
+	private function isSetWon(set as MatchSet) as Team? {
+		var scorePlayer1 = set.getScore(USER);
 		var scorePlayer2 = set.getScore(OPPONENT);
 		if(scorePlayer1 >= absoluteMaximumPoints || scorePlayer1 >= maximumPoints && (scorePlayer1 - scorePlayer2) > 1) {
-			return YOU;
+			return USER;
 		}
 		if(scorePlayer2 >= absoluteMaximumPoints || scorePlayer2 >= maximumPoints && (scorePlayer2 - scorePlayer1) > 1) {
 			return OPPONENT;
@@ -224,15 +224,15 @@ class Match {
 		return null;
 	}
 
-	private function isWon() as Player? {
+	private function isWon() as Team? {
 		//in endless mode, no winner can be determined wile the match has not been ended
 		if(isEndless()) {
 			return null;
 		}
 		var winning_sets = maximumSets as Number / 2; //if not in endless mode, maximum sets cannot be null
-		var player_1_sets = getSetsWon(YOU);
+		var player_1_sets = getSetsWon(USER);
 		if(player_1_sets > winning_sets) {
-			return YOU;
+			return USER;
 		}
 		var player_2_sets = getSetsWon(OPPONENT);
 		if(player_2_sets > winning_sets) {
@@ -282,31 +282,31 @@ class Match {
 		return number;
 	}
 
-	function getTotalScore(player as Player) as Number {
+	function getTotalScore(team as Team) as Number {
 		var score = 0;
 		for(var i = 0; i < sets.size(); i++) {
 			var set = sets.get(i) as MatchSet;
-			score += set.getScore(player);
+			score += set.getScore(team);
 		}
 		return score;
 	}
 
-	function getSetsWon(player as Player) as Number {
+	function getSetsWon(team as Team) as Number {
 		var won = 0;
 		for(var i = 0; i < sets.size(); i++) {
 			var set = sets.get(i) as MatchSet;
-			if(set.getWinner() == player) {
+			if(set.getWinner() == team) {
 				won++;
 			}
 		}
 		return won;
 	}
 
-	function getWinner() as Player? {
+	function getWinner() as Team? {
 		return winner;
 	}
 
-	function getServerTeam() as Player {
+	function getServerTeam() as Team {
 		return getCurrentSet().getServerTeam();
 	}
 
@@ -323,31 +323,31 @@ class Match {
 		return getPlayerCorner() == getServingCorner();
 	}
 
-	//methods used from perspective of player 1 (watch carrier)
-	function getPlayerTeamIsServer() as Boolean {
-		return getServerTeam() == YOU;
+	//methods used from perspective of the user
+	function getUserTeamIsServer() as Boolean {
+		return getServerTeam() == USER;
 	}
 
 	function getPlayerCorner() as Corner {
 		var current_set = getCurrentSet();
-		//in singles, the player 1 (watch carrier) position only depends on the current score
+		//in singles, the user position only depends on the current score
 		if(type == SINGLE) {
 			var server_team = current_set.getServerTeam();
 			var server_score = current_set.getScore(server_team);
-			return server_score % 2 == 0 ? YOU_RIGHT : YOU_LEFT;
+			return server_score % 2 == 0 ? USER_RIGHT : USER_LEFT;
 		}
 		//in doubles, it's not possible to give the position using only the current score
 		//remember that the one who serves changes each time the team gains the service (winning a rally while not serving)
 		var beginner = current_set.getBeginner();
 		var rallies = current_set.getRallies();
 		//initialize the corner differently depending on which team begins the set and which player starts to serve
-		//while the player 1 team (watch carrier) did not get a service, the position of the player depends on who has been configured to serve first (among the player and his teammate)
-		var corner = beginner == YOU ? server ? YOU_RIGHT : YOU_LEFT : server ? YOU_LEFT : YOU_RIGHT;
+		//while the user team did not get a service, the position of the user depends on who has been configured to serve first (among the user and his teammate)
+		var corner = beginner == USER ? server ? USER_RIGHT : USER_LEFT : server ? USER_LEFT : USER_RIGHT;
 		for(var i = 0; i < rallies.size(); i++) {
 			var previous_rally = i > 0 ? rallies.get(i - 1) : beginner;
 			var current_rally = rallies.get(i);
-			if(previous_rally == current_rally && current_rally == YOU) {
-				corner = corner == YOU_RIGHT ? YOU_LEFT : YOU_RIGHT;
+			if(previous_rally == current_rally && current_rally == USER) {
+				corner = corner == USER_RIGHT ? USER_LEFT : USER_RIGHT;
 			}
 		}
 		return corner;

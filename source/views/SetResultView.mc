@@ -18,13 +18,13 @@ class SetResultView extends WatchUi.View {
 		var set = match.getCurrentSet();
 		//draw end of match text
 		var set_winner = set.getWinner();
-		var title_text = WatchUi.loadResource(set_winner == YOU ? Rez.Strings.set_end_you_won : Rez.Strings.set_end_opponent_won) as String;
+		var title_text = WatchUi.loadResource(set_winner == USER ? Rez.Strings.set_end_you_won : Rez.Strings.set_end_opponent_won) as String;
 		(findDrawableById("result_title") as Text).setText(title_text);
 		//draw match score
-		var match_score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();
+		var match_score_text = match.getSetsWon(USER).toString() + " - " + match.getSetsWon(OPPONENT).toString();
 		(findDrawableById("result_match_score") as Text).setText(match_score_text);
 		//draw set score
-		var set_score_text = set.getScore(YOU).toString() + " - " + set.getScore(OPPONENT).toString();
+		var set_score_text = set.getScore(USER).toString() + " - " + set.getScore(OPPONENT).toString();
 		(findDrawableById("result_set_score") as Text).setText(set_score_text);
 		//draw set time
 		(findDrawableById("result_time") as Text).setText(Helpers.formatDuration(set.getDuration() as Duration));
