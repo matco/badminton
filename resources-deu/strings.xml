@@ -2,8 +2,9 @@
 	<string id="application_name">Badminton</string>
 
 	<string id="menu_title">Spiel</string>
-	<string id="menu_reset_game">Reset</string>
-	<string id="menu_end_game">Beenden</string>
+	<string id="menu_resume_match">Fortsetzen</string>
+	<string id="menu_reset_match">Reset</string>
+	<string id="menu_end_match">Beenden</string>
 
 	<string id="type_what">Spielart</string>
 	<string id="type_single">Einzel</string>

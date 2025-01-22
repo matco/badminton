@@ -1,5 +1,12 @@
 # Changelog
 
+## 4.7.0
+- Add support for Forerunner 165 series
+- Add support for Instinct 3 series
+- Open the match menu with the selection button
+- Store and display duration of sets
+- Fix refresh of the match view when starting a new set
+
 ## 4.6.1
 - Fix application for devices that support a version Connect IQ between 3.1.0 and 5.0.0
 

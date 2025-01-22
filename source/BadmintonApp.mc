@@ -49,7 +49,7 @@ class BadmintonApp extends Application.AppBase {
 	function onMatchEnd(payload as Dictionary) as Void {
 		var winner = payload["winner"];
 		if(winner != null && Attention has :playTone && Properties.getValue("enable_sound")) {
-			Attention.playTone(winner == YOU ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
+			Attention.playTone(winner == USER ? Attention.TONE_SUCCESS : Attention.TONE_FAILURE);
 		}
 		if(Attention has :vibrate) {
 			Attention.vibrate([new Attention.VibeProfile(80, 200)] as Array<VibeProfile>);

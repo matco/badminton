@@ -35,17 +35,26 @@ class ResultView extends WatchUi.View {
 
 	function onShow() {
 		var match = (Application.getApp() as BadmintonApp).getMatch() as Match;
+		var set = match.getCurrentSet();
 		//draw end of match text
 		var winner = match.getWinner();
-		var won_resource = Rez.Strings.end_draw;
+		var title_resource = Rez.Strings.end_draw;
 		if(winner != null) {
-			won_resource = winner == YOU ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won;
+			title_resource = winner == USER ? Rez.Strings.end_you_won : Rez.Strings.end_opponent_won;
 		}
-		var won_text = WatchUi.loadResource(won_resource) as String;
-		(findDrawableById("result_won_text") as Text).setText(won_text);
+		var title_text = WatchUi.loadResource(title_resource) as String;
+		(findDrawableById("result_title") as Text).setText(title_text);
 		//draw match score
-		var score_text = match.getSetsWon(YOU).toString() + " - " + match.getSetsWon(OPPONENT).toString();
-		(findDrawableById("result_score") as Text).setText(score_text);
+		var sets_won = match.getSetsWon(USER);
+		var sets_lost = match.getSetsWon(OPPONENT);
+		var match_score_text = sets_won.toString() + " - " + sets_lost.toString();
+		(findDrawableById("result_match_score") as Text).setText(match_score_text);
+		//draw current set score if the same number of sets has been won by both teams
+		//this may happen if the match is ended prematurely
+		if(sets_won == sets_lost) {
+			var set_score_text = set.getScore(USER).toString() + " - " + set.getScore(OPPONENT).toString();
+			(findDrawableById("result_set_score") as Text).setText(set_score_text);
+		}
 		//draw match time
 		(findDrawableById("result_time") as Text).setText(Helpers.formatDuration(match.getDuration()));
 		//draw rallies

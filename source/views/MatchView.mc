@@ -42,15 +42,15 @@ class MatchBoundaries {
 			[0.5 - COURT_SIDELINE_SIZE, 0.5 + COURT_SHORT_SERVICE_SIZE],
 			[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
 		],
-		//YOU_LEFT is the bottom left corner
-		YOU_LEFT => [
+		//USER_LEFT is the bottom left corner
+		USER_LEFT => [
 			[-0.5 + COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
 			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
 			[0, 0],
 			[-0.5 + COURT_SIDELINE_SIZE, 0]
 		],
-		//YOU_RIGHT is the bottom right corner
-		YOU_RIGHT => [
+		//USER_RIGHT is the bottom right corner
+		USER_RIGHT => [
 			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
 			[0.5 - COURT_SIDELINE_SIZE, 0.5 - COURT_SHORT_SERVICE_SIZE],
 			[0.5 - COURT_SIDELINE_SIZE, 0],
@@ -72,15 +72,15 @@ class MatchBoundaries {
 			[0.5, 0.5 + COURT_SHORT_SERVICE_SIZE],
 			[0, 0.5 + COURT_SHORT_SERVICE_SIZE]
 		],
-		//YOU_LEFT is the bottom left corner
-		YOU_LEFT => [
+		//USER_LEFT is the bottom left corner
+		USER_LEFT => [
 			[-0.5, 0.5 - COURT_SHORT_SERVICE_SIZE],
 			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
 			[0, COURT_LONG_SERVICE_SIZE],
 			[-0.5, COURT_LONG_SERVICE_SIZE]
 		],
-		//YOU_RIGHT is the bottom right corner
-		YOU_RIGHT => [
+		//USER_RIGHT is the bottom right corner
+		USER_RIGHT => [
 			[0, 0.5 - COURT_SHORT_SERVICE_SIZE],
 			[0.5, 0.5 - COURT_SHORT_SERVICE_SIZE],
 			[0.5, COURT_LONG_SERVICE_SIZE],
@@ -193,8 +193,8 @@ class MatchBoundaries {
 		corners = {
 			OPPONENT_RIGHT => perspective.transformArray(corner_coordinates[OPPONENT_RIGHT] as Array<Point2D>),
 			OPPONENT_LEFT => perspective.transformArray(corner_coordinates[OPPONENT_LEFT] as Array<Point2D>),
-			YOU_LEFT => perspective.transformArray(corner_coordinates[YOU_LEFT] as Array<Point2D>),
-			YOU_RIGHT => perspective.transformArray(corner_coordinates[YOU_RIGHT] as Array<Point2D>)
+			USER_LEFT => perspective.transformArray(corner_coordinates[USER_LEFT] as Array<Point2D>),
+			USER_RIGHT => perspective.transformArray(corner_coordinates[USER_RIGHT] as Array<Point2D>)
 		} as Dictionary<Corner, Array<Point2D>>;
 
 		//calculate set positions
@@ -278,12 +278,10 @@ class MatchView extends WatchUi.View {
 	}
 
 	function setRefreshTime(time as Number) as Void {
-		if(refreshTime != time) {
-			refreshTime = time;
-			refreshTimer.stop();
-			refreshTimer.start(method(:refresh), refreshTime, true);
-			System.println("set refresh time to " + time);
-		}
+		refreshTime = time;
+		refreshTimer.stop();
+		refreshTimer.start(method(:refresh), refreshTime, true);
+		System.println("set refresh time to " + time);
 	}
 
 	function onUpdateSettings() as Void {
@@ -338,8 +336,8 @@ class MatchView extends WatchUi.View {
 		//draw back long service line for singles
 		bd.perspective.drawTransversalLine(dc, 1f);
 
-		//draw a dot for the player 1 (watch carrier) position
-		var player_x = match.getPlayerCorner() == YOU_LEFT ? -0.28 : 0.28 as Float;
+		//draw a dot for the user position
+		var player_x = match.getPlayerCorner() == USER_LEFT ? -0.28 : 0.28 as Float;
 		var player_coordinates = bd.perspective.transform([player_x, 0.12] as Point2D);
 		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 		dc.fillCircle(player_coordinates[0], player_coordinates[1], 7);
@@ -354,9 +352,9 @@ class MatchView extends WatchUi.View {
 
 		var player_1_coordinates = bd.perspective.transform([0f, 0.25] as Point2D);
 		var player_2_coordinates = bd.perspective.transform([0f, 0.75] as Point2D);
-		var player_1_color = server_team == YOU ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
+		var player_1_color = server_team == USER ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
 		var player_2_color = server_team == OPPONENT ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
-		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(YOU).toString(), player_1_color, 2, 4);
+		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(USER).toString(), player_1_color, 2, 4);
 		UIHelpers.drawHighlightedNumber(dc, player_2_coordinates[0], player_2_coordinates[1], SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), player_2_color, 2, 4);
 	}
 
@@ -377,7 +375,7 @@ class MatchView extends WatchUi.View {
 						var set = sets.get(i) as MatchSet;
 						if(set.hasEnded()) {
 							var winner = set.getWinner();
-							color = winner == YOU ? Graphics.COLOR_GREEN : Graphics.COLOR_RED;
+							color = winner == USER ? Graphics.COLOR_GREEN : Graphics.COLOR_RED;
 						}
 						else {
 							color = Graphics.COLOR_BLUE;
@@ -508,16 +506,21 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 
 	function onMenu() {
 		var menu = new WatchUi.Menu2({:title => Rez.Strings.menu_title});
-		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_end_game, null, :menu_end_game, null));
-		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_reset_game, null, :menu_reset_game, null));
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_resume_match, null, :menu_resume_match, null));
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_end_match, null, :menu_end_match, null));
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_reset_match, null, :menu_reset_match, null));
 
 		WatchUi.pushView(menu, new MatchMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
-	function manageScore(player as Player) as Boolean {
+	function onSelect() {
+		return onMenu();
+	}
+
+	function manageScore(team as Team) as Boolean {
 		var match = (Application.getApp() as BadmintonApp).getMatch() as Match;
-		match.score(player);
+		match.score(team);
 		var winner = match.getCurrentSet().getWinner();
 		if(winner != null) {
 			WatchUi.switchToView(new SetResultView(), new SetResultViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
@@ -529,12 +532,12 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onNextPage() {
-		//score with player 1 (watch carrier)
-		return manageScore(YOU);
+		//user team scores
+		return manageScore(USER);
 	}
 
 	function onPreviousPage() {
-		//score with player 2 (opponent)
+		//opponent team scores
 		return manageScore(OPPONENT);
 	}
 
@@ -559,12 +562,12 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 			//boundaries cannot be null at this point
 			var bd = view.boundaries as MatchBoundaries;
 			if(event.getCoordinates()[1] < bd.yMiddle) {
-				//score with player 2 (opponent)
+				//opponent team scores
 				manageScore(OPPONENT);
 			}
 			else {
-				//score with player 1 (watch carrier)
-				manageScore(YOU);
+				//user team scores
+				manageScore(USER);
 			}
 		}
 		return true;

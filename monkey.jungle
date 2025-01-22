@@ -4,11 +4,9 @@ venu.resourcePath = resources;icons/60x60
 venud.resourcePath = resources;icons/60x60
 venusq.resourcePath = resources;icons/36x36
 venusqm.resourcePath = resources;icons/36x36
-venu2.resourcePath = resources;icons/70x70
+venusq2.resourcePath = resources;icons/40x40
+venusq2m.resourcePath = resources;icons/40x40
 venu2s.resourcePath = resources;icons/61x61
-venu2plus.resourcePath = resources;icons/70x70
-venu3.resourcePath = resources;icons/70x70
-venu3s.resourcePath = resources;icons/70x70
 
 vivoactive3m.resourcePath = resources;icons/40x33
 vivoactive3mlte.resourcePath = resources;icons/40x33
@@ -16,25 +14,62 @@ vivoactive3mlte.resourcePath = resources;icons/40x33
 vivoactive4.resourcePath = resources;icons/35x35
 vivoactive4s.resourcePath = resources;icons/30x30
 
-vivoactive5.resourcePath = resources;icons/70x70
-
+fenix5.resourcePath = resources;icons/40x40
+fenix5plus.resourcePath = resources;icons/40x40
 fenix5s.resourcePath = resources;icons/36x36
+fenix5splus.resourcePath = resources;icons/40x40
+fenix5x.resourcePath = resources;icons/40x40
+fenix5xplus.resourcePath = resources;icons/40x40
+fenix6.resourcePath = resources;icons/40x40
+fenix6pro.resourcePath = resources;icons/40x40
+fenix6s.resourcePath = resources;icons/40x40
+fenix6spro.resourcePath = resources;icons/40x40
+fenix6xpro.resourcePath = resources;icons/40x40
 fenixe.resourcePath = resources;icons/60x60
+fenix7.resourcePath = resources;icons/40x40
+fenix7pro.resourcePath = resources;icons/40x40
+fenix7s.resourcePath = resources;icons/40x40
+fenix7spro.resourcePath = resources;icons/40x40
+fenix7x.resourcePath = resources;icons/40x40
+fenix7xpro.resourcePath = resources;icons/40x40
 fenix843mm.resourcePath = resources;icons/60x60
 fenix847mm.resourcePath = resources;icons/65x65
+fenix8solar47mm.resourcePath = resources;icons/40x40
+fenix8solar51mm.resourcePath = resources;icons/40x40
+
+enduro3.resourcePath = resources;icons/40x40
 
 epix2.resourcePath = resources;icons/60x60
 epix2pro51mm.resourcePath = resources;icons/60x60
 epix2pro47mm.resourcePath = resources;icons/60x60
 epix2pro42mm.resourcePath = resources;icons/60x60
 
-fr55.resourcePath = resources;icons/35x35
+instinct3amoled45mm.resourcePath = resources;icons/60x60
+instinct3amoled50mm.resourcePath = resources;icons/60x60
+instinct3solar45mm.resourcePath = resources;icons/62x62
 
+fr55.resourcePath = resources;icons/35x35
+fr165.resourcePath = resources;icons/54x54
+fr165m.resourcePath = resources;icons/54x54
+fr245.resourcePath = resources;icons/40x40
+fr245m.resourcePath = resources;icons/40x40
+fr255.resourcePath = resources;icons/40x40
+fr255s.resourcePath = resources;icons/40x40
+fr255m.resourcePath = resources;icons/40x40
+fr255sm.resourcePath = resources;icons/40x40
 fr265.resourcePath = resources;icons/60x60
 fr265s.resourcePath = resources;icons/60x60
-
+fr645.resourcePath = resources;icons/40x40
+fr645m.resourcePath = resources;icons/40x40
+fr745.resourcePath = resources;icons/40x40
+fr935.resourcePath = resources;icons/40x40
+fr945.resourcePath = resources;icons/40x40
+fr945lte.resourcePath = resources;icons/40x40
+fr955.resourcePath = resources;icons/40x40
 fr965.resourcePath = resources;icons/65x65
 
+descentmk2.resourcePath = resources;icons/40x40
+descentmk2s.resourcePath = resources;icons/40x40
 descentmk343mm.resourcePath = resources;icons/60x60
 descentmk351mm.resourcePath = resources;icons/60x60
 
