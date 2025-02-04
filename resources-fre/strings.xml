@@ -61,6 +61,8 @@
 	<string id="settings_display_time">Afficher l'heure</string>
 	<string id="settings_display_heart_rate">Afficher la fréquence cardiaque</string>
 
+	<string id="settings_enable_alert_heart_rate_zone_5">Alerter quand la fréquence cardiaque atteint la zone 5</string>
+
 	<string id="fit_activity_name">Badminton</string>
 	<string id="fit_set_unit_label">sets</string>
 	<string id="fit_score_unit_label">points</string>
