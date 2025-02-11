@@ -1,5 +1,10 @@
 # Changelog
 
+## 4.8.0
+- Fix handling of touch events in the match screen
+- Add optional warmup phase
+- Monitor heart rate and trigger an alert when zone 5 is reached
+
 ## 4.7.0
 - Add support for Forerunner 165 series
 - Add support for Instinct 3 series
