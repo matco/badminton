@@ -25,6 +25,12 @@
 	<string id="server_you">Du</string>
 	<string id="server_teammate">Mitspieler</string>
 
+	<string id="warmup_confirmation">Aufwärmen</string>
+	<string id="warmup_yes">Ja</string>
+	<string id="warmup_no">Nein</string>
+
+	<string id="warmup_title">Aufwärmen</string>
+
 	<string id="total_rallies">${rallies} Wechsel</string>
 
 	<string id="set_end_you_won">Satz gewonnen!</string>
@@ -54,12 +60,15 @@
 	<string id="settings_group_default_options_description">Konfigurieren Sie Standardoptionen beim Starten eines Spiels</string>
 	<string id="settings_default_match_type">Standard Spielart</string>
 	<string id="settings_default_match_number_of_sets">Standardanzahl der Sätze</string>
+	<string id="settings_default_match_warmup">Aufwärmen standardmäßig aktiviert</string>
 
 	<string id="settings_enable_sound">Töne einschalten</string>
 	<string id="settings_enable_animation">Animation aktivieren</string>
 
 	<string id="settings_display_time">Anzeige der Uhrzeit</string>
 	<string id="settings_display_heart_rate">Heartbeat-Anzeige aktivieren</string>
+
+	<string id="settings_enable_alert_heart_rate_zone_5">Alarm, wenn die Herzfrequenz Zone 5 erreicht</string>
 
 	<string id="fit_activity_name">Badminton</string>
 	<string id="fit_set_unit_label">Sätze</string>

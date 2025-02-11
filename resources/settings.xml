@@ -25,6 +25,10 @@
 				<listEntry value="3">@Strings.set_endless</listEntry>
 			</settingConfig>
 		</setting>
+
+		<setting propertyKey="@Properties.default_match_warmup" title="@Strings.settings_default_match_warmup">
+			<settingConfig type="boolean" />
+		</setting>
 	</group>
 
 	<setting propertyKey="@Properties.enable_sound" title="@Strings.settings_enable_sound">
@@ -40,6 +44,10 @@
 	</setting>
 
 	<setting propertyKey="@Properties.display_heart_rate" title="@Strings.settings_display_heart_rate">
+		<settingConfig type="boolean" />
+	</setting>
+
+	<setting propertyKey="@Properties.enable_alert_heart_rate_zone_5" title="@Strings.settings_enable_alert_heart_rate_zone_5">
 		<settingConfig type="boolean" />
 	</setting>
 </settings>

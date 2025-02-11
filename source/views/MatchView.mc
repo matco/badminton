@@ -107,7 +107,6 @@ class MatchBoundaries {
 	public var corners as Dictionary<Corner, Array<Point2D>>;
 	public var board as Array<Point2D>;
 
-	public var hrCoordinates as Point2D;
 	public var heart as Heart;
 
 	function initialize(match as Match, device as DeviceSettings, elapsed_time as Number?) {
@@ -208,11 +207,14 @@ class MatchBoundaries {
 		}
 
 		//calculate hear rate position
-		hrCoordinates = BetterMath.roundAll(perspective.transform([0.75, 0.6])) as Point2D;
+		var heart_coordinates = BetterMath.roundAll(perspective.transform([0.75, 0.6])) as Point2D;
 		//size the icon according to the size of the tiny font
 		var size = Math.round(Graphics.getFontHeight(Graphics.FONT_TINY) * 0.2);
-		var heart_center = [hrCoordinates[0], hrCoordinates[1] - size * 2];
-		heart = new Heart(heart_center, size);
+		heart = new Heart({
+			:locX => heart_coordinates[0],
+			:locY => heart_coordinates[1] - size * 2,
+			:size => size
+		});
 	}
 }
 
@@ -391,36 +393,6 @@ class MatchView extends WatchUi.View {
 		}
 	}
 
-	function drawHeartRate(dc as Dc) as Void {
-		var activity = Activity.getActivityInfo() as Info;
-		var rate = activity.currentHeartRate;
-
-		if(rate != null) {
-			var profile = UserProfile.getCurrentSport();
-			var zones = UserProfile.getHeartRateZones(profile);
-
-			//choose color for the heart icon depending on the current user zone
-			var color = Graphics.COLOR_GREEN;
-			if(zones != null && zones.size() > 4) {
-				if(rate > zones[4]) {
-					color= Graphics.COLOR_RED;
-				}
-				else if(rate > zones[3]) {
-					color = Graphics.COLOR_YELLOW;
-				}
-			}
-
-			//boundaries cannot be null at this point
-			var bd = boundaries as MatchBoundaries;
-
-			dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-			bd.heart.draw(dc);
-
-			dc.setColor(Graphics.COLOR_WHITE, Graphics.COLOR_TRANSPARENT);
-			dc.drawText(bd.hrCoordinates[0], bd.hrCoordinates[1], Graphics.FONT_TINY, rate.toString(), Graphics.TEXT_JUSTIFY_CENTER);
-		}
-	}
-
 	function drawTimer(dc as Dc, match as Match) as Void {
 		//boundaries cannot be null at this point
 		var bd = boundaries as MatchBoundaries;
@@ -485,11 +457,9 @@ class MatchView extends WatchUi.View {
 			}
 
 			if(Properties.getValue("display_heart_rate")) {
-				//disable anti aliasing to draw a pixel perfect icon
-				if(dc has :setAntiAlias) {
-					dc.setAntiAlias(false);
-				}
-				drawHeartRate(dc);
+				//boundaries cannot be null at this point
+				var bd = boundaries as MatchBoundaries;
+				bd.heart.draw(dc);
 			}
 		}
 	}
@@ -514,8 +484,11 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		return true;
 	}
 
-	function onSelect() {
-		return onMenu();
+	function onKey(event as WatchUi.KeyEvent) {
+		if(event.getKey() == KEY_ENTER) {
+			return onMenu();
+		}
+		return false;
 	}
 
 	function manageScore(team as Team) as Boolean {
