@@ -484,8 +484,11 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		return true;
 	}
 
-	function onSelect() {
-		return onMenu();
+	function onKey(event as WatchUi.KeyEvent) {
+		if(event.getKey() == KEY_ENTER) {
+			return onMenu();
+		}
+		return false;
 	}
 
 	function manageScore(team as Team) as Boolean {
