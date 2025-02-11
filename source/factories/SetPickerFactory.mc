@@ -15,9 +15,9 @@ class SetPickerFactory extends WatchUi.PickerFactory {
 		return new WatchUi.Text({
 			:text => WatchUi.loadResource(SETS_LABELS[index]) as String,
 			:color => Graphics.COLOR_WHITE,
-			:font=> Graphics.FONT_SMALL,
+			:font => Graphics.FONT_SMALL,
 			:locX => WatchUi.LAYOUT_HALIGN_CENTER,
-			:locY=> WatchUi.LAYOUT_VALIGN_CENTER
+			:locY => WatchUi.LAYOUT_VALIGN_CENTER
 		});
 	}
 
