@@ -27,11 +27,12 @@ class MatchConfig {
 	public var sets as Number?;
 	public var beginner as Team?;
 	public var server as Boolean?;
+	public var warmup as Boolean = false;
 	public var maximumPoints as Number?;
 	public var absoluteMaximumPoints as Number?;
 
 	function isValid() as Boolean {
-		return type == SINGLE && step == 3 || step == 4;
+		return type == SINGLE && step == 4 || step == 5;
 	}
 }
 
@@ -160,6 +161,11 @@ class Match {
 		//encapsulate event payload in an object so this object can never be null
 		var event = new BusEvent(:onMatchEnd, {"winner" => winner});
 		(Application.getApp() as BadmintonApp).getBus().dispatch(event);
+	}
+
+	function endWarmup() as Void {
+		//manage activity session
+		session.addLap();
 	}
 
 	function nextSet() as Void {

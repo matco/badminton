@@ -25,6 +25,10 @@
 				<listEntry value="3">@Strings.set_endless</listEntry>
 			</settingConfig>
 		</setting>
+
+		<setting propertyKey="@Properties.default_match_warmup" title="@Strings.settings_default_match_warmup">
+			<settingConfig type="boolean" />
+		</setting>
 	</group>
 
 	<setting propertyKey="@Properties.enable_sound" title="@Strings.settings_enable_sound">

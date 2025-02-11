@@ -30,12 +30,20 @@ class InitialView extends WatchUi.View {
 			var app = Application.getApp() as BadmintonApp;
 			app.setMatch(match);
 
+			var warmup = config.warmup;
+
 			//prepare a new config
 			config = new MatchConfig();
 
-			//go to match view
-			var view = new MatchView(false);
-			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
+			if(warmup) {
+				//go to warmup view
+				WatchUi.switchToView(new WarmupView(), new WarmupViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			}
+			else {
+				//go to match view
+				var view = new MatchView(false);
+				WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
+			}
 		}
 		else {
 			//choose appropriate view depending on current step
@@ -45,10 +53,14 @@ class InitialView extends WatchUi.View {
 				delegate = new TypePickerDelegate();
 			}
 			else if(config.step == 1) {
+				picker = new WarmupPicker();
+				delegate = new WarmupPickerDelegate();
+			}
+			else if(config.step == 2) {
 				picker = new SetPicker();
 				delegate = new SetPickerDelegate();
 			}
-			else if(config.step == 2) {
+			else if(config.step == 3) {
 				picker = new BeginnerPicker();
 				delegate = new BeginnerPickerDelegate();
 			}

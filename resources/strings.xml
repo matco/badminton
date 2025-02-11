@@ -25,6 +25,12 @@
 	<string id="server_you">You</string>
 	<string id="server_teammate">Teammate</string>
 
+	<string id="warmup_confirmation">Warmup</string>
+	<string id="warmup_yes">Yes</string>
+	<string id="warmup_no">No</string>
+
+	<string id="warmup_title">Warmup</string>
+
 	<string id="total_rallies">${rallies} rallies</string>
 
 	<string id="set_end_you_won">Set won!</string>
@@ -54,6 +60,7 @@
 	<string id="settings_group_default_options_description">Configure default choices when starting a match</string>
 	<string id="settings_default_match_type">Default match type</string>
 	<string id="settings_default_match_number_of_sets">Default number of sets</string>
+	<string id="settings_default_match_warmup">Warmup enabled by default</string>
 
 	<string id="settings_enable_sound">Enable sound</string>
 	<string id="settings_enable_animation">Enable animation</string>
