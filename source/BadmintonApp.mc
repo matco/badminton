@@ -24,10 +24,32 @@ class BadmintonApp extends Application.AppBase {
 	function onStart(state as Dictionary?) as Void {
 		//register application itself in the bus
 		BUS.register(self);
+
+		//look for a saved match
+		if(Storage.getValue("match.type") != null) {
+			try {
+				System.println("Retrieving match saved in storage");
+				match = Match.fromStorage();
+			}
+			catch(exception) {
+				//retrieving match from storage may fail if storage format has been updated
+				System.println("Unable to restore match");
+				System.println(exception.getErrorMessage());
+			}
+			finally {
+				//Storage.clearValues();
+			}
+		}
 	}
 
 	function getInitialView() {
-		return [new InitialView(), new InitialViewDelegate()];
+		if(match != null) {
+			var view = new MatchView();
+			return [view, new MatchViewDelegate(view)] as Array<InputDelegate or View>;
+		}
+		else {
+			return [new InitialView(), new InitialViewDelegate()] as Array<InputDelegate or View>;
+		}
 	}
 
 	function getBus() as Bus {

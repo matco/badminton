@@ -3,6 +3,7 @@ import Toybox.Activity;
 import Toybox.ActivityRecording;
 import Toybox.FitContributor;
 import Toybox.Time;
+import Toybox.Application.Storage;
 
 enum Team {
 	USER = 1,
@@ -56,7 +57,10 @@ class Match {
 	private var type as MatchType; //type of the match, SINGLE or DOUBLE
 	private var warmup as Boolean = false;
 	private var maximumSets as Number?; //maximum number of sets for this match, null for match in endless mode
-	private var sets as List; //list of played sets
+	//TODO set this field private
+	//this field is now public because it is updated in the static method fromStorage
+	//MonkeyC does not support the update of private fields from a static method in the same class
+	public var sets as List; //list of played sets
 
 	private var server as Boolean; //in double, true if the user is the first to serve (among himself and his teammate)
 	private var winner as Team?; //store the winner of the match, USER or OPPONENT
@@ -73,7 +77,36 @@ class Match {
 	private var fieldScorePlayer1 as Field;
 	private var fieldScorePlayer2 as Field;
 
-	function initialize(config as MatchConfig) {
+	function saveToStorage() {
+		Storage.setValue("match.type", type);
+		Storage.setValue("match.sets", sets.size());
+		Storage.setValue("match.server", server);
+		Storage.setValue("match.maximum_points", maximumPoints);
+		Storage.setValue("match.absolute_maximum_points", absoluteMaximumPoints);
+		for(var i = 0; i < sets.size(); i++) {
+			sets.get(i).saveToStorage("match.sets." + i);
+		}
+	}
+
+	static function fromStorage() {
+		var config = new MatchConfig();
+		config.type = Storage.getValue("match.type");
+		config.sets = Storage.getValue("match.sets");
+		config.beginner = Storage.getValue("match.set.0.beginner");
+		config.server = Storage.getValue("match.server");
+		config.maximumPoints = Storage.getValue("match.maximum_points");
+		config.absoluteMaximumPoints = Storage.getValue("match.absolute_maximum_points");
+		//create match from stored information
+		var match = new Match(config, true);
+		//restore sets
+		for(var i = 0; i < config.sets; i++) {
+			var prefix = "match.sets." + i;
+			match.sets.push(MatchSet.fromStorage(prefix));
+		}
+		return match;
+	}
+
+	function initialize(config as MatchConfig, restore as Boolean) {
 		type = config.type as MatchType;
 		warmup = config.warmup;
 		maximumSets = config.sets;
@@ -99,14 +132,19 @@ class Match {
 		var sub_sport = v410 ? Activity.SUB_SPORT_BADMINTON : ActivityRecording.SUB_SPORT_MATCH;
 
 		//manage activity session
-		session = ActivityRecording.createSession({:sport => sport, :subSport => sub_sport, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name) as String});
-		fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
-		fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
-		fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT16, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT16, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_UINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
-		session.start();
+		if(!restore) {
+			session = ActivityRecording.createSession({:sport => sport, :subSport => sub_sport, :name => WatchUi.loadResource(Rez.Strings.fit_activity_name) as String});
+			fieldSetPlayer1 = session.createField("set_player_1", SET_WON_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
+			fieldSetPlayer2 = session.createField("set_player_2", SET_WON_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_set_unit_label) as String});
+			fieldScorePlayer1 = session.createField("score_player_1", TOTAL_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+			fieldScorePlayer2 = session.createField("score_player_2", TOTAL_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_SESSION, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+			fieldSetScorePlayer1 = session.createField("set_score_player_1", SET_SCORE_PLAYER_1_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+			fieldSetScorePlayer2 = session.createField("set_score_player_2", SET_SCORE_PLAYER_2_FIELD_ID, FitContributor.DATA_TYPE_SINT8, {:mesgType => FitContributor.MESG_TYPE_LAP, :units => WatchUi.loadResource(Rez.Strings.fit_score_unit_label) as String});
+			session.start();
+		}
+		else {
+			//wait for Garmin to allow to retrieve the previous session
+		}
 
 		(Application.getApp() as BadmintonApp).getBus().dispatch(new BusEvent(:onMatchBegin, null));
 	}

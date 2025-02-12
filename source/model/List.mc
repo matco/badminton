@@ -11,6 +11,14 @@ class List {
 		length = 0;
 	}
 
+	static function fromArray(array) {
+		var list = new List();
+		for(var i = 0; i < array.size(); i++) {
+			list.push(array[i]);
+		}
+		return list;
+	}
+
 	function size() as Number {
 		return length;
 	}
@@ -60,6 +68,14 @@ class List {
 			throw new Toybox.Lang.ValueOutOfBoundsException("No last element for an empty list");
 		}
 		return elements[length - 1];
+	}
+
+	function toArray() {
+		var array = new [length];
+		for(var i = 0; i < length; i++) {
+			array[i] = elements[i];
+		}
+		return array;
 	}
 
 	private function grow() as Void {

@@ -25,7 +25,7 @@ class InitialView extends WatchUi.View {
 			config.absoluteMaximumPoints = Properties.getValue("absolute_maximum_points") as Number;
 
 			//create match
-			var match = new Match(config);
+			var match = new Match(config, false);
 
 			var app = Application.getApp() as BadmintonApp;
 			app.setMatch(match);

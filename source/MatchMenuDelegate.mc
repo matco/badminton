@@ -17,6 +17,13 @@ class MatchMenuDelegate extends WatchUi.Menu2InputDelegate {
 			var view = new MatchView(true);
 			WatchUi.switchToView(view, new MatchViewDelegate(view), WatchUi.SLIDE_IMMEDIATE);
 		}
+		else if(id == :menu_resume_match_later) {
+			match.saveToStorage();
+			//pop once to close the menu
+			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+			//pop again to close the main view hence closing the application
+			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+		}
 		else if(id == :menu_end_match) {
 			match.end(null);
 			//pop once to close the menu
