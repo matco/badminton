@@ -6,6 +6,8 @@
 	<string id="menu_reset_match">Reset</string>
 	<string id="menu_end_match">End</string>
 
+	<string id="discard_match">Discard match?</string>
+
 	<string id="type_what">Type</string>
 	<string id="type_single">Single</string>
 	<string id="type_double">Double</string>

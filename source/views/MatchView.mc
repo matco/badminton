@@ -523,9 +523,20 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 			WatchUi.requestUpdate();
 		}
 		else if(match.getSets().size() == 1) {
-			match.discard();
-			//return to the initial view if the match has not been started yet
-			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			if(match.hasWarmup()) {
+				//do not try to get back to the warmup phase
+				//ending the warmup added a lap in the activity, so it is not possible to go back
+				//ask for confirmation before discarding the match
+				//user may not want to loose the warmup phase
+				var discard_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.discard_match) as String);
+				WatchUi.pushView(discard_match_confirmation, new DiscardMatchConfirmationDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			}
+			else {
+				//the match can be discarded without configuration because it has not been started yet
+				match.discard();
+				//return to the initial view
+				WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			}
 		}
 		return true;
 	}

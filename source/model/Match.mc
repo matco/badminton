@@ -54,6 +54,7 @@ class Match {
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
 	private var type as MatchType; //type of the match, SINGLE or DOUBLE
+	private var warmup as Boolean = false;
 	private var maximumSets as Number?; //maximum number of sets for this match, null for match in endless mode
 	private var sets as List; //list of played sets
 
@@ -74,6 +75,7 @@ class Match {
 
 	function initialize(config as MatchConfig) {
 		type = config.type as MatchType;
+		warmup = config.warmup;
 		maximumSets = config.sets;
 
 		//in singles, the server is necessary the user
@@ -161,6 +163,10 @@ class Match {
 		//encapsulate event payload in an object so this object can never be null
 		var event = new BusEvent(:onMatchEnd, {"winner" => winner});
 		(Application.getApp() as BadmintonApp).getBus().dispatch(event);
+	}
+
+	function hasWarmup() as Boolean {
+		return warmup;
 	}
 
 	function endWarmup() as Void {

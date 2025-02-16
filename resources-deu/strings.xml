@@ -6,6 +6,8 @@
 	<string id="menu_reset_match">Reset</string>
 	<string id="menu_end_match">Beenden</string>
 
+	<string id="discard_match">Spiel ablegen?</string>
+
 	<string id="type_what">Spielart</string>
 	<string id="type_single">Einzel</string>
 	<string id="type_double">Doppel</string>
