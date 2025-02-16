@@ -31,5 +31,12 @@ class MatchMenuDelegate extends WatchUi.Menu2InputDelegate {
 			//go to the initial screen
 			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		}
+		else if(id == :menu_exit) {
+			match.discard();
+			//pop once to close the menu
+			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
+			//exit the app
+			System.exit();
+		}
 	}
 }

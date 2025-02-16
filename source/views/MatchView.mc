@@ -479,6 +479,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_resume_match, null, :menu_resume_match, null));
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_end_match, null, :menu_end_match, null));
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_reset_match, null, :menu_reset_match, null));
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_exit, null, :menu_exit, null));
 
 		WatchUi.pushView(menu, new MatchMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
