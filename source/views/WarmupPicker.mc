@@ -15,7 +15,7 @@ class WarmupPicker extends WatchUi.Picker {
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_warmup_settings = Properties.getValue("default_match_warmup") as Boolean;
+		var default_warmup_settings = Properties.getValue("default_match_warmup") as Boolean?;
 		if(default_warmup_settings == null) {
 			default_warmup_settings = false;
 		}

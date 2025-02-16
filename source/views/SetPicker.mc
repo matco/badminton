@@ -16,7 +16,7 @@ class SetPicker extends WatchUi.Picker {
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_number_of_sets = Properties.getValue("default_match_number_of_sets") as Number;
+		var default_number_of_sets = Properties.getValue("default_match_number_of_sets") as Number?;
 		if(default_number_of_sets == null) {
 			default_number_of_sets = 0;
 		}
