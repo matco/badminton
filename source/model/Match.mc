@@ -325,8 +325,8 @@ class Match {
 		return OPPOSITE_CORNER[serving_corner] as Corner;
 	}
 
-	function getPlayerIsServer() as Boolean {
-		return getPlayerCorner() == getServingCorner();
+	function getUserIsServer() as Boolean {
+		return getUserCorner() == getServingCorner();
 	}
 
 	//methods used from perspective of the user
@@ -334,7 +334,7 @@ class Match {
 		return getServerTeam() == USER;
 	}
 
-	function getPlayerCorner() as Corner {
+	function getUserCorner() as Corner {
 		var current_set = getCurrentSet();
 		//in singles, the user position only depends on the current score
 		if(type == SINGLE) {

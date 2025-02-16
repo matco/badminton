@@ -339,7 +339,7 @@ class MatchView extends WatchUi.View {
 		bd.perspective.drawTransversalLine(dc, 1f);
 
 		//draw a dot for the user position
-		var player_x = match.getPlayerCorner() == USER_LEFT ? -0.28 : 0.28 as Float;
+		var player_x = match.getUserCorner() == USER_LEFT ? -0.28 : 0.28 as Float;
 		var player_coordinates = bd.perspective.transform([player_x, 0.12] as Point2D);
 		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 		dc.fillCircle(player_coordinates[0], player_coordinates[1], 7);
