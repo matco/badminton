@@ -36,7 +36,7 @@ class ServerPickerDelegate extends WatchUi.PickerDelegate {
 
 	function onCancel() {
 		InitialView.config.step--;
-		//remove picker from view stack
+		//remove picker from the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
@@ -45,7 +45,7 @@ class ServerPickerDelegate extends WatchUi.PickerDelegate {
 		//update match configuration
 		InitialView.config.server = values[0] as Boolean;
 		InitialView.config.step++;
-		//remove picker from view stack to go back to initial view
+		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}

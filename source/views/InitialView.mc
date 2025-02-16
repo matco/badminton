@@ -81,7 +81,10 @@ class InitialViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
-		//pop the main view to close the application
+		//pop the current view, which is necessarily a picker
+		//this will discard the current picker, and display this view (that is under the picker in the view stack)
+		//if the picker that was displayed is the first, the application will close itself (when the onShow is executed)
+		//if another picker was displayed, the previous picker will be pushed onto the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
