@@ -316,6 +316,10 @@ class Match {
 		return getCurrentSet().getServerTeam();
 	}
 
+	function getUserTeamIsServer() as Boolean {
+		return getCurrentSet().getUserTeamIsServer();
+	}
+
 	function getServingCorner() as Corner {
 		return getCurrentSet().getServingCorner();
 	}
@@ -323,15 +327,6 @@ class Match {
 	function getReceivingCorner() as Corner {
 		var serving_corner = getServingCorner();
 		return OPPOSITE_CORNER[serving_corner] as Corner;
-	}
-
-	function getUserIsServer() as Boolean {
-		return getUserCorner() == getServingCorner();
-	}
-
-	//methods used from perspective of the user
-	function getUserTeamIsServer() as Boolean {
-		return getServerTeam() == USER;
 	}
 
 	function getUserCorner() as Corner {
@@ -357,5 +352,9 @@ class Match {
 			}
 		}
 		return corner;
+	}
+
+	function getUserIsServer() as Boolean {
+		return getUserCorner() == getServingCorner();
 	}
 }
