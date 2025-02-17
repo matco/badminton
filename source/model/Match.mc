@@ -81,12 +81,13 @@ class Match {
 
 	function initialize(config as MatchConfig) {
 		self.config = config;
-
 		ended = false;
-
-		//prepare array of sets and create first set
 		sets = new List();
-		sets.push(new MatchSet(config.beginner as Team));
+
+		//create the first set now only if there is no warmup phase
+		if(!config.warmup) {
+			sets.push(new MatchSet(config.beginner as Team));
+		}
 
 		//determine sport and subsport
 		//it would be better to use feature detection instead of checking the version, but this does not work, see IQTest.mc
@@ -169,6 +170,8 @@ class Match {
 	function endWarmup() as Void {
 		//manage activity session
 		session.addLap();
+		//create the first set
+		sets.push(new MatchSet(config.beginner as Team));
 	}
 
 	function nextSet() as Void {
