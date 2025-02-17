@@ -339,7 +339,7 @@ class MatchView extends WatchUi.View {
 		bd.perspective.drawTransversalLine(dc, 1f);
 
 		//draw a dot for the user position
-		var player_x = match.getPlayerCorner() == USER_LEFT ? -0.28 : 0.28 as Float;
+		var player_x = match.getUserCorner() == USER_LEFT ? -0.28 : 0.28 as Float;
 		var player_coordinates = bd.perspective.transform([player_x, 0.12] as Point2D);
 		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
 		dc.fillCircle(player_coordinates[0], player_coordinates[1], 7);
@@ -479,6 +479,7 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_resume_match, null, :menu_resume_match, null));
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_end_match, null, :menu_end_match, null));
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_reset_match, null, :menu_reset_match, null));
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_exit, null, :menu_exit, null));
 
 		WatchUi.pushView(menu, new MatchMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
@@ -523,9 +524,20 @@ class MatchViewDelegate extends WatchUi.BehaviorDelegate {
 			WatchUi.requestUpdate();
 		}
 		else if(match.getSets().size() == 1) {
-			match.discard();
-			//return to the initial view if the match has not been started yet
-			WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			if(match.hasWarmup()) {
+				//do not try to get back to the warmup phase
+				//ending the warmup added a lap in the activity, so it is not possible to go back
+				//ask for confirmation before discarding the match
+				//user may not want to loose the warmup phase
+				var discard_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.discard_match) as String);
+				WatchUi.pushView(discard_match_confirmation, new DiscardMatchConfirmationDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			}
+			else {
+				//the match can be discarded without configuration because it has not been started yet
+				match.discard();
+				//return to the initial view
+				WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+			}
 		}
 		return true;
 	}

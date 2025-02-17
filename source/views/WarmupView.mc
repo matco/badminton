@@ -90,9 +90,8 @@ class WarmupViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
-		var match = (Application.getApp() as BadmintonApp).getMatch() as Match;
-		match.discard();
-		WatchUi.switchToView(new InitialView(), new InitialViewDelegate(), WatchUi.SLIDE_IMMEDIATE);
+		var discard_match_confirmation = new WatchUi.Confirmation(WatchUi.loadResource(Rez.Strings.discard_match) as String);
+		WatchUi.pushView(discard_match_confirmation, new DiscardMatchConfirmationDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 }

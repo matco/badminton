@@ -42,8 +42,13 @@ class SetResultViewDelegate extends WatchUi.BehaviorDelegate {
 
 	function onMenu() {
 		var menu = new WatchUi.Menu2({:title => Rez.Strings.menu_title});
-		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_end_match, null, :menu_end_match, null));
+		//if the match has already ended because it has only one set, do not allow to re-end the match
+		var match = (Application.getApp() as BadmintonApp).getMatch() as Match;
+		if(!match.hasEnded()) {
+			menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_end_match, null, :menu_end_match, null));
+		}
 		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_reset_match, null, :menu_reset_match, null));
+		menu.addItem(new WatchUi.MenuItem(Rez.Strings.menu_exit, null, :menu_exit, null));
 
 		WatchUi.pushView(menu, new MatchMenuDelegate(), WatchUi.SLIDE_IMMEDIATE);
 		return true;

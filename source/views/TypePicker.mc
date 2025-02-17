@@ -15,7 +15,7 @@ class TypePicker extends WatchUi.Picker {
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_type = Properties.getValue("default_match_type") as Number;
+		var default_type = Properties.getValue("default_match_type") as Number?;
 		if(default_type == null) {
 			default_type = 0;
 		}
@@ -35,23 +35,25 @@ class TypePicker extends WatchUi.Picker {
 }
 
 class TypePickerDelegate extends WatchUi.PickerDelegate {
+	private var view as InitialView;
 
-	function initialize() {
+	function initialize(view as InitialView) {
 		PickerDelegate.initialize();
+		self.view = view;
 	}
 
 	function onCancel() {
-		InitialView.config.step--;
-		//remove picker from view stack
+		view.step--;
+		//remove picker from the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.type = values[0] as MatchType;
-		InitialView.config.step++;
-		//remove picker from view stack to go back to initial view
+		view.type = values[0] as MatchType;
+		view.step++;
+		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}

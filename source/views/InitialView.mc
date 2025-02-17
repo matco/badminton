@@ -4,36 +4,52 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 
 class InitialView extends WatchUi.View {
-	public static var config as MatchConfig;
+	public var step as Number;
+	public var type as MatchType?;
+	public var warmup as Boolean?;
+	public var sets as Number?;
+	public var beginner as Team?;
+	public var server as Boolean?;
 
 	function initialize() {
 		View.initialize();
-		config = new MatchConfig();
+		step = 0;
 		//it's not possible to start the application with a picker view
 		//and it's not possible to push a view during the initialization of an other view
 	}
 
+	function isConfigValid() as Boolean {
+		return type == SINGLE && step == 4 || step == 5;
+	}
+
 	function onShow() {
 		//when step is negative, config has been cancelled, close the application
-		if(config.step == -1) {
+		if(step == -1) {
 			WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		}
 		//if config is valid, start the match
-		else if(config.isValid()) {
-			//adjust match configuration with app configuration
-			config.maximumPoints = Properties.getValue("maximum_points") as Number;
-			config.absoluteMaximumPoints = Properties.getValue("absolute_maximum_points") as Number;
+		else if(isConfigValid()) {
+			//in singles, the server is necessary the user
+			//in doubles, server is either the user or his teammate
+			if(type == DOUBLE) {
+				server = true;
+			}
+			//create match config
+			var config = new MatchConfig(
+				type as MatchType,
+				warmup as Boolean,
+				beginner as Team,
+				server as Boolean,
+				sets,
+				Properties.getValue("maximum_points") as Number,
+				Properties.getValue("absolute_maximum_points") as Number
+			);
 
 			//create match
 			var match = new Match(config);
 
 			var app = Application.getApp() as BadmintonApp;
 			app.setMatch(match);
-
-			var warmup = config.warmup;
-
-			//prepare a new config
-			config = new MatchConfig();
 
 			if(warmup) {
 				//go to warmup view
@@ -48,25 +64,25 @@ class InitialView extends WatchUi.View {
 		else {
 			//choose appropriate view depending on current step
 			var picker, delegate;
-			if(config.step == 0) {
+			if(step == 0) {
 				picker = new TypePicker();
-				delegate = new TypePickerDelegate();
+				delegate = new TypePickerDelegate(self);
 			}
-			else if(config.step == 1) {
+			else if(step == 1) {
 				picker = new WarmupPicker();
-				delegate = new WarmupPickerDelegate();
+				delegate = new WarmupPickerDelegate(self);
 			}
-			else if(config.step == 2) {
+			else if(step == 2) {
 				picker = new SetPicker();
-				delegate = new SetPickerDelegate();
+				delegate = new SetPickerDelegate(self);
 			}
-			else if(config.step == 3) {
+			else if(step == 3) {
 				picker = new BeginnerPicker();
-				delegate = new BeginnerPickerDelegate();
+				delegate = new BeginnerPickerDelegate(self);
 			}
 			else {
 				picker = new ServerPicker();
-				delegate = new ServerPickerDelegate();
+				delegate = new ServerPickerDelegate(self);
 			}
 			//this view is shown when application starts or when back is pressed on type picker view
 			WatchUi.pushView(picker, delegate, WatchUi.SLIDE_IMMEDIATE);
@@ -81,7 +97,10 @@ class InitialViewDelegate extends WatchUi.BehaviorDelegate {
 	}
 
 	function onBack() {
-		//pop the main view to close the application
+		//pop the current view, which is necessarily a picker
+		//this will discard the current picker, and display this view (that is under the picker in the view stack)
+		//if the picker that was displayed is the first, the application will close itself (when the onShow is executed)
+		//if another picker was displayed, the previous picker will be pushed onto the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}

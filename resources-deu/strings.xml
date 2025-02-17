@@ -5,6 +5,9 @@
 	<string id="menu_resume_match">Fortsetzen</string>
 	<string id="menu_reset_match">Reset</string>
 	<string id="menu_end_match">Beenden</string>
+	<string id="menu_exit">Verlassen</string>
+
+	<string id="discard_match">Spiel ablegen?</string>
 
 	<string id="type_what">Spielart</string>
 	<string id="type_single">Einzel</string>

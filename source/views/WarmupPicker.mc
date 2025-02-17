@@ -15,7 +15,7 @@ class WarmupPicker extends WatchUi.Picker {
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_warmup_settings = Properties.getValue("default_match_warmup") as Boolean;
+		var default_warmup_settings = Properties.getValue("default_match_warmup") as Boolean?;
 		if(default_warmup_settings == null) {
 			default_warmup_settings = false;
 		}
@@ -35,23 +35,25 @@ class WarmupPicker extends WatchUi.Picker {
 }
 
 class WarmupPickerDelegate extends WatchUi.PickerDelegate {
+	private var view as InitialView;
 
-	function initialize() {
+	function initialize(view as InitialView) {
 		PickerDelegate.initialize();
+		self.view = view;
 	}
 
 	function onCancel() {
-		InitialView.config.step--;
-		//remove picker from view stack
+		view.step--;
+		//remove picker from the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.warmup = values[0] as Boolean;
-		InitialView.config.step++;
-		//remove picker from view stack to go back to initial view
+		view.warmup = values[0] as Boolean;
+		view.step++;
+		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}

@@ -5,6 +5,9 @@
 	<string id="menu_resume_match">Reprendre</string>
 	<string id="menu_reset_match">Reset</string>
 	<string id="menu_end_match">Terminer</string>
+	<string id="menu_exit">Quitter</string>
+
+	<string id="discard_match">Annuler le match?</string>
 
 	<string id="type_what">Type</string>
 	<string id="type_single">Simple</string>

@@ -16,7 +16,7 @@ class SetPicker extends WatchUi.Picker {
 			:color => Graphics.COLOR_WHITE
 		});
 
-		var default_number_of_sets = Properties.getValue("default_match_number_of_sets") as Number;
+		var default_number_of_sets = Properties.getValue("default_match_number_of_sets") as Number?;
 		if(default_number_of_sets == null) {
 			default_number_of_sets = 0;
 		}
@@ -36,14 +36,16 @@ class SetPicker extends WatchUi.Picker {
 }
 
 class SetPickerDelegate extends WatchUi.PickerDelegate {
+	private var view as InitialView;
 
-	function initialize() {
+	function initialize(view as InitialView) {
 		PickerDelegate.initialize();
+		self.view = view;
 	}
 
 	function onCancel() {
-		InitialView.config.step--;
-		//remove picker from view stack
+		view.step--;
+		//remove picker from the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}
@@ -52,13 +54,13 @@ class SetPickerDelegate extends WatchUi.PickerDelegate {
 		//update match configuration
 		var value = values[0];
 		if(value == :endless) {
-			InitialView.config.sets = null;
+			view.sets = null;
 		}
 		else {
-			InitialView.config.sets = value as Number;
+			view.sets = value as Number;
 		}
-		InitialView.config.step++;
-		//remove picker from view stack to go back to initial view
+		view.step++;
+		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
 	}

@@ -39,6 +39,10 @@ class MatchSet {
 		return rallies;
 	}
 
+	function getDuration() as Duration? {
+		return duration;
+	}
+
 	function score(scorer as Team) as Void {
 		if(hasEnded()) {
 			throw new OperationNotAllowedException("Unable to score in a set that has ended");
@@ -74,6 +78,10 @@ class MatchSet {
 		return rallies.last() as Team;
 	}
 
+	function getUserTeamIsServer() as Boolean {
+		return getServerTeam() == USER;
+	}
+
 	function getServingCorner() as Corner {
 		var server = getServerTeam();
 		var server_score = getScore(server);
@@ -81,14 +89,5 @@ class MatchSet {
 			return server_score % 2 == 0 ? USER_RIGHT : USER_LEFT;
 		}
 		return server_score % 2 == 0 ? OPPONENT_RIGHT : OPPONENT_LEFT;
-	}
-
-	//methods used from the perspective of the user
-	function getUserTeamIsServer() as Boolean {
-		return getServerTeam() == USER;
-	}
-
-	function getDuration() as Duration? {
-		return duration;
 	}
 }
