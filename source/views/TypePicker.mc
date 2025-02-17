@@ -35,13 +35,15 @@ class TypePicker extends WatchUi.Picker {
 }
 
 class TypePickerDelegate extends WatchUi.PickerDelegate {
+	private var view as InitialView;
 
-	function initialize() {
+	function initialize(view as InitialView) {
 		PickerDelegate.initialize();
+		self.view = view;
 	}
 
 	function onCancel() {
-		InitialView.config.step--;
+		view.step--;
 		//remove picker from the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
@@ -49,8 +51,8 @@ class TypePickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.type = values[0] as MatchType;
-		InitialView.config.step++;
+		view.config.type = values[0] as MatchType;
+		view.step++;
 		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;

@@ -29,13 +29,15 @@ class ServerPicker extends WatchUi.Picker {
 }
 
 class ServerPickerDelegate extends WatchUi.PickerDelegate {
+	private var view as InitialView;
 
-	function initialize() {
+	function initialize(view as InitialView) {
 		PickerDelegate.initialize();
+		self.view = view;
 	}
 
 	function onCancel() {
-		InitialView.config.step--;
+		view.step--;
 		//remove picker from the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
@@ -43,8 +45,8 @@ class ServerPickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		InitialView.config.server = values[0] as Boolean;
-		InitialView.config.step++;
+		view.config.server = values[0] as Boolean;
+		view.step++;
 		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;

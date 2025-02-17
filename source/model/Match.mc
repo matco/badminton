@@ -22,7 +22,6 @@ enum Corner {
 }
 
 class MatchConfig {
-	public var step as Number = 0;
 	public var type as MatchType?;
 	public var sets as Number?;
 	public var beginner as Team?;
@@ -30,10 +29,6 @@ class MatchConfig {
 	public var warmup as Boolean = false;
 	public var maximumPoints as Number?;
 	public var absoluteMaximumPoints as Number?;
-
-	function isValid() as Boolean {
-		return type == SINGLE && step == 4 || step == 5;
-	}
 }
 
 class Match {

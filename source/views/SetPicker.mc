@@ -36,13 +36,15 @@ class SetPicker extends WatchUi.Picker {
 }
 
 class SetPickerDelegate extends WatchUi.PickerDelegate {
+	private var view as InitialView;
 
-	function initialize() {
+	function initialize(view as InitialView) {
 		PickerDelegate.initialize();
+		self.view = view;
 	}
 
 	function onCancel() {
-		InitialView.config.step--;
+		view.step--;
 		//remove picker from the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
@@ -52,12 +54,12 @@ class SetPickerDelegate extends WatchUi.PickerDelegate {
 		//update match configuration
 		var value = values[0];
 		if(value == :endless) {
-			InitialView.config.sets = null;
+			view.config.sets = null;
 		}
 		else {
-			InitialView.config.sets = value as Number;
+			view.config.sets = value as Number;
 		}
-		InitialView.config.step++;
+		view.step++;
 		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;

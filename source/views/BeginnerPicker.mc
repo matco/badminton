@@ -30,13 +30,15 @@ class BeginnerPicker extends WatchUi.Picker {
 }
 
 class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
+	private var view as InitialView;
 
-	function initialize() {
+	function initialize(view as InitialView) {
 		PickerDelegate.initialize();
+		self.view = view;
 	}
 
 	function onCancel() as Boolean {
-		InitialView.config.step--;
+		view.step--;
 		//remove picker from the view stack
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
@@ -47,12 +49,12 @@ class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
 		var value = values[0];
 		if(value == :random) {
 			var number = Math.rand();
-			InitialView.config.beginner = number % 2 == 0 ? USER : OPPONENT;
+			view.config.beginner = number % 2 == 0 ? USER : OPPONENT;
 		}
 		else {
-			InitialView.config.beginner = values[0] as Team;
+			view.config.beginner = values[0] as Team;
 		}
-		InitialView.config.step++;
+		view.step++;
 		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);
 		return true;
