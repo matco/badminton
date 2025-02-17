@@ -51,7 +51,7 @@ class TypePickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		view.config.type = values[0] as MatchType;
+		view.type = values[0] as MatchType;
 		view.step++;
 		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

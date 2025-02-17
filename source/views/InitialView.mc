@@ -4,19 +4,22 @@ using Toybox.WatchUi;
 using Toybox.Graphics;
 
 class InitialView extends WatchUi.View {
-	public var config as MatchConfig;
 	public var step as Number;
+	public var type as MatchType?;
+	public var warmup as Boolean?;
+	public var sets as Number?;
+	public var beginner as Team?;
+	public var server as Boolean?;
 
 	function initialize() {
 		View.initialize();
-		config = new MatchConfig();
 		step = 0;
 		//it's not possible to start the application with a picker view
 		//and it's not possible to push a view during the initialization of an other view
 	}
 
 	function isConfigValid() as Boolean {
-		return config.type == SINGLE && step == 4 || step == 5;
+		return type == SINGLE && step == 4 || step == 5;
 	}
 
 	function onShow() {
@@ -26,17 +29,27 @@ class InitialView extends WatchUi.View {
 		}
 		//if config is valid, start the match
 		else if(isConfigValid()) {
-			//adjust match configuration with app configuration
-			config.maximumPoints = Properties.getValue("maximum_points") as Number;
-			config.absoluteMaximumPoints = Properties.getValue("absolute_maximum_points") as Number;
+			//in singles, the server is necessary the user
+			//in doubles, server is either the user or his teammate
+			if(type == DOUBLE) {
+				server = true;
+			}
+			//create match config
+			var config = new MatchConfig(
+				type as MatchType,
+				warmup as Boolean,
+				beginner as Team,
+				server as Boolean,
+				sets,
+				Properties.getValue("maximum_points") as Number,
+				Properties.getValue("absolute_maximum_points") as Number
+			);
 
 			//create match
 			var match = new Match(config);
 
 			var app = Application.getApp() as BadmintonApp;
 			app.setMatch(match);
-
-			var warmup = config.warmup;
 
 			if(warmup) {
 				//go to warmup view

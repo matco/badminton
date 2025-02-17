@@ -49,10 +49,10 @@ class BeginnerPickerDelegate extends WatchUi.PickerDelegate {
 		var value = values[0];
 		if(value == :random) {
 			var number = Math.rand();
-			view.config.beginner = number % 2 == 0 ? USER : OPPONENT;
+			view.beginner = number % 2 == 0 ? USER : OPPONENT;
 		}
 		else {
-			view.config.beginner = values[0] as Team;
+			view.beginner = values[0] as Team;
 		}
 		view.step++;
 		//remove picker from the view stack to go back to the initial view

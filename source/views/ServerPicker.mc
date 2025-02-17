@@ -45,7 +45,7 @@ class ServerPickerDelegate extends WatchUi.PickerDelegate {
 
 	function onAccept(values) {
 		//update match configuration
-		view.config.server = values[0] as Boolean;
+		view.server = values[0] as Boolean;
 		view.step++;
 		//remove picker from the view stack to go back to the initial view
 		WatchUi.popView(WatchUi.SLIDE_IMMEDIATE);

@@ -4,14 +4,15 @@ import Toybox.Test;
 module MatchTest {
 
 	function create_match_config(type as MatchType, sets as Number?, beginner as Team, server as Boolean, maximum_points as Number, absolute_maximum_points as Number) as MatchConfig {
-		var config = new MatchConfig();
-		config.type = type;
-		config.sets = sets;
-		config.beginner = beginner;
-		config.server = server;
-		config.maximumPoints = maximum_points;
-		config.absoluteMaximumPoints = absolute_maximum_points;
-		return config;
+		return new MatchConfig(
+			type,
+			false,
+			beginner,
+			server,
+			sets,
+			maximum_points,
+			absolute_maximum_points
+		);
 	}
 
 	(:test)

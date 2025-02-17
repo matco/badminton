@@ -54,10 +54,10 @@ class SetPickerDelegate extends WatchUi.PickerDelegate {
 		//update match configuration
 		var value = values[0];
 		if(value == :endless) {
-			view.config.sets = null;
+			view.sets = null;
 		}
 		else {
-			view.config.sets = value as Number;
+			view.sets = value as Number;
 		}
 		view.step++;
 		//remove picker from the view stack to go back to the initial view

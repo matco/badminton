@@ -22,13 +22,30 @@ enum Corner {
 }
 
 class MatchConfig {
-	public var type as MatchType?;
-	public var sets as Number?;
-	public var beginner as Team?;
-	public var server as Boolean?;
-	public var warmup as Boolean = false;
-	public var maximumPoints as Number?;
-	public var absoluteMaximumPoints as Number?;
+	public var type as MatchType; //type of the match, SINGLE or DOUBLE
+	public var warmup as Boolean; //true if the match has a warmup phase
+	public var beginner as Team; //beginner of the match, USER or OPPONENT
+	public var server as Boolean; //in double, true if the user is the first to serve (among himself and his teammate)
+	public var maximumSets as Number?; //maximum number of sets for this match, null for match in endless mode
+	public var maximumPoints as Number; //number of points to win a set
+	public var absoluteMaximumPoints as Number; //absolute number of points to win a set
+
+	function initialize(
+		type as MatchType,
+		warmup as Boolean,
+		beginner as Team,
+		server as Boolean,
+		maximumSets as Number?,
+		maximumPoints as Number,
+		absoluteMaximumPoints as Number) {
+		self.type = type;
+		self.warmup = warmup;
+		self.beginner = beginner;
+		self.server = server;
+		self.maximumSets = maximumSets;
+		self.maximumPoints = maximumPoints;
+		self.absoluteMaximumPoints = absoluteMaximumPoints;
+	}
 }
 
 class Match {
@@ -48,17 +65,11 @@ class Match {
 	const SET_SCORE_PLAYER_1_FIELD_ID = 4;
 	const SET_SCORE_PLAYER_2_FIELD_ID = 5;
 
-	private var type as MatchType; //type of the match, SINGLE or DOUBLE
-	private var warmup as Boolean = false;
-	private var maximumSets as Number?; //maximum number of sets for this match, null for match in endless mode
-	private var sets as List; //list of played sets
+	private var config as MatchConfig;
 
-	private var server as Boolean; //in double, true if the user is the first to serve (among himself and his teammate)
+	private var sets as List; //list of played sets
 	private var winner as Team?; //store the winner of the match, USER or OPPONENT
 	private var ended as Boolean; //store if the match has ended
-
-	private var maximumPoints as Number;
-	private var absoluteMaximumPoints as Number;
 
 	private var session as Session;
 	private var fieldSetPlayer1 as Field;
@@ -69,22 +80,13 @@ class Match {
 	private var fieldScorePlayer2 as Field;
 
 	function initialize(config as MatchConfig) {
-		type = config.type as MatchType;
-		warmup = config.warmup;
-		maximumSets = config.sets;
-
-		//in singles, the server is necessary the user
-		//in doubles, server is either the user or his teammate
-		server = config.type == DOUBLE ? config.server as Boolean : true;
+		self.config = config;
 
 		ended = false;
 
 		//prepare array of sets and create first set
 		sets = new List();
 		sets.push(new MatchSet(config.beginner as Team));
-
-		maximumPoints = config.maximumPoints as Number;
-		absoluteMaximumPoints = config.absoluteMaximumPoints as Number;
 
 		//determine sport and subsport
 		//it would be better to use feature detection instead of checking the version, but this does not work, see IQTest.mc
@@ -161,7 +163,7 @@ class Match {
 	}
 
 	function hasWarmup() as Boolean {
-		return warmup;
+		return config.warmup;
 	}
 
 	function endWarmup() as Void {
@@ -187,7 +189,7 @@ class Match {
 	}
 
 	function getMaximumSets() as Number? {
-		return maximumSets;
+		return config.maximumSets;
 	}
 
 	function getCurrentSet() as MatchSet {
@@ -222,10 +224,10 @@ class Match {
 	private function isSetWon(set as MatchSet) as Team? {
 		var scorePlayer1 = set.getScore(USER);
 		var scorePlayer2 = set.getScore(OPPONENT);
-		if(scorePlayer1 >= absoluteMaximumPoints || scorePlayer1 >= maximumPoints && (scorePlayer1 - scorePlayer2) > 1) {
+		if(scorePlayer1 >= config.absoluteMaximumPoints || scorePlayer1 >= config.maximumPoints && (scorePlayer1 - scorePlayer2) > 1) {
 			return USER;
 		}
-		if(scorePlayer2 >= absoluteMaximumPoints || scorePlayer2 >= maximumPoints && (scorePlayer2 - scorePlayer1) > 1) {
+		if(scorePlayer2 >= config.absoluteMaximumPoints || scorePlayer2 >= config.maximumPoints && (scorePlayer2 - scorePlayer1) > 1) {
 			return OPPONENT;
 		}
 		return null;
@@ -236,7 +238,7 @@ class Match {
 		if(isEndless()) {
 			return null;
 		}
-		var winning_sets = maximumSets as Number / 2; //if not in endless mode, maximum sets cannot be null
+		var winning_sets = config.maximumSets as Number / 2; //if not in endless mode, maximum sets cannot be null
 		var player_1_sets = getSetsWon(USER);
 		if(player_1_sets > winning_sets) {
 			return USER;
@@ -265,11 +267,11 @@ class Match {
 	}
 
 	function getType() as MatchType {
-		return type;
+		return config.type;
 	}
 
 	function isEndless() as Boolean {
-		return maximumSets == null;
+		return config.maximumSets == null;
 	}
 
 	function getSets() as List {
@@ -333,7 +335,7 @@ class Match {
 	function getUserCorner() as Corner {
 		var current_set = getCurrentSet();
 		//in singles, the user position only depends on the current score
-		if(type == SINGLE) {
+		if(config.type == SINGLE) {
 			var server_team = current_set.getServerTeam();
 			var server_score = current_set.getScore(server_team);
 			return server_score % 2 == 0 ? USER_RIGHT : USER_LEFT;
@@ -344,7 +346,7 @@ class Match {
 		var rallies = current_set.getRallies();
 		//initialize the corner differently depending on which team begins the set and which player starts to serve
 		//while the user team did not get a service, the position of the user depends on who has been configured to serve first (among the user and his teammate)
-		var corner = beginner == USER ? server ? USER_RIGHT : USER_LEFT : server ? USER_LEFT : USER_RIGHT;
+		var corner = beginner == USER ? config.server ? USER_RIGHT : USER_LEFT : config.server ? USER_LEFT : USER_RIGHT;
 		for(var i = 0; i < rallies.size(); i++) {
 			var previous_rally = i > 0 ? rallies.get(i - 1) : beginner;
 			var current_rally = rallies.get(i);
