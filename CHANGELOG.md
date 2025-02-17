@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.9.0
+- Ask for a confirmation before discarding warmup data
+- Add an entry in the match menu to exit the application
+- Fix navigation to the initial view after a match has ended
+- Fix the first set's time calculation, excluding warmup time
+
 ## 4.8.0
 - Fix handling of touch events in the match screen
 - Add optional warmup phase
