@@ -31,7 +31,7 @@ class InitialView extends WatchUi.View {
 		else if(isConfigValid()) {
 			//in singles, the server is necessary the user
 			//in doubles, server is either the user or his teammate
-			if(type == DOUBLE) {
+			if(type == SINGLE) {
 				server = true;
 			}
 			//create match config
