@@ -1,5 +1,8 @@
 # Changelog
 
+## 4.9.1
+- Fix setup of server in doubles
+
 ## 4.9.0
 - Ask for a confirmation before discarding warmup data
 - Add an entry in the match menu to exit the application
