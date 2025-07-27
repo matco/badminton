@@ -7,12 +7,15 @@ venusqm.resourcePath = resources;icons/36x36
 venusq2.resourcePath = resources;icons/40x40
 venusq2m.resourcePath = resources;icons/40x40
 venu2s.resourcePath = resources;icons/61x61
+venux1.resourcePath = resources;icons/65x65
 
 vivoactive3m.resourcePath = resources;icons/40x33
 vivoactive3mlte.resourcePath = resources;icons/40x33
 
 vivoactive4.resourcePath = resources;icons/35x35
 vivoactive4s.resourcePath = resources;icons/30x30
+
+vivoactive6.resourcePath = resources;icons/54x54
 
 fenix5.resourcePath = resources;icons/40x40
 fenix5plus.resourcePath = resources;icons/40x40
@@ -59,6 +62,8 @@ fr255m.resourcePath = resources;icons/40x40
 fr255sm.resourcePath = resources;icons/40x40
 fr265.resourcePath = resources;icons/60x60
 fr265s.resourcePath = resources;icons/60x60
+fr57047mm.resourcePath = resources;icons/65x65
+fr57042mm.resourcePath = resources;icons/54x54
 fr645.resourcePath = resources;icons/40x40
 fr645m.resourcePath = resources;icons/40x40
 fr745.resourcePath = resources;icons/40x40
@@ -67,6 +72,9 @@ fr945.resourcePath = resources;icons/40x40
 fr945lte.resourcePath = resources;icons/40x40
 fr955.resourcePath = resources;icons/40x40
 fr965.resourcePath = resources;icons/65x65
+
+d2air.resourcePath = resources;icons/60x60
+d2mach1.resourcePath = resources;icons/60x60
 
 descentmk2.resourcePath = resources;icons/40x40
 descentmk2s.resourcePath = resources;icons/40x40

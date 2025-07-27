@@ -1,5 +1,11 @@
 # Changelog
 
+## 4.10.0
+- Add partial support for D2 series
+- Add support for Forerunner 570 series
+- Add support for Venu X1
+- Add support for Vivoactive 6
+
 ## 4.9.1
 - Fix setup of server in doubles
 
