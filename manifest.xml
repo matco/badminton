@@ -6,6 +6,9 @@
             <iq:product id="d2air"/>
             <iq:product id="d2airx10"/>
             <iq:product id="d2mach1"/>
+            <iq:product id="descentg1"/>
+            <iq:product id="descentg2"/>
+            <iq:product id="descentmk1"/>
             <iq:product id="descentmk2"/>
             <iq:product id="descentmk2s"/>
             <iq:product id="descentmk343mm"/>
@@ -28,10 +31,12 @@
             <iq:product id="fenix6xpro"/>
             <iq:product id="fenix7"/>
             <iq:product id="fenix7pro"/>
+            <iq:product id="fenix7pronowifi"/>
             <iq:product id="fenix7s"/>
             <iq:product id="fenix7spro"/>
             <iq:product id="fenix7x"/>
             <iq:product id="fenix7xpro"/>
+            <iq:product id="fenix7xpronowifi"/>
             <iq:product id="fenix843mm"/>
             <iq:product id="fenix847mm"/>
             <iq:product id="fenix8solar47mm"/>
@@ -58,6 +63,7 @@
             <iq:product id="fr945lte"/>
             <iq:product id="fr955"/>
             <iq:product id="fr965"/>
+            <iq:product id="fr970"/>
             <iq:product id="instinct3amoled45mm"/>
             <iq:product id="instinct3amoled50mm"/>
             <iq:product id="instinct3solar45mm"/>
