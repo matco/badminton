@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.11.0
+- Add support for Descent G1
+- Add support for Descent G2
+- Add support for Descent Mk1
+- Add support for Fenix 7 pro solar edition
+- Add support for Fenix 7X pro solar edition
+- Add support for Forerunner 970
+
 ## 4.10.0
 - Add partial support for D2 series
 - Add support for Forerunner 570 series
