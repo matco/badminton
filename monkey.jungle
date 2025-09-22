@@ -31,10 +31,12 @@ fenix6xpro.resourcePath = resources;icons/40x40
 fenixe.resourcePath = resources;icons/60x60
 fenix7.resourcePath = resources;icons/40x40
 fenix7pro.resourcePath = resources;icons/40x40
+fenix7pronowifi.resourcePath = resources;icons/40x40
 fenix7s.resourcePath = resources;icons/40x40
 fenix7spro.resourcePath = resources;icons/40x40
 fenix7x.resourcePath = resources;icons/40x40
 fenix7xpro.resourcePath = resources;icons/40x40
+fenix7xpronowifi.resourcePath = resources;icons/40x40
 fenix843mm.resourcePath = resources;icons/60x60
 fenix847mm.resourcePath = resources;icons/65x65
 fenix8solar47mm.resourcePath = resources;icons/40x40
@@ -72,10 +74,14 @@ fr945.resourcePath = resources;icons/40x40
 fr945lte.resourcePath = resources;icons/40x40
 fr955.resourcePath = resources;icons/40x40
 fr965.resourcePath = resources;icons/65x65
+fr970.resourcePath = resources;icons/65x65
 
 d2air.resourcePath = resources;icons/60x60
 d2mach1.resourcePath = resources;icons/60x60
 
+descentg1.resourcePath = resources;icons/62x62
+descentg2.resourcePath = resources;icons/60x60
+descentmk1.resourcePath = resources;icons/40x40
 descentmk2.resourcePath = resources;icons/40x40
 descentmk2s.resourcePath = resources;icons/40x40
 descentmk343mm.resourcePath = resources;icons/60x60

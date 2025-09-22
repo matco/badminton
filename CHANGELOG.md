@@ -1,5 +1,13 @@
 # Changelog
 
+## 4.11.0
+- Add support for Descent G1
+- Add support for Descent G2
+- Add support for Descent Mk1
+- Add support for Fenix 7 pro solar edition
+- Add support for Fenix 7X pro solar edition
+- Add support for Forerunner 970
+
 ## 4.10.0
 - Add partial support for D2 series
 - Add support for Forerunner 570 series
@@ -28,7 +36,7 @@
 - Fix refresh of the match view when starting a new set
 
 ## 4.6.1
-- Fix application for devices that support a version Connect IQ between 3.1.0 and 5.0.0
+- Fix application for devices that support a version of Connect IQ between 3.1.0 and 5.0.0
 
 ## 4.6.0
 - Add support for MARQ Gen 2 series
@@ -77,7 +85,7 @@
 - Improve settings
 
 ## 3.5.0
-- Add support for Venus 2 Plus and Descent MK series
+- Add support for Venus 2 Plus and Descent Mk series
 
 ## 3.4.0
 - Add support for Fenix 7 and Epix series
