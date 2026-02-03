@@ -52,22 +52,22 @@ module UIHelpers {
 		}
 	}
 
-	function drawHighlightedNumber(dc as Dc, x as Numeric, y as Numeric, font as FontType, text as String, color as Number, vertical_padding as Number, horizontal_padding as Number) as Void {
+	function drawHighlightedNumber(dc as Dc, x as Numeric, y as Numeric, font as FontType, number as Numeric, color as Number, padding_percent as Numeric) as Void {
+		var text = number.toString();
 		var dimensions = dc.getTextDimensions(text, font);
-		//the font height includes a default top margin that is useless
-		var offset = dimensions[1] * 0.12;
 		//calculate the real height of the text that will be actually be displayed
 		//remove the font descent because numbers don't have any descent
-		var font_height = (dimensions[1] - Graphics.getFontDescent(font));
+		var font_height = dimensions[1] - Graphics.getFontDescent(font);
+		//calculate the padding based on the font height
+		var padding = font_height * padding_percent;
 		//calculate the dimensions of the highlighting rectangle
-		var width = dimensions[0] + 2 * horizontal_padding;
-		var height = font_height + 2 * vertical_padding;
+		var height = Math.round(font_height * 0.8 + 2 * padding);
+		var width = Math.round(dimensions[0] + 2 * padding);
 		//draw the highlighting rectangle
 		dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
 		dc.fillRoundedRectangle(x - width / 2, y - height / 2, width, height, 5);
-		//draw the score
+		//draw the number
 		dc.setColor(color, Graphics.COLOR_TRANSPARENT);
-		//manually center the text vertically by discarding the top margin and removing half of the real height of the text
-		dc.drawText(x, y - offset - font_height / 2, font, text, Graphics.TEXT_JUSTIFY_CENTER);
+		dc.drawText(x, y, font, text, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 	}
 }

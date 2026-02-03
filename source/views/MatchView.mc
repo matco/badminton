@@ -101,6 +101,7 @@ class MatchBoundaries {
 
 	public var marginHeight as Float;
 
+	public var referenceSize as Number = Graphics.getFontHeight(Graphics.FONT_TINY);
 	public var perspective as Perspective;
 
 	public var court as Array<Point2D>;
@@ -209,7 +210,7 @@ class MatchBoundaries {
 		//calculate hear rate position
 		var heart_coordinates = BetterMath.roundAll(perspective.transform([0.75, 0.6])) as Point2D;
 		//size the icon according to the size of the tiny font
-		var size = Math.round(Graphics.getFontHeight(Graphics.FONT_TINY) * 0.2);
+		var size = Math.round(referenceSize * 0.2);
 		heart = new Heart({
 			:locX => heart_coordinates[0],
 			:locY => heart_coordinates[1] - size * 2,
@@ -219,8 +220,8 @@ class MatchBoundaries {
 }
 
 class MatchView extends WatchUi.View {
-	const SCORE_PLAYER_1_FONT = Graphics.FONT_LARGE;
-	const SCORE_PLAYER_2_FONT = Graphics.FONT_MEDIUM;
+	const SCORE_PLAYER_1_FONT = Graphics.FONT_NUMBER_MEDIUM;
+	const SCORE_PLAYER_2_FONT = Graphics.FONT_NUMBER_MILD;
 
 	const REFRESH_TIME_ANIMATION = 50;
 	const REFRESH_TIME_STANDARD = 1000;
@@ -339,10 +340,12 @@ class MatchView extends WatchUi.View {
 		bd.perspective.drawTransversalLine(dc, 1f);
 
 		//draw a dot for the user position
-		var player_x = match.getUserCorner() == USER_LEFT ? -0.28 : 0.28 as Float;
-		var player_coordinates = bd.perspective.transform([player_x, 0.12] as Point2D);
+		var player_x = match.getUserCorner() == USER_LEFT ? -0.32 : 0.32 as Float;
+		var player_coordinates = bd.perspective.transform([player_x, 0.10] as Point2D);
 		dc.setColor(Graphics.COLOR_RED, Graphics.COLOR_TRANSPARENT);
-		dc.fillCircle(player_coordinates[0], player_coordinates[1], 7);
+		//size the icon according to the size of the tiny font
+		var size = Math.round(bd.referenceSize * 0.2);
+		dc.fillCircle(player_coordinates[0], player_coordinates[1], size);
 	}
 
 	function drawScores(dc as Dc, match as Match) as Void {
@@ -352,12 +355,14 @@ class MatchView extends WatchUi.View {
 		//boundaries cannot be null at this point
 		var bd = boundaries as MatchBoundaries;
 
-		var player_1_coordinates = bd.perspective.transform([0f, 0.25] as Point2D);
-		var player_2_coordinates = bd.perspective.transform([0f, 0.75] as Point2D);
+		var player_1_center = BetterMath.mean(MatchBoundaries.COURT_LONG_SERVICE_SIZE, 0.5 - MatchBoundaries.COURT_SHORT_SERVICE_SIZE);
+		var player_2_center = BetterMath.mean(0.5 + MatchBoundaries.COURT_SHORT_SERVICE_SIZE, 1 - MatchBoundaries.COURT_LONG_SERVICE_SIZE);
+		var player_1_coordinates = bd.perspective.transform([0f, player_1_center] as Point2D);
+		var player_2_coordinates = bd.perspective.transform([0f, player_2_center] as Point2D);
 		var player_1_color = server_team == USER ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
 		var player_2_color = server_team == OPPONENT ? Graphics.COLOR_BLUE : Graphics.COLOR_WHITE;
-		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(USER).toString(), player_1_color, 2, 4);
-		UIHelpers.drawHighlightedNumber(dc, player_2_coordinates[0], player_2_coordinates[1], SCORE_PLAYER_2_FONT, set.getScore(OPPONENT).toString(), player_2_color, 2, 4);
+		UIHelpers.drawHighlightedNumber(dc, player_1_coordinates[0], player_1_coordinates[1], SCORE_PLAYER_1_FONT, set.getScore(USER), player_1_color, 0.08);
+		UIHelpers.drawHighlightedNumber(dc, player_2_coordinates[0], player_2_coordinates[1], SCORE_PLAYER_2_FONT, set.getScore(OPPONENT), player_2_color, 0.08);
 	}
 
 	function drawSets(dc as Dc, match as Match) as Void {
