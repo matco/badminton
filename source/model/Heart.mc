@@ -54,7 +54,7 @@ class Heart extends WatchUi.Drawable {
 		];
 	}
 
-	function draw(dc as Dc) as Void {
+	function draw(dc as Dc) {
 		var activity = Activity.getActivityInfo() as Info;
 		var rate = activity.currentHeartRate;
 

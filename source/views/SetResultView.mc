@@ -1,7 +1,7 @@
 import Toybox.Lang;
 import Toybox.Time;
 import Toybox.WatchUi;
-using Toybox.Graphics;
+import Toybox.Graphics;
 
 class SetResultView extends WatchUi.View {
 
@@ -9,7 +9,7 @@ class SetResultView extends WatchUi.View {
 		View.initialize();
 	}
 
-	function onLayout(dc) {
+	function onLayout(dc as Dc) {
 		setLayout(Rez.Layouts.result(dc));
 	}
 

@@ -1,6 +1,6 @@
 import Toybox.Lang;
+import Toybox.Graphics;
 using Toybox.WatchUi;
-using Toybox.Graphics;
 
 class ServerPicker extends WatchUi.Picker {
 
@@ -21,7 +21,7 @@ class ServerPicker extends WatchUi.Picker {
 		});
 	}
 
-	function onUpdate(dc) {
+	function onUpdate(dc as Dc) {
 		dc.setColor(Graphics.COLOR_BLACK, Graphics.COLOR_BLACK);
 		dc.clear();
 		Picker.onUpdate(dc);

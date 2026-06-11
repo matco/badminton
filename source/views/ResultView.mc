@@ -1,6 +1,6 @@
 import Toybox.Lang;
 import Toybox.WatchUi;
-using Toybox.Graphics;
+import Toybox.Graphics;
 
 class SaveMatchConfirmationDelegate extends WatchUi.ConfirmationDelegate {
 
@@ -39,7 +39,7 @@ class ResultView extends WatchUi.View {
 		View.initialize();
 	}
 
-	function onLayout(dc) {
+	function onLayout(dc as Dc) {
 		setLayout(Rez.Layouts.result(dc));
 	}
 

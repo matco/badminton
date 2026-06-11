@@ -28,7 +28,7 @@ class WarmupView extends WatchUi.View {
 		refreshTimer = new Timer.Timer();
 	}
 
-	function onLayout(dc) {
+	function onLayout(dc as Dc) {
 		setLayout(Rez.Layouts.warmup(dc));
 	}
 

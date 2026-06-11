@@ -1,7 +1,7 @@
 import Toybox.Lang;
 import Toybox.WatchUi;
 import Toybox.Activity;
-using Toybox.Graphics;
+import Toybox.Graphics;
 
 class ActivityStatsView extends WatchUi.View {
 
@@ -9,7 +9,7 @@ class ActivityStatsView extends WatchUi.View {
 		View.initialize();
 	}
 
-	function onLayout(dc) {
+	function onLayout(dc as Dc) {
 		setLayout(Rez.Layouts.activity_stats(dc));
 	}
 
